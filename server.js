@@ -138,7 +138,7 @@ app.get('/:pagename', (req, res) => {
                     <td>${safeDescription}</td>
                 </tr>`;
         }).join('')
-        : '<tr><td colspan="2">No links added yet.</td></tr>';
+        : '';
 
     html = html.replace(/{{links}}/g, linksHTML);
 

@@ -68,7 +68,9 @@ document.addEventListener("DOMContentLoaded", () => {
 
         try {
             const urlObj = new URL(linkValue); // Validate the URL structure
-            const domainPattern = /^(?!-)[a-zA-Z0-9-]+(\.[a-zA-Z0-9-]+)*\.[a-zA-Z]{2,}$/;
+
+            // ✅ Updated regex: Allows localhost, ports, and standard domains
+            const domainPattern = /^(localhost(:\d{1,5})?|[a-zA-Z0-9-]+(\.[a-zA-Z0-9-]+)*\.[a-zA-Z]{2,})$/;
 
             if (!domainPattern.test(urlObj.hostname)) {
                 throw new Error("Invalid domain");
@@ -155,7 +157,7 @@ document.addEventListener("DOMContentLoaded", () => {
                     // Clear form fields
                     if (linkInput) linkInput.value = "";
                     if (descriptionInput) descriptionInput.value = "";
-                    goButton.style.display = "none";
+                    if (goButton) goButton.style.display = "none";
 
                     // If a page name is provided and we aren't on that page, redirect there.
                     if (pageValue && window.location.pathname !== `/${pageValue}`) {

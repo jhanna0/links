@@ -11,16 +11,7 @@
 
 <body class="table-page">
 
-    <!-- <header class="site-header">
-        <a href="/" class="home-button">Main</a>
-        <a class="home-button share-button" style="cursor: pointer;">Share</a>
-    </header>
-    <div class="header-space"></div> -->
-
     <div class="container wide">
-        <!-- Aesthetic Back Button (Now Inside the Container) -->
-        <!-- <a href="javascript:history.back()" class="back-peel-button">
-        </a> -->
 
         <!-- Top Bar -->
         <div class="top-bar">
@@ -29,10 +20,13 @@
                 This page is invalid.
             </p>
             <h1 class="page-heading" style="margin-bottom: 20px; text-align: center;">
-                <a class="page-back">
-                    {{pagename}}
-                </a>
+                <a class="share hover">{{pagename}}</a>
             </h1>
+            <p class="subtext page-back hover">
+                <a style="all: unset;">
+                    Click above to copy link or me to go back.
+                </a>
+            </p>
         </div>
 
         <!-- Links Table -->
@@ -89,6 +83,30 @@
 
                 // Make it look clickable
                 pageHeading.style.cursor = "pointer";
+            }
+        });
+    </script>
+
+    <script>
+        document.addEventListener("DOMContentLoaded", () => {
+            const shareButton = document.querySelector(".share");
+
+            if (shareButton) {
+                shareButton.addEventListener("click", async () => {
+                    try {
+                        await navigator.clipboard.writeText(window.location.href);
+                        // alert("Page URL copied to clipboard! ✅");
+
+                        // Reduce opacity to 0.75 for 3 seconds
+                        shareButton.style.opacity = "0.50";
+                        setTimeout(() => {
+                            shareButton.style.opacity = "0.85";
+                        }, 2000);
+
+                    } catch (err) {
+                        console.error("Clipboard copy failed:", err);
+                    }
+                });
             }
         });
     </script>

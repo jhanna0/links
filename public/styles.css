@@ -167,6 +167,11 @@ button:hover {
     /* Slightly muted */
 }
 
+.hover:hover {
+    text-decoration: underline;
+    cursor: pointer;
+}
+
 /* Table Styles */
 
 table,
@@ -208,9 +213,7 @@ table td:first-child {
     padding-top: 0;
 }
 
-table tbody tr:hover {
-    background-color: var(--table-hover);
-}
+
 
 .error-message {
     color: var(--error-color);
@@ -221,27 +224,6 @@ table tbody tr:hover {
 .container.wide {
     position: relative;
     /* Ensures the back button is contained */
-}
-
-/* Aesthetic "Peel Back" Button */
-.back-peel-button {
-    position: absolute;
-    top: 0;
-    right: 0;
-    background: var(--button-bg);
-    color: white;
-    font-weight: bold;
-    text-decoration: none;
-    font-size: 0.9rem;
-    padding: 6px 6px;
-    border-radius: 0 12px 0 12px;
-    /* Top-right rounded corner */
-    box-shadow: -2px 2px 6px rgba(0, 0, 0, 0.1);
-}
-
-/* Hover effect */
-.back-peel-button:hover {
-    background: var(--button-hover-bg);
 }
 
 .container.wide {
@@ -285,14 +267,6 @@ table tbody tr:hover {
 .header-space {
     height: 45px;
 }
-
-/* Responsive Header Adjustments */
-@media (max-width: 600px) {
-    .site-header {
-        /* padding: 10px 15px; */
-    }
-}
-
 
 /* Responsive Adjustments */
 @media (max-width: 600px) {
