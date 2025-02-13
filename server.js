@@ -13,7 +13,30 @@ app.use(express.json());
 // Serve static files (CSS, images, etc.)
 app.use(express.static('public'));
 
-// Handle form submissions
+/**
+ * ✅ Helper Function: Validate Page Name
+ * - Ensures only A-Z, 0-9, -, _
+ * - Prevents blank names
+ * - Limits to 1000 characters
+ * - Returns { valid: boolean, error?: string }
+ */
+function validatePageName(page) {
+    if (!page || typeof page !== "string") {
+        return { valid: false, error: "Page name is required." };
+    }
+
+    if (page.length > 1000) {
+        return { valid: false, error: "Page name cannot exceed 1000 characters." };
+    }
+
+    const validPattern = /^[a-zA-Z0-9_-]+$/;
+    if (!validPattern.test(page)) {
+        return { valid: false, error: "Invalid page name. Use only letters, numbers, dashes, or underscores." };
+    }
+
+    return { valid: true };
+}
+
 // Handle form submissions
 app.post('/add', (req, res) => {
     let { page, link, description = '' } = req.body;
@@ -22,14 +45,15 @@ app.post('/add', (req, res) => {
         return res.status(400).json({ error: 'Page name and link are required' });
     }
 
-    // ✅ Ensure inputs are within 1000 characters
-    if (page.length > 1000 || link.length > 1000 || description.length > 1000) {
-        return res.status(400).json({ error: 'Inputs cannot exceed 1000 characters.' });
+    // ✅ Validate Page Name
+    const pageValidation = validatePageName(page);
+    if (!pageValidation.valid) {
+        return res.status(400).json({ error: pageValidation.error });
     }
 
-    // ✅ Only allow letters, numbers, dashes, and underscores
-    if (!/^[a-zA-Z0-9_-]+$/.test(page)) {
-        return res.status(400).json({ error: 'Invalid page name. Use only letters, numbers, dashes, or underscores.' });
+    // ✅ Ensure inputs are within 1000 characters
+    if (link.length > 1000 || description.length > 1000) {
+        return res.status(400).json({ error: 'Inputs cannot exceed 1000 characters.' });
     }
 
     // ✅ Ensure link has "https://"
@@ -52,6 +76,7 @@ app.get('/', (req, res) => {
 });
 
 // Serve one HTML file dynamically for all pages
+// Serve one HTML file dynamically for all pages
 app.get('/:pagename', (req, res) => {
     const { pagename } = req.params;
     const templatePath = path.join(__dirname, 'pages', 'page.html');
@@ -63,9 +88,14 @@ app.get('/:pagename', (req, res) => {
     let data = fs.existsSync(dataFile) ? JSON.parse(fs.readFileSync(dataFile, 'utf8')) : {};
     let pageData = data[pagename] || [];
 
+    // ✅ Validate Page Name - Just Block Posting Instead of Crashing
+    const pageValidation = validatePageName(pagename);
+    const allowAppending = pageValidation.valid; // If invalid, form will be hidden
+
     let html = fs.readFileSync(templatePath, 'utf8');
 
     html = html.replace(/{{pagename}}/g, pagename);
+    html = html.replace(/{{allowAppending}}/g, allowAppending ? "true" : "false");
 
     // Generate a clickable name instead of displaying full links
     let linksHTML = pageData.length
@@ -75,9 +105,7 @@ app.get('/:pagename', (req, res) => {
             // If it's a YouTube link, display "YouTube"
             if (entry.link.includes('youtube.com') || entry.link.includes('youtu.be')) {
                 displayName = 'YouTube';
-            }
-            // Otherwise, show the site's domain as the name
-            else {
+            } else {
                 try {
                     const urlObj = new URL(entry.link);
                     displayName = urlObj.hostname.replace('www.', '');
@@ -98,8 +126,6 @@ app.get('/:pagename', (req, res) => {
 
     res.send(html);
 });
-
-
 
 // Start the server
 app.listen(port, () => console.log(`Server running at http://localhost:${port}`));

@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Submit a Page</title>
+    <title>Main</title>
     <link rel="stylesheet" href="/styles.css" />
     <style>
         /* Wrapper to keep the input & button in the same layout */
@@ -53,7 +53,8 @@
             A unique enough name is basically private.
         </p>
         <form action="/add" method="POST">
-            <label>Page Name</label>
+
+            <label>Page Name <span id="pageError" class="error-message"></span></label>
             <div class="input-wrapper">
                 <input type="text" id="page" name="page" pattern="[a-zA-Z0-9_-]+"
                     title="Only letters, numbers, dashes, and underscores allowed." maxlength="1000" required />

@@ -8,13 +8,15 @@
     <link rel="stylesheet" href="/styles.css" />
 </head>
 
-<!-- Add a unique class to target the table page -->
-
 <body class="table-page">
     <div class="container wide">
         <!-- Top Bar -->
         <div class="top-bar">
             <h1>{{pagename}}</h1>
+            <span id="pageInvalidMessage" class="error-message"
+                style="display: none; text-align: center; font-weight: bold; width: 100%; margin: 0;">
+                This page is invalid.
+            </span>
         </div>
 
         <!-- Links Table -->
@@ -25,7 +27,7 @@
         </table>
     </div>
 
-    <div class="container wide">
+    <div class="container wide" id="formContainer">
         <form action="/add" method="POST">
             <input type="hidden" id="page" name="page" value="{{pagename}}" />
 
@@ -34,14 +36,27 @@
                 <input type="text" id="link" name="link" maxlength="1000" required />
             </div>
 
-            <label>
-                Description
-            </label>
+            <label>Description</label>
             <input type="text" id="description" name="description" maxlength="1000" />
 
             <button type="submit">Submit</button>
         </form>
     </div>
+
+    <script>
+        document.addEventListener("DOMContentLoaded", () => {
+            // Read `allowAppending` from server-side rendering
+            const allowAppending = "{{allowAppending}}" === "true";
+            const formContainer = document.getElementById("formContainer");
+            const pageInvalidMessage = document.getElementById("pageInvalidMessage");
+
+            if (!allowAppending) {
+                formContainer.style.pointerEvents = "none";
+                formContainer.style.opacity = 0.75;
+                pageInvalidMessage.style.display = "inline-block"; // Show warning message
+            }
+        });
+    </script>
 
     <script src="/form-handler.js"></script>
 
