@@ -252,9 +252,9 @@ form label textarea {}
         /* Ensures padding doesn't cause overflow */
     }
 
-    body.table-page .container {
+    /* body.table-page .container {
         width: 100%;
-    }
+    } */
 
     /* 📌 Fix Table Layout */
     body.table-page table {
