@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Submit a Page</title>
+    <link rel="stylesheet" href="/styles.css" />
+</head>
+<!-- Add a unique class to target the home page -->
+
+<body class="home-page">
+    <div class="container">
+        <!-- <h1>Submit a New Page</h1> -->
+        <p>Store links on a shared page. No account needed.</p>
+        <form action="/add" method="POST">
+            <label>
+                Page Name
+                <input type="text" name="page" required />
+            </label>
+            <label>
+                Link
+                <input type="url" name="link" required />
+            </label>
+            <label>
+                Description
+                <textarea name="description"></textarea>
+            </label>
+            <button type="submit">Submit</button>
+        </form>
+    </div>
+</body>
+
+</html>
