@@ -57,6 +57,10 @@
     {
       "link": "https://www.google.com/search?q=manual+url+validation+&sca_esv=4be518e6148afb1c&ei=0IutZ9iyI-7ekPIPs7Ca4A8&ved=0ahUKEwjY2p3V_b-LAxVuL0QIHTOYBvwQ4dUDCBA&uact=5&oq=manual+url+validation+&gs_lp=Egxnd3Mtd2l6LXNlcnAiFm1hbnVhbCB1cmwgdmFsaWRhdGlvbiAyBRAhGKABMgUQIRigATIFECEYoAEyBRAhGKsCMgUQIRirAjIFECEYqwIyBRAhGJ8FMgUQIRifBTIFECEYnwUyBRAhGJ8FSKhRULQpWLJCcAN4AJABAJgBSaAB-QqqAQIyM7gBA8gBAPgBAZgCGaACrwvCAgoQABiwAxjWBBhHwgILEAAYgAQYkQIYigXCAgsQABiABBixAxiDAcICDhAuGIAEGLEDGNEDGMcBwgILEC4YgAQY0QMYxwHCAgUQLhiABMICChAAGIAEGEMYigXCAhAQABiABBixAxhDGIMBGIoFwgIOEC4YgAQYsQMYgwEYigXCAg0QLhiABBixAxhDGIoFwgIIEC4YgAQYsQPCAgsQLhiABBixAxiDAcICCBAAGIAEGLEDwgIOEC4YgAQYxwEYjgUYrwHCAggQABiABBjJA8ICHRAuGIAEGMcBGI4FGK8BGJcFGNwEGN4EGOAE2AEBwgIFEAAYgATCAgcQLhiABBgKwgIQEC4YgAQYxwEYChiOBRivAcICBxAAGIAEGArCAgsQABiABBiGAxiKBcICBRAAGO8FwgIIEAAYgAQYogSYAwCIBgGQBgi6BgYIARABGBSSBwIyNaAHqOEB&sclient=gws-wiz-serp",
       "description": "fawfwa"
+    },
+    {
+      "link": "https://google.com",
+      "description": "Border & Border-Radius: Using border-collapse: separate lets us apply a smooth border-radius (8px) to the table. The table now has a soft border that matches your overall color theme. Background Consistency: The header cells (th) use the same background as your form container (var(--container-bg)), ensuring visual consistency. Link Styling: The <a> tags in the table cells adopt your button colors. On hover, they underline and change to your designated hover color. Spacing & Hover: Extra spacing and a subtle hover effect (var(--table-hover)) on rows help improve readability. This should give your table a cleaner, more modern appearance that matches the rest of your form styling. Feel free to adjust the values to"
     }
   ],
   "goo": [

@@ -37,6 +37,15 @@ function validatePageName(page) {
     return { valid: true };
 }
 
+function escapeHtml(text) {
+    return text
+        .replace(/&/g, '&amp;')
+        .replace(/</g, '&lt;')
+        .replace(/>/g, '&gt;')
+        .replace(/"/g, '&quot;')
+        .replace(/'/g, '&#039;');
+}
+
 // Handle form submissions
 app.post('/add', (req, res) => {
     let { page, link, description = '' } = req.body;
@@ -114,6 +123,9 @@ app.get('/:pagename', (req, res) => {
                 }
             }
 
+            // Escape the description so any HTML is rendered as plain text.
+            const safeDescription = escapeHtml(entry.description || 'No description');
+
             return `
                 <tr>
                     <td>
@@ -121,7 +133,7 @@ app.get('/:pagename', (req, res) => {
                             ${displayName}
                         </a>
                     </td>
-                    <td>${entry.description || 'No description'}</td>
+                    <td>${safeDescription}</td>
                 </tr>`;
         }).join('')
         : '<tr><td colspan="2">No links added yet.</td></tr>';
