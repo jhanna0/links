@@ -31,6 +31,7 @@ function validatePageName(page) {
 
     const validPattern = /^[a-zA-Z0-9_-]+$/;
     if (!validPattern.test(page)) {
+        // this is displaying on link error
         return { valid: false, error: "Invalid page name. Use only letters, numbers, dashes, or underscores." };
     }
 
@@ -118,6 +119,7 @@ app.get('/:pagename', (req, res) => {
                 try {
                     const urlObj = new URL(entry.link);
                     displayName = urlObj.hostname.replace('www.', '');
+                    displayName = displayName.replace(/\.[a-zA-Z]{2,}$/, '');
                 } catch (error) {
                     console.error('Invalid URL:', entry.link);
                 }

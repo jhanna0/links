@@ -11,6 +11,7 @@ document.addEventListener("DOMContentLoaded", () => {
     /**
      * ✅ Validate Page Name (Only if Page Name Input Exists)
      */
+    // let's require # or char "-" is ugly name
     function validatePageName() {
         if (!pageNameInput || !goButton) return true; // No page input? Skip validation.
 
@@ -138,6 +139,7 @@ document.addEventListener("DOMContentLoaded", () => {
             formData.append("link", linkValue);
             formData.append("description", descriptionValue);
 
+            // this encoding is messing a lot of stuff up
             try {
                 const response = await fetch(form.action, {
                     method: "POST",
@@ -153,10 +155,10 @@ document.addEventListener("DOMContentLoaded", () => {
                     // Clear form fields
                     if (linkInput) linkInput.value = "";
                     if (descriptionInput) descriptionInput.value = "";
-                    if (pageNameInput) pageNameInput.value = "";
 
                     // If a page name is provided and we aren't on that page, redirect there.
                     if (pageValue && window.location.pathname !== `/${pageValue}`) {
+                        if (pageNameInput) pageNameInput.value = "";
                         window.location.href = `/${pageValue}`;
                     } else if (linksTable) {
                         console.log("hi")
