@@ -62,6 +62,20 @@
     <script src="/form-handler.js"></script>
     <script>
         document.addEventListener("DOMContentLoaded", () => {
+            // Read `allowAppending` from server-side rendering
+            const allowAppending = "{{allowAppending}}" === "true";
+            const formContainer = document.getElementById("formContainer");
+            const pageInvalidMessage = document.getElementById("pageInvalidMessage");
+
+            if (!allowAppending) {
+                formContainer.style.pointerEvents = "none";
+                formContainer.style.opacity = 0.75;
+                pageInvalidMessage.style.display = "inline-block"; // Show warning message
+            }
+        });
+    </script>
+    <script>
+        document.addEventListener("DOMContentLoaded", () => {
             const pageHeading = document.querySelector(".page-back");
 
             if (pageHeading) {
