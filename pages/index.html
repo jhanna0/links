@@ -20,40 +20,19 @@
             flex-grow: 1;
             padding-right: 50px;
         }
-
-        /* "Go" Button inside the input */
-        .go-button {
-            position: absolute;
-            width: 50px;
-            right: 5px;
-            top: 50%;
-            transform: translateY(-50%);
-            padding: 8px 12px;
-            font-size: 14px;
-            font-weight: bold;
-            cursor: pointer;
-            border: none;
-            background: var(--button-bg);
-            color: white;
-            border-radius: 5px;
-            display: none;
-            transition: background 0.3s, transform 0.2s;
-        }
-
-        .go-button:hover {
-            background: var(--button-hover-bg);
-        }
     </style>
 </head>
 
 <body class="home-page">
     <div class="container">
-        <p>
-            Store links on a public page. No account needed.<br>
+        <h2 class="page-heading">
+            Store links on a public page.
+        </h2>
+        <p class="subtext">
             A unique enough name is basically private.
         </p>
-        <form action="/add" method="POST">
 
+        <form action="/add" method="POST">
             <label>Page Name <span id="pageError" class="error-message"></span></label>
             <div class="input-wrapper">
                 <input type="text" id="page" name="page" pattern="[a-zA-Z0-9_-]+"

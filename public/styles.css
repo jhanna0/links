@@ -1,36 +1,40 @@
-/* 🎨 Color Variables */
+/* 🎨 Color & Styling Variables */
 :root {
-    --background-gradient: linear-gradient(to right, #6a11cb, #2575fc);
-    --container-bg: #ffffff;
-    --container-shadow: rgba(0, 0, 0, 0.1);
-    --text-color: #333;
-    --heading-color: #222;
+    --background-gradient: linear-gradient(to right, #8e44ad, #3498db);
+    --container-bg: rgba(255, 255, 255, 1);
+    --container-shadow: rgba(0, 0, 0, 0.05);
+    --text-color: #444;
+    --heading-color: #111;
     --border-color: #ddd;
-    --button-bg: #007bff;
-    --button-hover-bg: #0056b3;
+    --input-bg: #ffffff;
+    --input-border: #ccc;
+    --button-bg: linear-gradient(to right, #007bff, #0056b3);
+    --button-hover-bg: linear-gradient(to right, #0056b3, #003f80);
     --secondary-button-bg: #666;
     --secondary-button-hover-bg: #444;
+    --button-radius: 8px;
+    --button-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
     --table-bg: #ffffff;
     --table-border: #ddd;
-    --table-hover: #f8f8f8;
+    --table-hover: #f3f3f3;
+    --table-link: #0068d9;
+    --error-color: #D63B3B;
 }
 
-/* Ensure the body allows full-page scrolling but starts centered */
+/* General Page Styling */
 body {
-    font-family: 'Arial', sans-serif;
+    font-family: 'Inter', sans-serif;
     display: flex;
     flex-direction: column;
     align-items: center;
     justify-content: center;
-    /* Keeps centered initially */
     min-height: 100vh;
-    /* Allows scrolling if needed */
     margin: 0;
     background: var(--background-gradient);
     color: var(--text-color);
 }
 
-/* Center the container initially, but let it stretch when content overflows */
+/* Main Container */
 .container {
     background: var(--container-bg);
     padding: 30px;
@@ -38,235 +42,162 @@ body {
     box-shadow: 0 5px 15px var(--container-shadow);
     width: 90%;
     max-width: 450px;
-    animation: fadeIn 0.8s ease-in-out;
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    /* Keeps content centered inside */
     margin: 40px auto;
-    /* Ensures it remains centered until it needs to grow */
 }
 
-/* Shared Input & Button Styles */
+/* Link Styling */
+a {
+    color: var(--table-link);
+    text-decoration: none;
+    font-weight: bold;
+}
+
+a:hover {
+    text-decoration: underline;
+}
+
+/* Input & Button Styling */
 input,
-button,
 textarea {
     width: 100%;
     padding: 12px;
-    border-radius: 6px;
-    border: 1px solid var(--border-color);
-    background: var(--table-bg);
+    border-radius: var(--button-radius);
+    border: 1px solid var(--input-border);
+    background: var(--input-bg);
     color: var(--text-color);
     font-size: 14px;
+    font-family: 'Inter', sans-serif;
     box-sizing: border-box;
 }
 
-.wide {
-    max-width: 600px;
+input:focus,
+textarea:focus {
+    border-color: var(--button-bg);
+    outline: none;
 }
 
+/* Form Enhancements */
+form label {
+    display: block;
+    font-weight: bold;
+    margin: 10px 0 5px;
+    color: var(--heading-color);
+}
+
+.error-message {
+    color: var(--error-color);
+    font-weight: bold;
+    font-size: 0.8rem;
+}
+
+/* Button Styling */
 button {
-    cursor: pointer;
-    transition: background 0.3s, transform 0.2s;
-}
-
-/* Form Button */
-form button {
-    background-color: var(--button-bg);
+    width: 100%;
+    padding: 12px;
+    border-radius: var(--button-radius);
+    border: none;
+    background: var(--button-bg);
     font-weight: bold;
     color: white;
+    cursor: pointer;
+    box-shadow: var(--button-shadow);
     margin-top: 15px;
-
-    .go-button {
-        margin-top: 0px;
-    }
 }
 
-form button.go-button {
-    margin-top: 0px;
+button:hover {
+    background: var(--button-hover-bg);
 }
 
-form button:hover {
-    background-color: var(--button-hover-bg);
+.home-page p {
+    margin-bottom: 20px;
 }
 
-/* Page-Specific Styles */
-
-/* ===== TABLE PAGE ===== */
-
-body.table-page h1 {
-    text-align: center;
-}
-
-/* Table Styling for the Table Page */
-body.table-page table {
-    width: 100%;
-    border-collapse: separate;
-    /* Allows use of border-radius */
-    border-spacing: 0;
-    background: var(--table-bg);
-    border: 1px solid var(--table-border);
-    border-radius: 8px;
-    overflow: hidden;
-    margin-top: 20px;
-}
-
-body.table-page th,
-body.table-page td {
-    padding: 15px;
-    text-align: left;
-}
-
-body.table-page th {
-    background-color: var(--container-bg);
-    /* Matches the form's background */
-    color: var(--heading-color);
+/* Adjust Go Button */
+.go-button {
+    margin-top: 0;
+    position: absolute;
+    width: 50px;
+    right: 5px;
+    top: 50%;
+    transform: translateY(-50%);
+    padding: 8px 12px;
+    font-size: 14px;
     font-weight: bold;
-    border-bottom: 1px solid var(--table-border);
+    cursor: pointer;
+    border: none;
+    background: var(--button-bg);
+    color: white;
+    border-radius: 5px;
+    display: none;
 }
 
-body.table-page td {
-    border-bottom: 1px solid var(--table-border);
+.go-button:hover {
+    background: var(--button-hover-bg);
 }
 
-body.table-page tbody tr:last-child td {
-    border-bottom: none;
+.page-heading {
+    font-size: 1.6rem;
+    font-weight: bold;
+    color: var(--heading-color);
+    text-align: center;
+    margin-bottom: 5px;
 }
 
-body.table-page tr:hover {
+.subtext {
+    font-size: 0.95rem;
+    color: var(--text-color);
+    text-align: center;
+    margin-bottom: 20px;
+    opacity: 0.85;
+    /* Slightly muted */
+}
+
+/* Table Styles */
+
+table,
+tbody,
+tr,
+th,
+td {
+    display: block;
+    width: 100%;
+}
+
+tr {
+    /* margin-bottom: 10px; */
+    /* Add spacing between stacked rows */
+    border-bottom: 1px solid var(--border-color);
+    padding: 10px 0;
+}
+
+td {
+    text-align: left;
+    padding-top: 8px;
+    position: relative;
+}
+
+/* First column acts as a label for the second */
+td:first-child {
+    font-weight: bold;
+    color: var(--table-link);
+    padding-bottom: 4px;
+}
+
+/* Remove padding-right from first column since it's stacked */
+table td:first-child {
+    padding-right: 0;
+}
+
+table tbody tr:hover {
     background-color: var(--table-hover);
 }
 
-/* Style links inside table cells */
-body.table-page td a {
-    color: var(--button-bg);
-    text-decoration: none;
-    transition: color 0.2s;
-}
-
-body.table-page td a:hover {
-    text-decoration: underline;
-    color: var(--button-hover-bg);
-}
-
-
-/* Form Container (still used on the table page) */
-body.table-page .form-container {
-    background: #f9f9f9;
-    /* Softer, near-white background */
-    padding: 25px;
-    margin-top: 40px;
-    border-radius: 12px;
-    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.08);
-    /* Soft shadow */
-    border: 1px solid #ddd;
-    /* Light gray border for contrast */
-    width: 100%;
-    box-sizing: border-box;
-}
-
-/* ===== HOME PAGE ===== */
-body.home-page {
-    /* (Optional) Page-specific body adjustments */
-}
-
-body.home-page .container {
-    width: 90%;
-    max-width: 450px;
-}
-
-body.home-page h1 {
-    text-align: center;
-    color: var(--heading-color);
-    margin-bottom: 15px;
-}
-
-body.home-page p {
-    text-align: center;
-    margin-bottom: 30px;
-}
-
-form label {
-    display: block;
-    margin-bottom: 20px;
-    font-weight: bold;
-    margin-bottom: 5px;
-    margin-top: 10px;
-    display: flex;
-    align-items: center;
-    /* Aligns label text and error message */
-}
-
-form label input,
-form label textarea {}
-
-.error-message {
-    color: red;
-    font-size: 0.8em;
-    margin-left: 5px;
-    display: none;
-    /* Hide initially */
-}
-
-/* Optional: Fine-Tune for Smaller Screens */
+/* Responsive Adjustments */
 @media (max-width: 600px) {
-    body {
-        display: flex;
-        flex-direction: column;
-    }
-
-    /* Ensure container takes full width without overflow */
     .container {
-        border-radius: 0px;
+        border-radius: 0;
         max-width: 100%;
         margin: 20px auto;
         padding: 20px;
-        box-sizing: border-box;
-        /* Ensures padding doesn't cause overflow */
-    }
-
-    /* body.table-page .container {
-        width: 100%;
-    } */
-
-    /* 📌 Fix Table Layout */
-    body.table-page table {
-        display: block;
-        overflow-x: auto;
-        white-space: nowrap;
-        max-width: 100%;
-        border-radius: 0;
-    }
-
-    body.table-page tbody {
-        width: 100%;
-        display: block;
-    }
-
-    body.table-page th,
-    body.table-page td {
-        word-wrap: break-word;
-        overflow-wrap: break-word;
-        white-space: normal;
-        max-width: 100%;
-    }
-
-    body.table-page td a {
-        word-break: break-word;
-        /* Ensures links don’t overflow */
-        display: inline-block;
-        max-width: 100%;
-    }
-
-    /* Stack table rows for better mobile display */
-    body.table-page tbody tr {
-        display: flex;
-        flex-direction: column;
-        width: 100%;
-        padding-bottom: 10px;
-    }
-
-    body.table-page td {
-        padding: 10px;
     }
 }

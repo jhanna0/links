@@ -193,7 +193,7 @@ document.addEventListener("DOMContentLoaded", () => {
     if (linkInput) linkInput.addEventListener("input", () => {
         if (linkError) linkError.style.display = "none";
     });
-    if (descriptionInput) descriptionInput.addEventListener("input", () => {
-        if (pageError) pageError.style.display = "none";
-    });
+    // if (descriptionInput) descriptionInput.addEventListener("input", () => {
+    //     if (pageError) pageError.style.display = "none";
+    // });
 });
