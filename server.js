@@ -76,7 +76,6 @@ app.get('/', (req, res) => {
 });
 
 // Serve one HTML file dynamically for all pages
-// Serve one HTML file dynamically for all pages
 app.get('/:pagename', (req, res) => {
     const { pagename } = req.params;
     const templatePath = path.join(__dirname, 'pages', 'page.html');
@@ -97,7 +96,8 @@ app.get('/:pagename', (req, res) => {
     html = html.replace(/{{pagename}}/g, pagename);
     html = html.replace(/{{allowAppending}}/g, allowAppending ? "true" : "false");
 
-    // Generate a clickable name instead of displaying full links
+    // Generate a clickable name instead of displaying full links.
+    // We add a tooltip (via the title attribute) to show the full URL.
     let linksHTML = pageData.length
         ? pageData.map(entry => {
             let displayName = entry.link;
@@ -116,7 +116,11 @@ app.get('/:pagename', (req, res) => {
 
             return `
                 <tr>
-                    <td><a href="${entry.link}" target="_blank">${displayName}</a></td>
+                    <td>
+                        <a href="${entry.link}" target="_blank" title="${entry.link}">
+                            ${displayName}
+                        </a>
+                    </td>
                     <td>${entry.description || 'No description'}</td>
                 </tr>`;
         }).join('')
@@ -126,6 +130,7 @@ app.get('/:pagename', (req, res) => {
 
     res.send(html);
 });
+
 
 // Start the server
 app.listen(port, () => console.log(`Server running at http://localhost:${port}`));
