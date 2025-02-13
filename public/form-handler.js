@@ -155,6 +155,7 @@ document.addEventListener("DOMContentLoaded", () => {
                     // Clear form fields
                     if (linkInput) linkInput.value = "";
                     if (descriptionInput) descriptionInput.value = "";
+                    goButton.style.display = "none";
 
                     // If a page name is provided and we aren't on that page, redirect there.
                     if (pageValue && window.location.pathname !== `/${pageValue}`) {

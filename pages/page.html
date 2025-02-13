@@ -10,21 +10,21 @@
 
 <body class="table-page">
     <div class="container wide">
+        <!-- Aesthetic Back Button (Now Inside the Container) -->
+        <!-- <a href="javascript:history.back()" class="back-peel-button">
+        </a> -->
+
         <!-- Top Bar -->
         <div class="top-bar">
-            <h1 class="page-heading" style="margin-bottom: 20px; text-align: left;">{{pagename}}</h1>
             <p id="pageInvalidMessage" class="error-message"
                 style="display: none; text-align: center; font-weight: bold; width: 100%; margin: 0;">
                 This page is invalid.
             </p>
+            <h1 class="page-heading" style="margin-bottom: 20px; text-align: left;">{{pagename}}</h1>
         </div>
 
         <!-- Links Table -->
         <table>
-            <!-- <tr>
-                <th>Link</th>
-                <th>Description</th>
-            </tr> -->
             <tbody>
                 {{links}}
             </tbody>

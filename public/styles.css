@@ -21,6 +21,18 @@
     --error-color: #D63B3B;
 }
 
+html,
+body {
+    overflow-x: hidden;
+    width: 100%;
+}
+
+/* Ensure all elements respect the screen width */
+* {
+    box-sizing: border-box;
+    max-width: 100%;
+}
+
 /* General Page Styling */
 body {
     font-family: 'Inter', sans-serif;
@@ -84,12 +96,6 @@ form label {
     color: var(--heading-color);
 }
 
-.error-message {
-    color: var(--error-color);
-    font-weight: bold;
-    font-size: 0.8rem;
-}
-
 /* Button Styling */
 button {
     width: 100%;
@@ -109,7 +115,7 @@ button:hover {
 }
 
 .home-page p {
-    margin-bottom: 20px;
+    margin-bottom: 25px;
 }
 
 /* Adjust Go Button */
@@ -140,7 +146,15 @@ button:hover {
     font-weight: bold;
     color: var(--heading-color);
     text-align: center;
-    margin-bottom: 5px;
+    margin-bottom: 15px;
+    word-wrap: break-word;
+    /* Ensures long words break */
+    overflow-wrap: break-word;
+    /* Ensures breaking works in modern browsers */
+    white-space: normal;
+    /* Allows text to wrap naturally */
+    max-width: 100%;
+    /* Prevents overflow */
 }
 
 .subtext {
@@ -170,6 +184,10 @@ tr {
     padding: 10px 0;
 }
 
+tr:last-child {
+    border-bottom: none;
+}
+
 td {
     text-align: left;
     padding-top: 8px;
@@ -177,7 +195,7 @@ td {
 }
 
 /* First column acts as a label for the second */
-td:first-child {
+td a {
     font-weight: bold;
     color: var(--table-link);
     padding-bottom: 4px;
@@ -186,18 +204,60 @@ td:first-child {
 /* Remove padding-right from first column since it's stacked */
 table td:first-child {
     padding-right: 0;
+    padding-top: 0;
 }
 
 table tbody tr:hover {
     background-color: var(--table-hover);
 }
 
+.error-message {
+    color: var(--error-color);
+    font-weight: bold;
+    font-size: 0.8rem;
+}
+
+.container.wide {
+    position: relative;
+    /* Ensures the back button is contained */
+}
+
+/* Aesthetic "Peel Back" Button */
+.back-peel-button {
+    position: absolute;
+    top: 0;
+    right: 0;
+    background: var(--button-bg);
+    color: white;
+    font-weight: bold;
+    text-decoration: none;
+    font-size: 0.9rem;
+    padding: 6px 6px;
+    border-radius: 0 12px 0 12px;
+    /* Top-right rounded corner */
+    box-shadow: -2px 2px 6px rgba(0, 0, 0, 0.1);
+}
+
+/* Hover effect */
+.back-peel-button:hover {
+    background: var(--button-hover-bg);
+}
+
+.container.wide {
+    position: relative;
+    /* Ensures the back button is contained */
+}
+
 /* Responsive Adjustments */
 @media (max-width: 600px) {
     .container {
         border-radius: 0;
-        max-width: 100%;
+        width: 100%;
         margin: 20px auto;
         padding: 20px;
+    }
+
+    .back-peel-button {
+        border-radius: 0 0px 0 12px;
     }
 }
