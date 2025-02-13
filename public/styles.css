@@ -106,7 +106,7 @@ body.table-page .top-bar {
     align-items: center; */
     width: 100%;
     /* margin-bottom: 15px; */
-    border-bottom: 1px solid var(--border-color);
+    /* border-bottom: 1px solid var(--border-color); */
     padding-bottom: 10px;
 }
 
@@ -164,7 +164,7 @@ body.table-page td {
 }
 
 body.table-page th {
-    background-color: var(--border-color);
+    /* background-color: var(--border-color); */
     color: var(--text-color);
 }
 

@@ -17,6 +17,12 @@ document.addEventListener("DOMContentLoaded", () => {
         const pageValue = pageNameInput.value.trim();
         const validPattern = /^[a-zA-Z0-9_-]+$/;
 
+        if (pageValue == "") {
+            pageError.style.display = "none";
+            goButton.style.display = "none";
+            return false;
+        }
+
         if (!validPattern.test(pageValue)) {
             if (pageError) {
                 pageError.style.display = "inline";
