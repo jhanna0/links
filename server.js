@@ -14,10 +14,27 @@ app.use(express.json());
 app.use(express.static('public'));
 
 // Handle form submissions
+// Handle form submissions
 app.post('/add', (req, res) => {
-    const { page, link, description = '' } = req.body;
+    let { page, link, description = '' } = req.body;
+
     if (!page || !link) {
         return res.status(400).json({ error: 'Page name and link are required' });
+    }
+
+    // ✅ Ensure inputs are within 1000 characters
+    if (page.length > 1000 || link.length > 1000 || description.length > 1000) {
+        return res.status(400).json({ error: 'Inputs cannot exceed 1000 characters.' });
+    }
+
+    // ✅ Only allow letters, numbers, dashes, and underscores
+    if (!/^[a-zA-Z0-9_-]+$/.test(page)) {
+        return res.status(400).json({ error: 'Invalid page name. Use only letters, numbers, dashes, or underscores.' });
+    }
+
+    // ✅ Ensure link has "https://"
+    if (!/^https?:\/\//i.test(link)) {
+        link = 'https://' + link;
     }
 
     let data = fs.existsSync(dataFile) ? JSON.parse(fs.readFileSync(dataFile, 'utf8')) : {};
@@ -26,7 +43,7 @@ app.post('/add', (req, res) => {
 
     fs.writeFileSync(dataFile, JSON.stringify(data, null, 2));
 
-    res.redirect(`/${page}`);
+    res.status(201).json({ success: true, message: "Page added successfully" });
 });
 
 // Serve the homepage
@@ -50,19 +67,38 @@ app.get('/:pagename', (req, res) => {
 
     html = html.replace(/{{pagename}}/g, pagename);
 
+    // Generate a clickable name instead of displaying full links
     let linksHTML = pageData.length
-        ? pageData.map(entry =>
-            `<tr>
-                <td><a href="${entry.link}" target="_blank">${entry.link}</a></td>
-                <td>${entry.description || 'No description'}</td>
-            </tr>`
-        ).join('')
+        ? pageData.map(entry => {
+            let displayName = entry.link;
+
+            // If it's a YouTube link, display "YouTube"
+            if (entry.link.includes('youtube.com') || entry.link.includes('youtu.be')) {
+                displayName = 'YouTube';
+            }
+            // Otherwise, show the site's domain as the name
+            else {
+                try {
+                    const urlObj = new URL(entry.link);
+                    displayName = urlObj.hostname.replace('www.', '');
+                } catch (error) {
+                    console.error('Invalid URL:', entry.link);
+                }
+            }
+
+            return `
+                <tr>
+                    <td><a href="${entry.link}" target="_blank">${displayName}</a></td>
+                    <td>${entry.description || 'No description'}</td>
+                </tr>`;
+        }).join('')
         : '<tr><td colspan="2">No links added yet.</td></tr>';
 
     html = html.replace(/{{links}}/g, linksHTML);
 
     res.send(html);
 });
+
 
 
 // Start the server

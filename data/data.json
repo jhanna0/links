@@ -40,5 +40,149 @@
       "link": "https://www.google.com/",
       "description": "nothing"
     }
+  ],
+  "google": [
+    {
+      "link": "https://google.com",
+      "description": "validate"
+    },
+    {
+      "link": "https://google",
+      "description": "validate"
+    },
+    {
+      "link": "https://goog",
+      "description": "asdsa"
+    }
+  ],
+  "goo": [
+    {
+      "link": "https://gogole.",
+      "description": "asdas"
+    },
+    {
+      "link": "https://gogole.",
+      "description": "asdas"
+    },
+    {
+      "link": "https://gogolec",
+      "description": "asdas"
+    },
+    {
+      "link": "https://gogolec",
+      "description": "asdas"
+    }
+  ],
+  "soo": [
+    {
+      "link": "https://sadoasd",
+      "description": "asdada"
+    }
+  ],
+  "asdasd": [
+    {
+      "link": "https://asdasd.com",
+      "description": "asdasd"
+    },
+    {
+      "link": "https://asdasd.com",
+      "description": "asdasd"
+    },
+    {
+      "link": "https://asdasda.com",
+      "description": "asdasd"
+    },
+    {
+      "link": "https://asdasda.com",
+      "description": "asdasd"
+    },
+    {
+      "link": "https://asdas.com",
+      "description": "asdasd"
+    },
+    {
+      "link": "https://asdasd.com",
+      "description": "asdas"
+    },
+    {
+      "link": "https://sdass.com",
+      "description": "sdasdas"
+    }
+  ],
+  "ok": [
+    {
+      "link": "https://www.google.com/search?q=manual+url+validation+&sca_esv=4be518e6148afb1c&ei=0IutZ9iyI-7ekPIPs7Ca4A8&ved=0ahUKEwjY2p3V_b-LAxVuL0QIHTOYBvwQ4dUDCBA&uact=5&oq=manual+url+validation+&gs_lp=Egxnd3Mtd2l6LXNlcnAiFm1hbnVhbCB1cmwgdmFsaWRhdGlvbiAyBRAhGKABMgUQIRigATIFECEYoAEyBRAhGKsCMgUQIRirAjIFECEYqwIyBRAhGJ8FMgUQIRifBTIFECEYnwUyBRAhGJ8FSKhRULQpWLJCcAN4AJABAJgBSaAB-QqqAQIyM7gBA8gBAPgBAZgCGaACrwvCAgoQABiwAxjWBBhHwgILEAAYgAQYkQIYigXCAgsQABiABBixAxiDAcICDhAuGIAEGLEDGNEDGMcBwgILEC4YgAQY0QMYxwHCAgUQLhiABMICChAAGIAEGEMYigXCAhAQABiABBixAxhDGIMBGIoFwgIOEC4YgAQYsQMYgwEYigXCAg0QLhiABBixAxhDGIoFwgIIEC4YgAQYsQPCAgsQLhiABBixAxiDAcICCBAAGIAEGLEDwgIOEC4YgAQYxwEYjgUYrwHCAggQABiABBjJA8ICHRAuGIAEGMcBGI4FGK8BGJcFGNwEGN4EGOAE2AEBwgIFEAAYgATCAgcQLhiABBgKwgIQEC4YgAQYxwEYChiOBRivAcICBxAAGIAEGArCAgsQABiABBiGAxiKBcICBRAAGO8FwgIIEAAYgAQYogSYAwCIBgGQBgi6BgYIARABGBSSBwIyNaAHqOEB&sclient=gws-wiz-serp",
+      "description": "asdasd"
+    },
+    {
+      "link": "https://www.youtube.com/watch?v=FK3dav4bA4s",
+      "description": "asdasd"
+    },
+    {
+      "link": "https://www.youtube.com/watch?v=FK3dav4bA4s",
+      "description": "/* 🎨 Color Variables */ :root {     --background-gradient: linear-gradient(to right, #6a11cb, #2575fc);     --container-bg: #ffffff;     --container-shadow: rgba(0, 0, 0, 0.1);     --text-color: #333;     --heading-color: #222;     --border-color: #ddd;     --button-bg: #007bff;     --button-hover-bg: #0056b3;     --secondary-button-bg: #666;     --secondary-button-hover-bg: #444;     --table-bg: #ffffff;     --table-border: #ddd;     --table-hover: #f8f8f8; }  /* Common Styles */ body {     font-family: 'Arial', sans-serif;     display: flex;     flex-direction: column;     align-items: center;     justify-content: center;     height: 100vh;     margin: 0;     background: var(--background-gradient);     color: var(--text-color); }  .container {     background: var(--container-bg);     padding: 30px;     border-radius: 12px;     box-shadow: 0 5px 15px var(--container-shadow);     width: 90%;     max-width: 450px;     animation: fadeIn 0.8s ease-in-out; }  /* Shared Input & Button Styles */ input, button, textarea {     width: 100%;     padding: 12px;     border-radius: 6px;     border: 1px solid var(--border-color);     background: var(--table-bg);     color: var(--text-color);     font-size: 14px;     box-sizing: border-box; }  button {     cursor: pointer;     transition: background 0.3s, transform 0.2s; }  /* Form Button */ form button {     background-color: var(--button-bg);     font-weight: bold;     color: white;     margin-top: 15px;      .go-button {         margin-top: 0px;     } }  form button.go-button {     margin-top: 0px; }  form button:hover {     background-color: var(--button-hover-bg); }  /* Page-Specific Styles */  /* ===== TABLE PAGE ===== */ body.table-page {     /* (Optional) Page-specific body adjustments */ }  body.table-page .container {     width: 90%;     /* Adjusts to nearly full width on mobile */     max-width: 800px;     /* Caps the width at 800px on larger screens */ }  body.table-page .top-bar {     /* display: flex;     justify-content: space-between;     align-items: center; */     width: 100%;     /* margin-bottom: 15px; */     border-bottom: 1px solid var(--border-color);     padding-bottom: 10px; }  body.table-page .top-bar .button {     /* padding: 8px 12px;     font-size: 14px;     font-weight: bold;     border: none;     border-radius: 5px;     white-space: nowrap;     background: var(--secondary-button-bg);     color: white; */ }  body.table-page .top-bar .button:hover {     /* background: var(--secondary-button-hover-bg); */ }  body.table-page .top-bar .nav-buttons {     display: flex;     justify-content: center; }  body.table-page .top-bar .nav-buttons .button {     width: 100px; }  body.table-page h1, body.table-page h2 {     font-size: 30px;     margin-bottom: 20px;     text-align: center;     color: var(--heading-color); }  body.table-page p {     text-align: center; }  /* Table Styling (only for the table page) */ body.table-page table {     width: 100%;     border-collapse: collapse;     /* margin-top: 20px; */     background: var(--table-bg);     border-radius: 8px;     overflow: hidden; }  body.table-page th, body.table-page td {     padding: 15px;     border-bottom: 1px solid var(--table-border);     text-align: left; }  body.table-page th {     background-color: var(--border-color);     color: var(--text-color); }  body.table-page tr:hover {     background-color: var(--table-hover); }  /* Form Container (still used on the table page) */ body.table-page .form-container {     background: #f9f9f9;     /* Softer, near-white background */     padding: 25px;     margin-top: 40px;     border-radius: 12px;     box-shadow: 0 2px 10px rgba(0, 0, 0, 0.08);     /* Soft shadow */     border: 1px solid #ddd;     /* Light gray border for contrast */     width: 100%;     box-sizing: border-box; }  /* ===== HOME PAGE ===== */ body.home-page {     /* (Optional) Page-specific body adjustments */ }  body.home-page .container {     width: 90%;     max-width: 450px; }  body.home-page h1 {     text-align: center;     color: var(--heading-color);     margin-bottom: 15px; }  body.home-page p {     text-align: center;     margin-bottom: 30px; }  form label {     display: block;     margin-bottom: 20px;     font-weight: bold;     margin-bottom: 5px;     margin-top: 10px; }  form label input, form label textarea {}  /* Optional: Fine-Tune for Smaller Screens */ @media (max-width: 600px) {     .container {         border-radius: 0px;         width: 100%;     }      body.table-page .form-container {         border-radius: 0px;     } }"
+    }
+  ],
+  "adasd": [
+    {
+      "link": "https://sadasd.com",
+      "description": "asdasd"
+    },
+    {
+      "link": "https://asdas.com",
+      "description": "sdasd"
+    },
+    {
+      "link": "https://blog.example.com",
+      "description": "asdas"
+    },
+    {
+      "link": "https://blog.example.com/asdjbaijfkwhbqjnfbhaekjsasf.asdasfasfasfas",
+      "description": "safasfsa"
+    },
+    {
+      "link": "https://sadasd.com",
+      "description": "asdasd"
+    }
+  ],
+  "asdasda": [
+    {
+      "link": "https://sadsadsada.com",
+      "description": "asdsada"
+    }
+  ],
+  "sadsad": [
+    {
+      "link": "https://eweasd.com",
+      "description": "sadsad"
+    },
+    {
+      "link": "https://asdsad.com",
+      "description": "sadasd"
+    }
+  ],
+  "sadasd": [
+    {
+      "link": "https://asdasindas.com",
+      "description": "asdasda"
+    },
+    {
+      "link": "https://asdasindas.com",
+      "description": "asdasda"
+    },
+    {
+      "link": "https://asdasindas.com",
+      "description": "asdasda"
+    }
+  ],
+  "zxzsf": [
+    {
+      "link": "https://saasd.com",
+      "description": "asdasf"
+    },
+    {
+      "link": "https://sadasd.com",
+      "description": "asdasdas"
+    }
   ]
 }

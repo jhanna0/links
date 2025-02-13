@@ -15,19 +15,22 @@
     --table-hover: #f8f8f8;
 }
 
-/* Common Styles */
+/* Ensure the body allows full-page scrolling but starts centered */
 body {
     font-family: 'Arial', sans-serif;
     display: flex;
     flex-direction: column;
     align-items: center;
     justify-content: center;
-    height: 100vh;
+    /* Keeps centered initially */
+    min-height: 100vh;
+    /* Allows scrolling if needed */
     margin: 0;
     background: var(--background-gradient);
     color: var(--text-color);
 }
 
+/* Center the container initially, but let it stretch when content overflows */
 .container {
     background: var(--container-bg);
     padding: 30px;
@@ -36,6 +39,12 @@ body {
     width: 90%;
     max-width: 450px;
     animation: fadeIn 0.8s ease-in-out;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    /* Keeps content centered inside */
+    margin: 40px auto;
+    /* Ensures it remains centered until it needs to grow */
 }
 
 /* Shared Input & Button Styles */
@@ -62,6 +71,15 @@ form button {
     background-color: var(--button-bg);
     font-weight: bold;
     color: white;
+    margin-top: 15px;
+
+    .go-button {
+        margin-top: 0px;
+    }
+}
+
+form button.go-button {
+    margin-top: 0px;
 }
 
 form button:hover {
@@ -134,7 +152,7 @@ body.table-page table {
     border-collapse: collapse;
     /* margin-top: 20px; */
     background: var(--table-bg);
-    border-radius: 8px;
+    /* border-radius: 8px; */
     overflow: hidden;
 }
 
@@ -152,6 +170,11 @@ body.table-page th {
 
 body.table-page tr:hover {
     background-color: var(--table-hover);
+}
+
+/* Remove bottom border for the last row */
+body.table-page tbody tr:last-child td {
+    border-bottom: none;
 }
 
 /* Form Container (still used on the table page) */
@@ -194,21 +217,83 @@ form label {
     display: block;
     margin-bottom: 20px;
     font-weight: bold;
+    margin-bottom: 5px;
+    margin-top: 10px;
+    display: flex;
+    align-items: center;
+    /* Aligns label text and error message */
 }
 
 form label input,
-form label textarea {
-    margin-top: 5px;
+form label textarea {}
+
+.error-message {
+    color: red;
+    font-size: 0.8em;
+    margin-left: 5px;
+    display: none;
+    /* Hide initially */
 }
 
 /* Optional: Fine-Tune for Smaller Screens */
 @media (max-width: 600px) {
+    body {
+        display: flex;
+        flex-direction: column;
+    }
+
+    /* Ensure container takes full width without overflow */
     .container {
         border-radius: 0px;
+        max-width: 100%;
+        margin: 20px auto;
+        padding: 20px;
+        box-sizing: border-box;
+        /* Ensures padding doesn't cause overflow */
+    }
+
+    body.table-page .container {
         width: 100%;
     }
 
-    body.table-page .form-container {
-        border-radius: 0px;
+    /* 📌 Fix Table Layout */
+    body.table-page table {
+        display: block;
+        overflow-x: auto;
+        white-space: nowrap;
+        max-width: 100%;
+        border-radius: 0;
+    }
+
+    body.table-page tbody {
+        width: 100%;
+        display: block;
+    }
+
+    body.table-page th,
+    body.table-page td {
+        word-wrap: break-word;
+        overflow-wrap: break-word;
+        white-space: normal;
+        max-width: 100%;
+    }
+
+    body.table-page td a {
+        word-break: break-word;
+        /* Ensures links don’t overflow */
+        display: inline-block;
+        max-width: 100%;
+    }
+
+    /* Stack table rows for better mobile display */
+    body.table-page tbody tr {
+        display: flex;
+        flex-direction: column;
+        width: 100%;
+        padding-bottom: 10px;
+    }
+
+    body.table-page td {
+        padding: 10px;
     }
 }

@@ -6,29 +6,73 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Submit a Page</title>
     <link rel="stylesheet" href="/styles.css" />
+    <style>
+        /* Wrapper to keep the input & button in the same layout */
+        .input-wrapper {
+            position: relative;
+            display: flex;
+            align-items: center;
+            width: 100%;
+        }
+
+        /* Style the input field */
+        .input-wrapper input {
+            flex-grow: 1;
+            padding-right: 50px;
+        }
+
+        /* "Go" Button inside the input */
+        .go-button {
+            position: absolute;
+            width: 50px;
+            right: 5px;
+            top: 50%;
+            transform: translateY(-50%);
+            padding: 8px 12px;
+            font-size: 14px;
+            font-weight: bold;
+            cursor: pointer;
+            border: none;
+            background: var(--button-bg);
+            color: white;
+            border-radius: 5px;
+            display: none;
+            transition: background 0.3s, transform 0.2s;
+        }
+
+        .go-button:hover {
+            background: var(--button-hover-bg);
+        }
+    </style>
 </head>
-<!-- Add a unique class to target the home page -->
 
 <body class="home-page">
     <div class="container">
-        <!-- <h1>Submit a New Page</h1> -->
-        <p>Store links on a shared page. No account needed.</p>
+        <p>
+            Store links on a public page. No account needed.<br>
+            A unique enough name is basically private.
+        </p>
         <form action="/add" method="POST">
-            <label>
-                Page Name
-                <input type="text" name="page" required />
-            </label>
-            <label>
-                Link
-                <input type="url" name="link" required />
-            </label>
-            <label>
-                Description
-                <textarea name="description"></textarea>
-            </label>
+            <label>Page Name</label>
+            <div class="input-wrapper">
+                <input type="text" id="page" name="page" pattern="[a-zA-Z0-9_-]+"
+                    title="Only letters, numbers, dashes, and underscores allowed." maxlength="1000" required />
+                <button type="button" id="goButton" class="go-button">Go</button>
+            </div>
+
+            <label>Link <span id="linkError" class="error-message"></span></label>
+            <div class="input-wrapper">
+                <input type="text" id="link" name="link" maxlength="1000" required />
+            </div>
+
+            <label>Description</label>
+            <textarea name="description" id="description" maxlength="1000"></textarea>
+
             <button type="submit">Submit</button>
         </form>
     </div>
+
+    <script src="/form-handler.js"></script>
 </body>
 
 </html>
