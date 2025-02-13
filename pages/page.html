@@ -8,7 +8,15 @@
     <link rel="stylesheet" href="/styles.css" />
 </head>
 
+
 <body class="table-page">
+
+    <!-- <header class="site-header">
+        <a href="/" class="home-button">Main</a>
+        <a class="home-button share-button" style="cursor: pointer;">Share</a>
+    </header>
+    <div class="header-space"></div> -->
+
     <div class="container wide">
         <!-- Aesthetic Back Button (Now Inside the Container) -->
         <!-- <a href="javascript:history.back()" class="back-peel-button">
@@ -20,7 +28,11 @@
                 style="display: none; text-align: center; font-weight: bold; width: 100%; margin: 0;">
                 This page is invalid.
             </p>
-            <h1 class="page-heading" style="margin-bottom: 20px; text-align: left;">{{pagename}}</h1>
+            <h1 class="page-heading" style="margin-bottom: 20px; text-align: center;">
+                <a class="page-back">
+                    {{pagename}}
+                </a>
+            </h1>
         </div>
 
         <!-- Links Table -->
@@ -47,22 +59,25 @@
         </form>
     </div>
 
+    <script src="/form-handler.js"></script>
     <script>
         document.addEventListener("DOMContentLoaded", () => {
-            // Read `allowAppending` from server-side rendering
-            const allowAppending = "{{allowAppending}}" === "true";
-            const formContainer = document.getElementById("formContainer");
-            const pageInvalidMessage = document.getElementById("pageInvalidMessage");
+            const pageHeading = document.querySelector(".page-back");
 
-            if (!allowAppending) {
-                formContainer.style.pointerEvents = "none";
-                formContainer.style.opacity = 0.75;
-                pageInvalidMessage.style.display = "inline-block"; // Show warning message
+            if (pageHeading) {
+                pageHeading.addEventListener("click", () => {
+                    if (document.referrer.endsWith("/")) {
+                        window.history.back(); // Go back if the referrer was "/"
+                    } else {
+                        window.location.href = "/"; // Otherwise, go to "/"
+                    }
+                });
+
+                // Make it look clickable
+                pageHeading.style.cursor = "pointer";
             }
         });
     </script>
-
-    <script src="/form-handler.js"></script>
 
 </body>
 

@@ -44,6 +44,8 @@ body {
     margin: 0;
     background: var(--background-gradient);
     color: var(--text-color);
+    /* padding-top: 65px; */
+    /* Matches header height */
 }
 
 /* Main Container */
@@ -59,7 +61,6 @@ body {
 
 /* Link Styling */
 a {
-    color: var(--table-link);
     text-decoration: none;
     font-weight: bold;
 }
@@ -248,6 +249,51 @@ table tbody tr:hover {
     /* Ensures the back button is contained */
 }
 
+/* Header Styling */
+.site-header {
+    width: 100%;
+    /* background: black; */
+    /* Matches button gradient */
+    padding: 12px 20px;
+    /* box-shadow: 0 2px 6px var(--container-shadow); */
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    position: fixed;
+    top: 0;
+    left: 0;
+    z-index: 0;
+    height: 45px;
+    /* border-radius: 0 0 var(--button-radius) var(--button-radius); */
+    /* Rounded bottom corners */
+}
+
+/* Home Button in Header */
+.home-button {
+    text-decoration: none;
+    font-size: 1rem;
+    font-weight: 520;
+    color: white;
+}
+
+
+.home-button:hover {
+    /* background: rgba(255, 255, 255, 0.35); */
+}
+
+/* Prevent content from hiding under fixed header */
+.header-space {
+    height: 45px;
+}
+
+/* Responsive Header Adjustments */
+@media (max-width: 600px) {
+    .site-header {
+        /* padding: 10px 15px; */
+    }
+}
+
+
 /* Responsive Adjustments */
 @media (max-width: 600px) {
     .container {
@@ -260,4 +306,9 @@ table tbody tr:hover {
     .back-peel-button {
         border-radius: 0 0px 0 12px;
     }
+
+    .page-heading {
+        font-size: 1.4rem;
+    }
+
 }
