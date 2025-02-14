@@ -283,4 +283,13 @@ table td:first-child {
     .page-heading {
         font-size: 1.4rem;
     }
+
+    a:hover {
+        text-decoration: none;
+    }
+
+    .hover:hover {
+        text-decoration: none;
+    }
+
 }
