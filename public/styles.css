@@ -78,7 +78,7 @@ textarea {
     border: 1px solid var(--input-border);
     background: var(--input-bg);
     color: var(--text-color);
-    font-size: 14px;
+    font-size: 16px;
     font-family: 'Inter', sans-serif;
     box-sizing: border-box;
 }
@@ -109,6 +109,10 @@ button {
     cursor: pointer;
     box-shadow: var(--button-shadow);
     margin-top: 15px;
+}
+
+.btn-submit {
+    font-size: 1rem;
 }
 
 button:hover {
@@ -284,5 +288,4 @@ table td:first-child {
     .page-heading {
         font-size: 1.4rem;
     }
-
 }

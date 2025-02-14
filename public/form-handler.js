@@ -153,6 +153,12 @@ document.addEventListener("DOMContentLoaded", () => {
 
                 const responseData = await response.json();
 
+                if (response.status === 429) {
+                    console.error("Rate limit exceeded:", responseData.error);
+                    alert(responseData.error);
+                    return; // Exit early
+                }
+
                 if (response.ok) {
                     console.log("Submission successful! Clearing form fields...");
 

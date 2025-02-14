@@ -2,6 +2,13 @@ const express = require('express');
 const fs = require('fs');
 const path = require('path');
 const { Pool } = require('pg');
+const rateLimit = require('express-rate-limit');
+
+const apiLimiter = rateLimit({
+    windowMs: 60 * 1000, // 15 minutes
+    max: 5, // limit each IP to 5 requests per windowMs
+    message: "You may only add 5 links a minute."
+});
 
 const app = express();
 const port = 3000; // Hardcoded port
@@ -49,6 +56,7 @@ initDB();
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
 app.use(express.static('public'));
+app.use('/add', apiLimiter);
 
 console.log('✅ Express setup complete.');
 
