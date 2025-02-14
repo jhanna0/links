@@ -1,3 +1,4 @@
+const env = require('dotenv').config();
 const express = require('express');
 const fs = require('fs');
 const path = require('path');
@@ -8,6 +9,9 @@ const app = express();
 const port = 3000; // Hardcoded port
 
 app.set('trust proxy', 1);
+password = env.parsed.PASSWORD
+
+console.log("password: ", password)
 
 const apiLimiter = rateLimit({
     windowMs: 60 * 1000, // 1 minute
@@ -25,7 +29,7 @@ const pool = new Pool({
     user: 'links_user',
     host: 'localhost',
     database: 'links_db',
-    password: 'securepassword',
+    password: password,
     port: 5432
 });
 
