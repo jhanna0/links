@@ -4,7 +4,9 @@ const path = require('path');
 const { Pool } = require('pg');
 const rateLimit = require('express-rate-limit');
 
-// Set trust proxy so the real IP can be used
+const app = express();
+const port = 3000; // Hardcoded port
+
 app.set('trust proxy', 1);
 
 const apiLimiter = rateLimit({
@@ -17,9 +19,6 @@ const apiLimiter = rateLimit({
 });
 
 app.use('/add', apiLimiter);
-
-const app = express();
-const port = 3000; // Hardcoded port
 
 // ✅ Hardcoded PostgreSQL credentials
 const pool = new Pool({
