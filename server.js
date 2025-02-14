@@ -31,44 +31,44 @@ const dailyLimiter = rateLimit({
 
 app.use('/add', minuteLimiter, dailyLimiter);
 
-// // ✅ Hardcoded PostgreSQL credentials
-// const pool = new Pool({
-//     user: 'links_user',
-//     host: 'localhost',
-//     database: 'links_db',
-//     password: env.parsed.PASSWORD,
-//     port: 5432
-// });
+// ✅ Hardcoded PostgreSQL credentials
+const pool = new Pool({
+    user: 'links_user',
+    host: 'localhost',
+    database: 'links_db',
+    password: env.parsed.PASSWORD,
+    port: 5432
+});
 
-// // ✅ Test PostgreSQL Connection
-// pool.connect()
-//     .then(() => {
-//         console.log('✅ Connected to PostgreSQL');
-//     })
-//     .catch(err => {
-//         console.error('❌ PostgreSQL connection error:', err);
-//         process.exit(1);
-//     });
+// ✅ Test PostgreSQL Connection
+pool.connect()
+    .then(() => {
+        console.log('✅ Connected to PostgreSQL');
+    })
+    .catch(err => {
+        console.error('❌ PostgreSQL connection error:', err);
+        process.exit(1);
+    });
 
-// const initDB = async () => {
-//     const createTableQuery = `
-//           CREATE TABLE IF NOT EXISTS links (
-//             id SERIAL PRIMARY KEY,
-//             page TEXT NOT NULL,
-//             link TEXT NOT NULL,
-//             description TEXT,
-//             created_at TIMESTAMPTZ DEFAULT CURRENT_TIMESTAMP
-//           );
-//         `;
-//     try {
-//         await pool.query(createTableQuery);
-//         console.log('Database initialized.');
-//     } catch (err) {
-//         console.error('Error initializing database:', err);
-//     }
-// };
+const initDB = async () => {
+    const createTableQuery = `
+          CREATE TABLE IF NOT EXISTS links (
+            id SERIAL PRIMARY KEY,
+            page TEXT NOT NULL,
+            link TEXT NOT NULL,
+            description TEXT,
+            created_at TIMESTAMPTZ DEFAULT CURRENT_TIMESTAMP
+          );
+        `;
+    try {
+        await pool.query(createTableQuery);
+        console.log('Database initialized.');
+    } catch (err) {
+        console.error('Error initializing database:', err);
+    }
+};
 
-// initDB();
+initDB();
 
 // ✅ Middleware
 app.use(express.urlencoded({ extended: true }));
