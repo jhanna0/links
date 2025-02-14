@@ -3,6 +3,7 @@ const express = require('express');
 const fs = require('fs');
 const path = require('path');
 const { Pool } = require('pg');
+const punycode = require("punycode/");
 const rateLimit = require('express-rate-limit');
 
 const app = express();
@@ -95,29 +96,34 @@ function validatePageName(page) {
 
 function validateLink(link) {
     try {
-        const urlObj = new URL(link);
+        const urlObj = new URL(link); // Just validates URL structure
 
-        // ❌ Reject any non-http(s) protocols
+        // Reject non-http(s) protocols
         if (urlObj.protocol !== "http:" && urlObj.protocol !== "https:") {
             return { valid: false, error: "Only HTTP and HTTPS links are allowed." };
         }
 
-        // ✅ Allow localhost, Unicode domains, subdomains, ports, and IPv4/IPv6
-        const domainPattern = /^(localhost(:\d{1,5})?|[\p{L}0-9-]+(\.[\p{L}0-9-]+)*(\.[a-zA-Z]{2,})?|(\d{1,3}\.){3}\d{1,3}|\[[a-fA-F0-9:]+\])$/u;
+        // Convert Punycode to Unicode (for validation only, not for modifying the link)
+        let decodedHostname = urlObj.hostname.startsWith("xn--")
+            ? punycode.toUnicode(urlObj.hostname)
+            : urlObj.hostname;
 
-        if (!domainPattern.test(urlObj.hostname)) {
+        // Simpler regex to ensure valid domains, IPv4/IPv6, and localhost
+        const domainPattern = /^(localhost(:\d{1,5})?|[\p{L}0-9-]+(\.[\p{L}0-9-]+)+|(\d{1,3}\.){3}\d{1,3}|\[[a-fA-F0-9:]+\])$/u;
+
+        if (!domainPattern.test(decodedHostname)) {
             return { valid: false, error: "Invalid domain format." };
         }
 
-        // ❌ Prevent out-of-range IPs (0-255 only)
-        if (/^(\d{1,3}\.){3}\d{1,3}$/.test(urlObj.hostname)) {
-            const octets = urlObj.hostname.split('.').map(Number);
+        // Prevent out-of-range IPs (ensure valid 0-255 octets)
+        if (/^(\d{1,3}\.){3}\d{1,3}$/.test(decodedHostname)) {
+            const octets = decodedHostname.split('.').map(Number);
             if (octets.some(o => o < 0 || o > 255)) {
                 return { valid: false, error: "Invalid IP address." };
             }
         }
 
-        return { valid: true };
+        return { valid: true }; // Just return validation status, no modifications
     } catch (error) {
         return { valid: false, error: "Invalid URL format." };
     }
@@ -157,7 +163,7 @@ app.post('/add', async (req, res) => {
         link = 'https://' + link;
     }
 
-    // ✅ Validate the link structure
+    // ✅ Validate the link without modifying it
     const linkValidation = validateLink(link);
     if (!linkValidation.valid) {
         return res.status(400).json({ error: linkValidation.error });
@@ -173,11 +179,10 @@ app.post('/add', async (req, res) => {
         `;
         const duplicateResult = await pool.query(duplicateCheckQuery, [page, link, description]);
         if (duplicateResult.rows.length > 0) {
-            // Duplicate found; return success without inserting again.
             return res.status(200).json({ success: true, message: "Entry already exists." });
         }
 
-        // Insert new entry
+        // ✅ Insert the original, unmodified link
         await pool.query(
             'INSERT INTO links (page, link, description) VALUES ($1, $2, $3)',
             [page, link, description]
