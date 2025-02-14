@@ -19,7 +19,6 @@ const pool = new Pool({
 pool.connect()
     .then(() => {
         console.log('✅ Connected to PostgreSQL');
-        app.listen(port, () => console.log(`🚀 Server running on port ${port}`));
     })
     .catch(err => {
         console.error('❌ PostgreSQL connection error:', err);
