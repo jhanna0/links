@@ -128,6 +128,18 @@ button:hover {
     margin-bottom: 25px;
 }
 
+.input-wrapper {
+    position: relative;
+    display: flex;
+    align-items: center;
+    width: 100%;
+}
+
+.input-wrapper input {
+    flex-grow: 1;
+    padding-right: 50px;
+}
+
 /* Adjust Go Button */
 .go-button {
     margin-top: 0;
