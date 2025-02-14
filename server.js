@@ -4,11 +4,19 @@ const path = require('path');
 const { Pool } = require('pg');
 const rateLimit = require('express-rate-limit');
 
+// Set trust proxy so the real IP can be used
+app.set('trust proxy', 1);
+
 const apiLimiter = rateLimit({
-    windowMs: 60 * 1000, // 15 minutes
-    max: 5, // limit each IP to 5 requests per windowMs
-    message: { error: "You may only add 5 links a minute." }
+    windowMs: 60 * 1000, // 1 minute
+    max: 5, // Limit each IP to 5 requests per windowMs
+    message: JSON.stringify({ error: "You may only add 5 links a minute." }),
+    statusCode: 429,
+    headers: true, // Include rate limit headers
+    keyGenerator: (req) => req.ip, // Ensure we're using the real IP
 });
+
+app.use('/add', apiLimiter);
 
 const app = express();
 const port = 3000; // Hardcoded port
