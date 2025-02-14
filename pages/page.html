@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>{{pagename}}</title>
+    <title>Linky - {{pagename}}</title>
     <link rel="stylesheet" href="/styles.css" />
 </head>
 
@@ -43,11 +43,11 @@
 
             <label>Link <span id="linkError" class="error-message"></span></label>
             <div class="input-wrapper">
-                <input type="text" id="link" name="link" maxlength="1000" required />
+                <input type="text" id="link" name="link" maxlength="500" required />
             </div>
 
             <label>Description</label>
-            <input type="text" id="description" name="description" maxlength="1000" />
+            <input type="text" id="description" name="description" maxlength="100" />
 
             <button type="submit">Store</button>
         </form>
@@ -101,7 +101,7 @@
                         shareButton.style.opacity = "0.50";
                         setTimeout(() => {
                             shareButton.style.opacity = "0.85";
-                        }, 2000);
+                        }, 1200);
 
                     } catch (err) {
                         console.error("Clipboard copy failed:", err);

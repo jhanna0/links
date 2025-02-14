@@ -108,8 +108,10 @@ app.get('/:pagename', (req, res) => {
 
     // Generate a clickable name instead of displaying full links.
     // We add a tooltip (via the title attribute) to show the full URL.
-    let linksHTML = pageData.length
-        ? pageData.map(entry => {
+    let linksHTML = "";
+
+    if (pageData.length) {
+        linksHTML = pageData.map(entry => {
             let displayName = entry.link;
 
             // If it's a YouTube link, display "YouTube"
@@ -129,22 +131,32 @@ app.get('/:pagename', (req, res) => {
             const safeDescription = escapeHtml(entry.description || 'No description');
 
             return `
-                <tr>
-                    <td>
-                        <a href="${entry.link}" target="_blank" title="${entry.link}">
-                            ${displayName}
-                        </a>
-                    </td>
-                    <td>${safeDescription}</td>
-                </tr>`;
-        }).join('')
-        : '';
+            <tr>
+                <td>
+                    <a href="${entry.link}" target="_blank" title="${entry.link}">
+                        ${displayName}
+                    </a>
+                </td>
+                <td>${safeDescription}</td>
+            </tr>`;
+        }).join('');
+    } else if (allowAppending) {
+        // Show "No links added yet." message, but only if the page is valid
+        linksHTML = `
+        <tr>
+            <td colspan="2" style="text-align: center;">
+                No links added yet.
+            </td>
+        </tr>`;
+    }
 
+    // Replace {{links}} in HTML template
     html = html.replace(/{{links}}/g, linksHTML);
+
 
     res.send(html);
 });
 
 
 // Start the server
-app.listen(port, () => console.log(`Server running at http://localhost:${port}`));
+app.listen(port, '0.0.0.0', () => console.log(`Server running at http://0.0.0.0:${port}`));

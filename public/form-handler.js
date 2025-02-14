@@ -12,6 +12,7 @@ document.addEventListener("DOMContentLoaded", () => {
      * ✅ Validate Page Name (Only if Page Name Input Exists)
      */
     // let's require # or char "-" is ugly name
+    // max length 100
     function validatePageName() {
         if (!pageNameInput || !goButton) return true; // No page input? Skip validation.
 
@@ -55,6 +56,7 @@ document.addEventListener("DOMContentLoaded", () => {
     /**
      * ✅ Validate Link Input
      */
+    // max length 500
     function validateLink() {
         if (!linkInput) return false;
 
@@ -196,6 +198,8 @@ document.addEventListener("DOMContentLoaded", () => {
     if (linkInput) linkInput.addEventListener("input", () => {
         if (linkError) linkError.style.display = "none";
     });
+
+    // add description validor max length 100
     // if (descriptionInput) descriptionInput.addEventListener("input", () => {
     //     if (pageError) pageError.style.display = "none";
     // });
