@@ -37,7 +37,7 @@
     </header>
     <div class="header-space"></div> -->
 
-    <div class="container">
+    <div class="home-container container hidden">
         <h2 class="page-heading">Stash links on a public page.</h2>
         <p class="subtext">
             A unique enough name can be private.
@@ -111,6 +111,13 @@
                 accessBtn.addEventListener("click", () => {
                     accessContainer.classList.toggle("hidden");
                 });
+            }
+
+
+            const homeContainer = document.querySelector(".home-container");
+
+            if (homeContainer) {
+                homeContainer.classList.remove("hidden");
             }
         });
 
