@@ -57,25 +57,39 @@ document.addEventListener("DOMContentLoaded", () => {
      * ✅ Validate Link Input
      */
     // max length 500
+    // CHECK THIS ON BACKEND- do we need other validation? english only?
     function validateLink() {
         if (!linkInput) return false;
 
         let linkValue = linkInput.value.trim();
 
-        // Auto-add "https://" before validation
+        // Auto-add "https://" if missing
         if (!/^https?:\/\//i.test(linkValue)) {
             linkValue = "https://" + linkValue;
             linkInput.value = linkValue;
         }
 
         try {
-            const urlObj = new URL(linkValue); // Validate the URL structure
+            const urlObj = new URL(linkValue); // Validate structure
 
-            // ✅ Updated regex: Allows localhost, ports, and standard domains
-            const domainPattern = /^(localhost(:\d{1,5})?|[a-zA-Z0-9-]+(\.[a-zA-Z0-9-]+)*\.[a-zA-Z]{2,})$/;
+            // any non-http(s) protocols
+            if (urlObj.protocol !== "http:" && urlObj.protocol !== "https:") {
+                throw new Error("Invalid protocol");
+            }
+
+            // localhost, Unicode domains, subdomains, ports, and IPv4/IPv6
+            const domainPattern = /^(localhost(:\d{1,5})?|[\p{L}0-9-]+(\.[\p{L}0-9-]+)*(\.[a-zA-Z]{2,})?|(\d{1,3}\.){3}\d{1,3}|\[[a-fA-F0-9:]+\])$/u;
 
             if (!domainPattern.test(urlObj.hostname)) {
                 throw new Error("Invalid domain");
+            }
+
+            // out-of-range IPs (0-255 only)
+            if (/^(\d{1,3}\.){3}\d{1,3}$/.test(urlObj.hostname)) {
+                const octets = urlObj.hostname.split('.').map(Number);
+                if (octets.some(o => o < 0 || o > 255)) {
+                    throw new Error("Invalid IP address");
+                }
             }
 
             if (linkError) {

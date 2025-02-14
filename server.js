@@ -93,6 +93,36 @@ function validatePageName(page) {
     return { valid: true };
 }
 
+function validateLink(link) {
+    try {
+        const urlObj = new URL(link);
+
+        // ❌ Reject any non-http(s) protocols
+        if (urlObj.protocol !== "http:" && urlObj.protocol !== "https:") {
+            return { valid: false, error: "Only HTTP and HTTPS links are allowed." };
+        }
+
+        // ✅ Allow localhost, Unicode domains, subdomains, ports, and IPv4/IPv6
+        const domainPattern = /^(localhost(:\d{1,5})?|[\p{L}0-9-]+(\.[\p{L}0-9-]+)*(\.[a-zA-Z]{2,})?|(\d{1,3}\.){3}\d{1,3}|\[[a-fA-F0-9:]+\])$/u;
+
+        if (!domainPattern.test(urlObj.hostname)) {
+            return { valid: false, error: "Invalid domain format." };
+        }
+
+        // ❌ Prevent out-of-range IPs (0-255 only)
+        if (/^(\d{1,3}\.){3}\d{1,3}$/.test(urlObj.hostname)) {
+            const octets = urlObj.hostname.split('.').map(Number);
+            if (octets.some(o => o < 0 || o > 255)) {
+                return { valid: false, error: "Invalid IP address." };
+            }
+        }
+
+        return { valid: true };
+    } catch (error) {
+        return { valid: false, error: "Invalid URL format." };
+    }
+}
+
 function escapeHtml(text) {
     return text
         .replace(/&/g, '&amp;')
@@ -127,14 +157,20 @@ app.post('/add', async (req, res) => {
         link = 'https://' + link;
     }
 
+    // ✅ Validate the link structure
+    const linkValidation = validateLink(link);
+    if (!linkValidation.valid) {
+        return res.status(400).json({ error: linkValidation.error });
+    }
+
     try {
         // Check for duplicate entry
         const duplicateCheckQuery = `
-      SELECT id 
-      FROM links 
-      WHERE page = $1 AND link = $2 AND description = $3
-      LIMIT 1
-    `;
+            SELECT id 
+            FROM links 
+            WHERE page = $1 AND link = $2 AND description = $3
+            LIMIT 1
+        `;
         const duplicateResult = await pool.query(duplicateCheckQuery, [page, link, description]);
         if (duplicateResult.rows.length > 0) {
             // Duplicate found; return success without inserting again.
@@ -152,6 +188,7 @@ app.post('/add', async (req, res) => {
         res.status(500).json({ error: 'Database error' });
     }
 });
+
 
 // Serve the homepage
 app.get('/', (req, res) => {
