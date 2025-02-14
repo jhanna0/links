@@ -101,6 +101,7 @@ function escapeHtml(text) {
 }
 
 // Handle form submissions
+// let's only allow 1000 per page!
 app.post('/add', async (req, res) => {
     let { page, link, description = '' } = req.body;
 
