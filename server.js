@@ -84,7 +84,7 @@ function validatePageName(page) {
         return { valid: false, error: "Page name cannot exceed 100 characters." };
     }
 
-    const validPattern = /^[a-zA-Z0-9\+\-\._!~*'()＆\u00C0-\u1FFF\u2C00-\u2C5F\u0300-\u036F\u0370-\u03FF]+$/u;
+    const validPattern = /^[\p{L}\p{N}\+\-\._!~*'()]+$/u;
 
     if (!validPattern.test(page)) {
         return { valid: false, error: "Invalid page name. Use only letters, numbers, dashes, or underscores." };

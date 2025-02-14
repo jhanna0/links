@@ -17,7 +17,7 @@ document.addEventListener("DOMContentLoaded", () => {
         if (!pageNameInput || !goButton) return true; // No page input? Skip validation.
 
         const pageValue = pageNameInput.value.trim();
-        const validPattern = /^[a-zA-Z0-9\+\-\._!~*'()＆\u00C0-\u1FFF\u2C00-\u2C5F\u0300-\u036F\u0370-\u03FF]+$/u;
+        const validPattern = /^[\p{L}\p{N}\+\-\._!~*'()]+$/u;
 
         if (pageValue == "") {
             pageError.style.display = "none";
