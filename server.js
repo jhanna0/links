@@ -25,6 +25,26 @@ pool.connect()
         process.exit(1);
     });
 
+const initDB = async () => {
+    const createTableQuery = `
+          CREATE TABLE IF NOT EXISTS links (
+            id SERIAL PRIMARY KEY,
+            page TEXT NOT NULL,
+            link TEXT NOT NULL,
+            description TEXT,
+            created_at TIMESTAMPTZ DEFAULT CURRENT_TIMESTAMP
+          );
+        `;
+    try {
+        await pool.query(createTableQuery);
+        console.log('Database initialized.');
+    } catch (err) {
+        console.error('Error initializing database:', err);
+    }
+};
+
+initDB();
+
 // ✅ Middleware
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
