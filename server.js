@@ -11,55 +11,64 @@ const port = 3000; // Hardcoded port
 
 app.set('trust proxy', 1);
 
-const apiLimiter = rateLimit({
+const minuteLimiter = rateLimit({
     windowMs: 60 * 1000, // 1 minute
-    max: 5, // Limit each IP to 5 requests per windowMs
+    max: 5, // Limit each IP to 5 requests per minute
     message: JSON.stringify({ error: "You may only add 5 links a minute." }),
     statusCode: 429,
-    headers: true, // Include rate limit headers
-    keyGenerator: (req) => req.ip, // Ensure we're using the real IP
+    headers: true,
+    keyGenerator: (req) => req.ip,
 });
 
-app.use('/add', apiLimiter);
-
-// ✅ Hardcoded PostgreSQL credentials
-const pool = new Pool({
-    user: 'links_user',
-    host: 'localhost',
-    database: 'links_db',
-    password: env.parsed.PASSWORD,
-    port: 5432
+const dailyLimiter = rateLimit({
+    windowMs: 24 * 60 * 60 * 1000, // 24 hours
+    max: 20, // Limit each IP to 20 requests per day
+    message: JSON.stringify({ error: "You may only add 20 links a day." }),
+    statusCode: 429,
+    headers: true,
+    keyGenerator: (req) => req.ip,
 });
 
-// ✅ Test PostgreSQL Connection
-pool.connect()
-    .then(() => {
-        console.log('✅ Connected to PostgreSQL');
-    })
-    .catch(err => {
-        console.error('❌ PostgreSQL connection error:', err);
-        process.exit(1);
-    });
+app.use('/add', minuteLimiter, dailyLimiter);
 
-const initDB = async () => {
-    const createTableQuery = `
-          CREATE TABLE IF NOT EXISTS links (
-            id SERIAL PRIMARY KEY,
-            page TEXT NOT NULL,
-            link TEXT NOT NULL,
-            description TEXT,
-            created_at TIMESTAMPTZ DEFAULT CURRENT_TIMESTAMP
-          );
-        `;
-    try {
-        await pool.query(createTableQuery);
-        console.log('Database initialized.');
-    } catch (err) {
-        console.error('Error initializing database:', err);
-    }
-};
+// // ✅ Hardcoded PostgreSQL credentials
+// const pool = new Pool({
+//     user: 'links_user',
+//     host: 'localhost',
+//     database: 'links_db',
+//     password: env.parsed.PASSWORD,
+//     port: 5432
+// });
 
-initDB();
+// // ✅ Test PostgreSQL Connection
+// pool.connect()
+//     .then(() => {
+//         console.log('✅ Connected to PostgreSQL');
+//     })
+//     .catch(err => {
+//         console.error('❌ PostgreSQL connection error:', err);
+//         process.exit(1);
+//     });
+
+// const initDB = async () => {
+//     const createTableQuery = `
+//           CREATE TABLE IF NOT EXISTS links (
+//             id SERIAL PRIMARY KEY,
+//             page TEXT NOT NULL,
+//             link TEXT NOT NULL,
+//             description TEXT,
+//             created_at TIMESTAMPTZ DEFAULT CURRENT_TIMESTAMP
+//           );
+//         `;
+//     try {
+//         await pool.query(createTableQuery);
+//         console.log('Database initialized.');
+//     } catch (err) {
+//         console.error('Error initializing database:', err);
+//     }
+// };
+
+// initDB();
 
 // ✅ Middleware
 app.use(express.urlencoded({ extended: true }));
@@ -276,7 +285,7 @@ app.get('/:pagename', async (req, res) => {
         // Show "No links added yet." message, but only if the page is valid
         linksHTML = `
       <tr>
-        <td colspan="2" style="text-align: left;">
+        <td colspan="2" style="text-align: left; color: var(--text-color);">
           No links added yet.
         </td>
       </tr>`;

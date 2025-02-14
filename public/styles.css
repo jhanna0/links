@@ -3,10 +3,11 @@
     --background-gradient: linear-gradient(to right, #8e44ad, #3498db);
     --container-bg: rgba(255, 255, 255, 1);
     --container-shadow: rgba(0, 0, 0, 0.05);
-    --subtext-color: #5f5f5f;
+    --subtext-color: #737373;
     --text-color: #3a3a3a;
     --heading-color: #111;
     --border-color: #ddd;
+    --border-style: 1px solid var(--border-color);
     --input-bg: #ffffff;
     --input-border: #ccc;
     --button-bg: linear-gradient(to right, #007bff, #0056b3);
@@ -207,7 +208,7 @@ td {
 tr {
     /* margin-bottom: 10px; */
     /* Add spacing between stacked rows */
-    border-bottom: 1px solid var(--border-color);
+    border-bottom: var(--border-style);
     padding: 10px 0;
 }
 
@@ -224,7 +225,6 @@ td {
 /* First column acts as a label for the second */
 td a {
     font-weight: bold;
-    color: var(--table-link);
     padding-bottom: 4px;
 }
 
@@ -232,9 +232,8 @@ td a {
 table td:first-child {
     padding-right: 0;
     padding-top: 0;
+    color: var(--table-link);
 }
-
-
 
 .error-message {
     color: var(--error-color);
@@ -242,42 +241,43 @@ table td:first-child {
     font-size: 0.8rem;
 }
 
-/* Header Styling */
-.site-header {
-    width: 100%;
-    /* background: black; */
-    /* Matches button gradient */
-    padding: 12px 20px;
-    /* box-shadow: 0 2px 6px var(--container-shadow); */
+.access-list {
+    list-style: none;
+    padding: 0;
+    text-align: left;
+    margin-bottom: 20px;
+}
+
+.access-list li {
+    padding: 8px 0;
+    font-size: 0.95rem;
+    color: var(--text-color);
     display: flex;
     align-items: center;
-    justify-content: space-between;
-    position: fixed;
-    top: 0;
-    left: 0;
-    z-index: 0;
-    height: 45px;
-    /* border-radius: 0 0 var(--button-radius) var(--button-radius); */
-    /* Rounded bottom corners */
 }
 
-/* Home Button in Header */
-.home-button {
-    text-decoration: none;
+.access-list li strong {
+    color: var(--heading-color);
+}
+
+.btn-upgrade {
+    background: var(--button-bg);
+    border-radius: var(--button-radius);
     font-size: 1rem;
-    font-weight: 520;
+    padding: 12px;
+    font-weight: bold;
     color: white;
+    cursor: pointer;
+    box-shadow: var(--button-shadow);
+    width: 100%;
+    margin-top: 15px;
+    border: none;
 }
 
-
-.home-button:hover {
-    /* background: rgba(255, 255, 255, 0.35); */
+.btn-upgrade:hover {
+    background: var(--button-hover-bg);
 }
 
-/* Prevent content from hiding under fixed header */
-.header-space {
-    height: 45px;
-}
 
 /* Responsive Adjustments */
 @media (max-width: 600px) {

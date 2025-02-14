@@ -61,9 +61,113 @@
 
             <button class="btn-submit" type="submit">Stash</button>
         </form>
+        <p class="subtext hover access-button" style="text-align: center; margin-top: 15px; margin-bottom: 0;">
+            Enhance Access
+        </p>
+    </div>
+
+    <!-- Unlimited Access Section -->
+    <div class="container access hidden">
+        <h2 class="page-heading">Enhance Access</h2>
+        <p class="subtext">
+            $5 for one month.
+        </p>
+
+        <table class="access-table">
+            <tr>
+                <td><strong>API limit</strong></td>
+                <td><strong>3 → 20</strong> add links per minute.</td>
+                <td><strong>20 → 100</strong> add links per day.</td>
+            </tr>
+            <tr>
+                <td><strong>API key</strong></td>
+                <td>Use in the UI or programmatically.</td>
+            </tr>
+            <tr style="border-bottom: var(--table-border);">
+                <td><strong>Private</strong></td>
+                <td>Absolutely no user information is stored.</td>
+            </tr>
+        </table>
+
+        <div style="border-bottom: var(--border-style);">
+            <button class="btn-upgrade" style="margin-bottom: 20px;">Get Key</button>
+        </div>
+
+        <!-- API Key Input Section -->
+        <!-- <label for="apiKey"><strong>Enter API Key</strong></label> -->
+        <div class="input-wrapper" style="margin-top: 20px;">
+            <input type="text" id="apiKey" placeholder="Enter API key">
+            <button id="saveApiKey" class="btn-save">Save</button>
+        </div>
     </div>
 
     <script src="/form-handler.js"></script>
+    <script>
+        document.addEventListener("DOMContentLoaded", () => {
+            const accessContainer = document.querySelector(".access");
+            const accessBtn = document.querySelector(".access-button");
+
+            if (accessBtn && accessContainer) {
+                accessBtn.addEventListener("click", () => {
+                    accessContainer.classList.toggle("hidden");
+                });
+            }
+        });
+
+        document.addEventListener("DOMContentLoaded", () => {
+            const apiKeyInput = document.getElementById("apiKey");
+            const saveButton = document.getElementById("saveApiKey");
+
+            // Load saved API key from local storage (if exists)
+            const savedKey = localStorage.getItem("userApiKey");
+            if (savedKey) {
+                apiKeyInput.value = savedKey;
+            }
+
+            saveButton.addEventListener("click", () => {
+                const key = apiKeyInput.value.trim();
+                if (key) {
+                    localStorage.setItem("userApiKey", key);
+                    alert("API key saved locally.")
+                }
+            });
+        });
+
+
+    </script>
+
+
+
+    <style>
+        .input-wrapper {
+            display: flex;
+            gap: 8px;
+            align-items: center;
+            width: 100%;
+            margin-top: 10px;
+        }
+
+        .btn-save {
+            border-radius: var(--button-radius);
+            border: none;
+            background: var(--button-bg);
+            color: white;
+            font-weight: bold;
+            margin-top: 0;
+            position: absolute;
+            width: 60px;
+            height: auto;
+            right: 0px;
+            top: 50%;
+            transform: translateY(-50%);
+            font-size: 14px;
+            cursor: pointer;
+        }
+
+        .btn-save:hover {
+            background: var(--button-hover-bg);
+        }
+    </style>
 
 </body>
 
