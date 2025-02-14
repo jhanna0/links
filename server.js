@@ -2,13 +2,14 @@ const express = require('express');
 const fs = require('fs');
 const path = require('path');
 const { Pool } = require('pg');
+require('dotenv').config();
 
 const app = express();
 const port = 3000;
 
 // Set up the PostgreSQL pool. Adjust the connection string accordingly.
 const pool = new Pool({
-    connectionString: process.env.DATABASE_URL || 'postgresql://user:password@localhost:5432/mydatabase'
+    connectionString: process.env.DATABASE_URL
 });
 
 // Initialize the database by creating the table if it doesn't exist.
