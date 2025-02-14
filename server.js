@@ -1,25 +1,21 @@
-require('dotenv').config(); // ✅ Load environment variables FIRST
 const express = require('express');
 const fs = require('fs');
 const path = require('path');
 const { Pool } = require('pg');
 
 const app = express();
-const port = process.env.PORT || 3000;
+const port = 3000; // Hardcoded port
 
-// ✅ Ensure DATABASE_URL is correctly set
-if (!process.env.DATABASE_URL) {
-    console.error("❌ DATABASE_URL is not set in environment variables!");
-    process.exit(1);
-}
-
-// ✅ PostgreSQL connection
+// ✅ Hardcoded PostgreSQL credentials
 const pool = new Pool({
-    connectionString: process.env.DATABASE_URL,
-    ssl: process.env.NODE_ENV === 'production' ? { rejectUnauthorized: false } : false,
+    user: 'links_user',
+    host: 'localhost',
+    database: 'links_db',
+    password: 'securepassword',
+    port: 5432
 });
 
-// ✅ Initialize DB only after connection success
+// ✅ Test PostgreSQL Connection
 pool.connect()
     .then(() => {
         console.log('✅ Connected to PostgreSQL');
@@ -30,10 +26,12 @@ pool.connect()
         process.exit(1);
     });
 
-// Middleware
+// ✅ Middleware
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
 app.use(express.static('public'));
+
+console.log('✅ Express setup complete.');
 
 /**
  * ✅ Helper Function: Validate Page Name
