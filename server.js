@@ -2,36 +2,51 @@ const express = require('express');
 const fs = require('fs');
 const path = require('path');
 const { Pool } = require('pg');
-require('dotenv').config();
+require('dotenv').config(); // ✅ Load environment variables
 
 const app = express();
-const port = 3000;
+const port = process.env.PORT || 3000; // ✅ Allow dynamic port assignment
 
-// Set up the PostgreSQL pool. Adjust the connection string accordingly.
+// ✅ Set up the PostgreSQL connection pool
 const pool = new Pool({
-    connectionString: process.env.DATABASE_URL
+    connectionString: process.env.DATABASE_URL,
+    ssl: process.env.NODE_ENV === 'production' ? { rejectUnauthorized: false } : false, // ✅ Required for cloud-hosted databases
 });
 
-// Initialize the database by creating the table if it doesn't exist.
+// ✅ Initialize the database by creating the table if it doesn't exist
 const initDB = async () => {
     const createTableQuery = `
-    CREATE TABLE IF NOT EXISTS links (
-      id SERIAL PRIMARY KEY,
-      page VARCHAR(1000) NOT NULL,
-      link TEXT NOT NULL,
-      description TEXT,
-      created_at DATE DEFAULT CURRENT_DATE
-    );
-  `;
+        CREATE TABLE IF NOT EXISTS links (
+            id SERIAL PRIMARY KEY,
+            page VARCHAR(1000) NOT NULL,
+            link TEXT NOT NULL,
+            description TEXT,
+            created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+        );
+    `;
+
     try {
         await pool.query(createTableQuery);
-        console.log('Database initialized.');
+        console.log('✅ Database initialized.');
     } catch (err) {
-        console.error('Error initializing database:', err);
+        console.error('❌ Error initializing database:', err);
+        process.exit(1); // ✅ Exit if the database connection fails
     }
 };
 
-initDB();
+// ✅ Connect to PostgreSQL before starting the server
+pool.connect()
+    .then(() => {
+        console.log('✅ Connected to PostgreSQL');
+        initDB(); // ✅ Initialize the database only after successful connection
+
+        // ✅ Start the Express server after DB is ready
+        app.listen(port, () => console.log(`🚀 Server running on port ${port}`));
+    })
+    .catch(err => {
+        console.error('❌ PostgreSQL connection error:', err);
+        process.exit(1); // ✅ Exit if the database connection fails
+    });
 
 // Middleware to parse form data
 app.use(express.urlencoded({ extended: true }));
