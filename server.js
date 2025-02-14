@@ -94,6 +94,8 @@ function validatePageName(page) {
     return { valid: true };
 }
 
+// get rid of punycode shit we added and deal with it later
+// could it be actually returning as punycode? check /getpage and postgres
 function validateLink(link) {
     try {
         const urlObj = new URL(link); // Just validates URL structure
@@ -244,8 +246,14 @@ app.get('/:pagename', async (req, res) => {
             } else {
                 try {
                     const urlObj = new URL(entry.link);
-                    displayName = urlObj.hostname.replace('www.', '');
-                    displayName = displayName.replace(/\.[a-zA-Z]{2,}$/, '');
+                    let hostname = urlObj.hostname.replace('www.', '');
+
+                    // 🔥 Decode Punycode if necessary
+                    if (hostname.startsWith("xn--")) {
+                        hostname = punycode.toUnicode(hostname);
+                    }
+
+                    displayName = hostname.replace(/\.[a-zA-Z]{2,}$/, ''); // Strip TLD for display
                 } catch (error) {
                     console.error('Invalid URL:', entry.link);
                 }
