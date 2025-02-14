@@ -201,6 +201,5 @@ app.get('/:pagename', async (req, res) => {
 });
 
 // Start the server
-if (require.main === module) {
-    app.listen(port, '0.0.0.0', () => console.log(`🚀 Server running at http://0.0.0.0:${port}`));
-}
+app.listen(port, '0.0.0.0', () => console.log(`🚀 Server running at http://0.0.0.0:${port}`));
+
