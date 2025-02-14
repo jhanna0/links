@@ -11,8 +11,6 @@ const port = 3000; // Hardcoded port
 app.set('trust proxy', 1);
 password = env.parsed.PASSWORD
 
-console.log("password: ", password)
-
 const apiLimiter = rateLimit({
     windowMs: 60 * 1000, // 1 minute
     max: 5, // Limit each IP to 5 requests per windowMs
@@ -121,8 +119,8 @@ app.post('/add', async (req, res) => {
     }
 
     // ✅ Ensure inputs are within 1000 characters
-    if (link.length > 1000 || description.length > 1000) {
-        return res.status(400).json({ error: 'Inputs cannot exceed 1000 characters.' });
+    if (link.length > 500 || description.length > 100) {
+        return res.status(400).json({ error: 'Link cannot exceed 500 characters, description 100.' });
     }
 
     // ✅ Ensure link has "https://"
