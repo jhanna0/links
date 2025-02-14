@@ -29,6 +29,10 @@ const dailyLimiter = rateLimit({
     keyGenerator: (req) => req.ip,
 });
 
+// ✅ Middleware
+app.use(express.urlencoded({ extended: true }));
+app.use(express.json());
+app.use(express.static('public'));
 app.use('/add', minuteLimiter, dailyLimiter);
 
 // ✅ Hardcoded PostgreSQL credentials
@@ -69,14 +73,6 @@ const initDB = async () => {
 };
 
 initDB();
-
-// ✅ Middleware
-app.use(express.urlencoded({ extended: true }));
-app.use(express.json());
-app.use(express.static('public'));
-app.use('/add', apiLimiter);
-
-console.log('✅ Express setup complete.');
 
 /**
  * ✅ Helper Function: Validate Page Name
