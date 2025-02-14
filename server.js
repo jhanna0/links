@@ -1,10 +1,36 @@
 const express = require('express');
 const fs = require('fs');
 const path = require('path');
+const { Pool } = require('pg');
 
 const app = express();
 const port = 3000;
-const dataFile = path.join(__dirname, 'data/data.json');
+
+// Set up the PostgreSQL pool. Adjust the connection string accordingly.
+const pool = new Pool({
+    connectionString: process.env.DATABASE_URL || 'postgresql://user:password@localhost:5432/mydatabase'
+});
+
+// Initialize the database by creating the table if it doesn't exist.
+const initDB = async () => {
+    const createTableQuery = `
+    CREATE TABLE IF NOT EXISTS links (
+      id SERIAL PRIMARY KEY,
+      page VARCHAR(1000) NOT NULL,
+      link TEXT NOT NULL,
+      description TEXT,
+      created_at DATE DEFAULT CURRENT_DATE
+    );
+  `;
+    try {
+        await pool.query(createTableQuery);
+        console.log('Database initialized.');
+    } catch (err) {
+        console.error('Error initializing database:', err);
+    }
+};
+
+initDB();
 
 // Middleware to parse form data
 app.use(express.urlencoded({ extended: true }));
@@ -31,7 +57,6 @@ function validatePageName(page) {
 
     const validPattern = /^[a-zA-Z0-9_-]+$/;
     if (!validPattern.test(page)) {
-        // this is displaying on link error
         return { valid: false, error: "Invalid page name. Use only letters, numbers, dashes, or underscores." };
     }
 
@@ -48,7 +73,7 @@ function escapeHtml(text) {
 }
 
 // Handle form submissions
-app.post('/add', (req, res) => {
+app.post('/add', async (req, res) => {
     let { page, link, description = '' } = req.body;
 
     if (!page || !link) {
@@ -71,13 +96,30 @@ app.post('/add', (req, res) => {
         link = 'https://' + link;
     }
 
-    let data = fs.existsSync(dataFile) ? JSON.parse(fs.readFileSync(dataFile, 'utf8')) : {};
-    if (!data[page]) data[page] = [];
-    data[page].push({ link, description });
+    try {
+        // Check for duplicate entry
+        const duplicateCheckQuery = `
+      SELECT id 
+      FROM links 
+      WHERE page = $1 AND link = $2 AND description = $3
+      LIMIT 1
+    `;
+        const duplicateResult = await pool.query(duplicateCheckQuery, [page, link, description]);
+        if (duplicateResult.rows.length > 0) {
+            // Duplicate found; return success without inserting again.
+            return res.status(200).json({ success: true, message: "Entry already exists." });
+        }
 
-    fs.writeFileSync(dataFile, JSON.stringify(data, null, 2));
-
-    res.status(201).json({ success: true, message: "Page added successfully" });
+        // Insert new entry
+        await pool.query(
+            'INSERT INTO links (page, link, description) VALUES ($1, $2, $3)',
+            [page, link, description]
+        );
+        res.status(201).json({ success: true, message: "Page added successfully" });
+    } catch (err) {
+        console.error('Database error on insert:', err);
+        res.status(500).json({ error: 'Database error' });
+    }
 });
 
 // Serve the homepage
@@ -86,7 +128,7 @@ app.get('/', (req, res) => {
 });
 
 // Serve one HTML file dynamically for all pages
-app.get('/:pagename', (req, res) => {
+app.get('/:pagename', async (req, res) => {
     const { pagename } = req.params;
     const templatePath = path.join(__dirname, 'pages', 'page.html');
 
@@ -94,12 +136,21 @@ app.get('/:pagename', (req, res) => {
         return res.status(500).send('<h1>500 - Template Not Found</h1>');
     }
 
-    let data = fs.existsSync(dataFile) ? JSON.parse(fs.readFileSync(dataFile, 'utf8')) : {};
-    let pageData = data[pagename] || [];
-
     // ✅ Validate Page Name - Just Block Posting Instead of Crashing
     const pageValidation = validatePageName(pagename);
     const allowAppending = pageValidation.valid; // If invalid, form will be hidden
+
+    let pageData = [];
+    try {
+        const result = await pool.query(
+            'SELECT link, description FROM links WHERE page = $1 ORDER BY created_at ASC',
+            [pagename]
+        );
+        pageData = result.rows;
+    } catch (err) {
+        console.error('Database error on select:', err);
+        return res.status(500).send('<h1>500 - Database Error</h1>');
+    }
 
     let html = fs.readFileSync(templatePath, 'utf8');
 
@@ -131,32 +182,30 @@ app.get('/:pagename', (req, res) => {
             const safeDescription = escapeHtml(entry.description || 'No description');
 
             return `
-            <tr>
-                <td>
-                    <a href="${entry.link}" target="_blank" title="${entry.link}">
-                        ${displayName}
-                    </a>
-                </td>
-                <td>${safeDescription}</td>
-            </tr>`;
+        <tr>
+          <td>
+            <a href="${entry.link}" target="_blank" title="${entry.link}">
+              ${displayName}
+            </a>
+          </td>
+          <td>${safeDescription}</td>
+        </tr>`;
         }).join('');
     } else if (allowAppending) {
         // Show "No links added yet." message, but only if the page is valid
         linksHTML = `
-        <tr>
-            <td colspan="2" style="text-align: center;">
-                No links added yet.
-            </td>
-        </tr>`;
+      <tr>
+        <td colspan="2" style="text-align: left;">
+          No links added yet.
+        </td>
+      </tr>`;
     }
 
     // Replace {{links}} in HTML template
     html = html.replace(/{{links}}/g, linksHTML);
 
-
     res.send(html);
 });
-
 
 // Start the server
 app.listen(port, '0.0.0.0', () => console.log(`Server running at http://0.0.0.0:${port}`));
