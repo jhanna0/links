@@ -7,7 +7,7 @@ const rateLimit = require('express-rate-limit');
 const apiLimiter = rateLimit({
     windowMs: 60 * 1000, // 15 minutes
     max: 5, // limit each IP to 5 requests per windowMs
-    message: "You may only add 5 links a minute."
+    message: { error: "You may only add 5 links a minute." }
 });
 
 const app = express();
