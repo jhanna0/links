@@ -75,7 +75,7 @@ console.log('✅ Express setup complete.');
  * ✅ Helper Function: Validate Page Name
  * - Ensures only A-Z, 0-9, -, _
  * - Prevents blank names
- * - Limits to 1000 characters
+ * - Limits to 100 characters
  * - Returns { valid: boolean, error?: string }
  */
 function validatePageName(page) {
@@ -83,11 +83,12 @@ function validatePageName(page) {
         return { valid: false, error: "Page name is required." };
     }
 
-    if (page.length > 1000) {
-        return { valid: false, error: "Page name cannot exceed 1000 characters." };
+    if (page.length > 100) {
+        return { valid: false, error: "Page name cannot exceed 100 characters." };
     }
 
-    const validPattern = /^[a-zA-Z0-9_-]+$/;
+    const validPattern = /^[a-zA-Z0-9\+\-\._!~*'()＆\u00C0-\u1FFF\u2C00-\u2C5F\u0300-\u036F\u0370-\u03FF]+$/u;
+
     if (!validPattern.test(page)) {
         return { valid: false, error: "Invalid page name. Use only letters, numbers, dashes, or underscores." };
     }
