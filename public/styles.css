@@ -60,6 +60,10 @@ body {
     margin: 40px auto;
 }
 
+.hidden {
+    display: none;
+}
+
 /* Link Styling */
 a {
     text-decoration: none;

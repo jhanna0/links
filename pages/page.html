@@ -11,19 +11,19 @@
 
 </head>
 
-<body class="table-page">
+<body class="table-page hidden">
 
     <div class="container wide">
 
         <!-- Top Bar -->
         <div class="top-bar">
+            <h1 class="page-heading" style="margin-bottom: 20px; text-align: center;">
+                <a class="share hover">{{pagename}}</a>
+            </h1>
             <p id="pageInvalidMessage" class="error-message"
                 style="display: none; text-align: center; font-weight: bold; width: 100%; margin: 0;">
                 This page is invalid.
             </p>
-            <h1 class="page-heading" style="margin-bottom: 20px; text-align: center;">
-                <a class="share hover">{{pagename}}</a>
-            </h1>
             <p class="subtext">
                 Click page name to copy link, or
                 <a href="javascript:void(0);" class="page-back hover" style="color: var(--table-link)">here</a> to go
@@ -62,8 +62,15 @@
             const allowAppending = "{{allowAppending}}" === "true";
             const formContainer = document.getElementById("formContainer");
             const pageInvalidMessage = document.getElementById("pageInvalidMessage");
+            const pageHeading = document.querySelector(".page-heading");
+            const body = document.querySelector("body");
+
+            body.classList.remove("hidden");
 
             if (!allowAppending) {
+                if (pageHeading) {
+                    pageHeading.style.pointerEvents = "none";
+                }
                 formContainer.style.pointerEvents = "none";
                 formContainer.style.opacity = 0.75;
                 pageInvalidMessage.style.display = "inline-block"; // Show warning message
