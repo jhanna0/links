@@ -230,16 +230,6 @@ table td:first-child {
     font-size: 0.8rem;
 }
 
-.container.wide {
-    position: relative;
-    /* Ensures the back button is contained */
-}
-
-.container.wide {
-    position: relative;
-    /* Ensures the back button is contained */
-}
-
 /* Header Styling */
 .site-header {
     width: 100%;

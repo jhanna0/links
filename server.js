@@ -9,7 +9,6 @@ const app = express();
 const port = 3000; // Hardcoded port
 
 app.set('trust proxy', 1);
-password = env.parsed.PASSWORD
 
 const apiLimiter = rateLimit({
     windowMs: 60 * 1000, // 1 minute
@@ -27,7 +26,7 @@ const pool = new Pool({
     user: 'links_user',
     host: 'localhost',
     database: 'links_db',
-    password: password,
+    password: env.parsed.PASSWORD,
     port: 5432
 });
 

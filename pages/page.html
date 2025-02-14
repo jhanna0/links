@@ -11,9 +11,9 @@
 
 </head>
 
-<body class="table-page hidden">
+<body class="table-page">
 
-    <div class="container wide">
+    <div class="container hidden">
 
         <!-- Top Bar -->
         <div class="top-bar">
@@ -39,7 +39,7 @@
         </table>
     </div>
 
-    <div class="container wide" id="formContainer">
+    <div class="container hidden" id="formContainer">
         <form action="/add" method="POST">
             <input type="hidden" id="page" name="page" value="{{pagename}}" />
 
@@ -63,9 +63,10 @@
             const formContainer = document.getElementById("formContainer");
             const pageInvalidMessage = document.getElementById("pageInvalidMessage");
             const pageHeading = document.querySelector(".page-heading");
-            const body = document.querySelector("body");
 
-            body.classList.remove("hidden");
+            document.querySelectorAll('.container').forEach(container => {
+                container.classList.remove("hidden"); // Remove "hidden" from both containers
+            });
 
             if (!allowAppending) {
                 if (pageHeading) {

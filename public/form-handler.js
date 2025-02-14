@@ -28,7 +28,7 @@ document.addEventListener("DOMContentLoaded", () => {
         if (!validPattern.test(pageValue)) {
             if (pageError) {
                 pageError.style.display = "inline";
-                pageError.textContent = "(Invalid Page Name)";
+                pageError.textContent = "(Invalid)";
             }
             goButton.style.display = "none"; // Hide "Go" button for invalid input
             return false;
