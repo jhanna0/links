@@ -48,6 +48,9 @@ document.addEventListener("DOMContentLoaded", () => {
             if (key) {
                 localStorage.setItem("userApiKey", key);
                 alert("API key saved locally.");
+            } else {
+                localStorage.removeItem("userApiKey"); // Remove stored key if blank
+                alert("API key removed.");
             }
         });
     }
@@ -83,12 +86,13 @@ document.addEventListener("DOMContentLoaded", () => {
         let link = linkInput ? linkInput.value.trim() : "";
         const description = descriptionInput ? descriptionInput.value.trim() : "";
 
+        if (page === "") {
+            pageLabel.textContent = originalPageLabel; // Restore default label
+            goButton.classList.add("hidden");
+            return null;
+        }
+
         if (page) {
-            if (page === "") {
-                pageLabel.textContent = originalPageLabel; // Restore default label
-                goButton.classList.add("hidden");
-                return null;
-            }
 
             const page_result = validatePageName(page);
 

@@ -1,4 +1,4 @@
-// commonFormValidator.js
+// request.js
 // This client-side file wraps the shared validators and provides form submission helpers.
 
 /**
@@ -41,22 +41,31 @@ export function attachFormSubmission(form, getFormValues, onSuccess, onFailure) 
         try {
             const { response, responseData } = await submitForm(form, values);
 
-            if (response.status === 429) {
-                console.error("Rate limit exceeded:", responseData.error);
-                alert("Max 5 adds per minute.");
+            if (!response) {
+                console.error("No response from server.");
+                alert("Unable to connect to the server. Please try again later.");
+                return;
             }
-            else if (response.status === 500) {
-                alert(responseData.error);
+
+            if (response.status === 429) {
+                console.error("Rate limit exceeded:", responseData?.error);
+                alert(response.error);
             }
             else if (response.ok) {
                 onSuccess && onSuccess(values, responseData);
-            } else {
-                console.error("Submission failed:", responseData.error);
-                if (responseData.error) {
-                    onFailure && onFailure(responseData.error);
-                } else {
-                    alert("An unknown error occurred. Please try again.");
-                }
+            }
+            else if (response.status === 500) {
+                console.error("Server error:", responseData?.error || "Database failure");
+                alert(responseData?.error || "A server error occurred. Please try again later.");
+            }
+            else if (response.status >= 400 && response.status < 500) {
+                console.error("Validation error:", responseData?.error || "Unknown validation issue");
+                alert(responseData?.error || "Something went wrong. Please check your input.");
+                onFailure && onFailure(responseData?.error);
+            }
+            else {
+                console.error("Unexpected server response:", responseData?.error || "Unknown error");
+                alert(responseData?.error || "An unknown error occurred. Please try again.");
             }
         } catch (error) {
             console.error("Error submitting form:", error);
@@ -64,3 +73,5 @@ export function attachFormSubmission(form, getFormValues, onSuccess, onFailure) 
         }
     });
 }
+
+
