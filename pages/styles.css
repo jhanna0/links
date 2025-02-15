@@ -21,6 +21,7 @@
     --table-hover: #f3f3f3;
     --table-link: #0068d9;
     --error-color: #D63B3B;
+    --outline-color: #0056b3;
 }
 
 html,
@@ -97,8 +98,12 @@ textarea {
 
 input:focus,
 textarea:focus {
-    border-color: var(--button-bg);
+    border-color: var(--outline-color);
     outline: none;
+}
+
+form {
+    padding-top: 10px;
 }
 
 /* Form Enhancements */
@@ -107,6 +112,10 @@ form label {
     font-weight: bold;
     margin: 10px 0 5px;
     color: var(--heading-color);
+}
+
+form label:first-of-type {
+    margin-top: 0;
 }
 
 /* Button Styling */
@@ -123,12 +132,16 @@ button {
     margin-top: 15px;
 }
 
-.btn-submit {
-    font-size: 1rem;
+button:focus-visible {
+    outline: 1px solid black;
 }
 
 button:hover {
     background: var(--button-hover-bg);
+}
+
+.btn-submit {
+    font-size: 1rem;
 }
 
 .home-page p {
@@ -210,9 +223,8 @@ table td:first-child a {
     color: inherit;
 }
 
-.error-message {
+.error {
     color: var(--error-color);
-    font-size: 0.8rem;
 }
 
 .access-list {
