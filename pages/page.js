@@ -71,7 +71,14 @@ document.addEventListener("DOMContentLoaded", () => {
         console.log("Submission successful!", responseData);
         if (linkInput) linkInput.value = "";
         if (descriptionInput) descriptionInput.value = "";
-        updateLinksTable(formValues.page);
+
+        if (formValues.page && window.location.pathname !== `/${formValues.page}`) {
+            window.location.href = `/${formValues.page}`;
+        }
+
+        else {
+            updateLinksTable(formValues.page);
+        }
     }
 
     /**

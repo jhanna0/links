@@ -50,8 +50,14 @@ document.addEventListener("DOMContentLoaded", () => {
     if (accessBtn && accessContainer) {
         accessBtn.addEventListener("click", () => {
             accessContainer.classList.toggle("hidden");
+            if (accessContainer.classList.contains("hidden")) {
+                accessBtn.textContent = "Increase access";
+            } else {
+                accessBtn.textContent = "Decrease access";
+            }
         });
     }
+
     if (homeContainer) {
         homeContainer.classList.remove("hidden");
     }
