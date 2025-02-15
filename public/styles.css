@@ -75,11 +75,15 @@ a:hover {
     text-decoration: underline;
 }
 
+input {
+    height: 40px;
+}
+
 /* Input & Button Styling */
 input,
 textarea {
     width: 100%;
-    padding: 12px;
+    padding: 10px;
     border-radius: var(--button-radius);
     border: 1px solid var(--input-border);
     background: var(--input-bg);
@@ -127,41 +131,6 @@ button:hover {
 
 .home-page p {
     margin-bottom: 25px;
-}
-
-.input-wrapper {
-    position: relative;
-    display: flex;
-    align-items: center;
-    width: 100%;
-}
-
-.input-wrapper input {
-    flex-grow: 1;
-    padding-right: 50px;
-}
-
-/* Adjust Go Button */
-.go-button {
-    margin-top: 0;
-    position: absolute;
-    width: 50px;
-    right: 5px;
-    top: 50%;
-    transform: translateY(-50%);
-    padding: 8px 12px;
-    font-size: 14px;
-    font-weight: bold;
-    cursor: pointer;
-    border: none;
-    background: var(--button-bg);
-    color: white;
-    border-radius: 5px;
-    display: none;
-}
-
-.go-button:hover {
-    background: var(--button-hover-bg);
 }
 
 .page-heading {

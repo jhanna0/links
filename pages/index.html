@@ -48,7 +48,7 @@
             <div class="input-wrapper">
                 <input type="text" id="page" name="page" pattern="[a-zA-Z0-9_-]+"
                     title="Only letters, numbers, dashes, and underscores allowed." maxlength="100" required />
-                <button type="button" id="goButton" class="go-button">Go</button>
+                <button type="button" id="goButton" class="inner-button go-button">Go</button>
             </div>
 
             <label>Link <span id="linkError" class="error-message"></span></label>
@@ -97,7 +97,7 @@
         <!-- <label for="apiKey"><strong>Enter API Key</strong></label> -->
         <div class="input-wrapper" style="margin-top: 20px;">
             <input type="text" id="apiKey" placeholder="Enter API key">
-            <button id="saveApiKey" class="btn-save">Save</button>
+            <button id="saveApiKey" class="inner-button btn-save">Save</button>
         </div>
     </div>
 
@@ -148,30 +148,42 @@
     <style>
         .input-wrapper {
             display: flex;
-            gap: 8px;
             align-items: center;
             width: 100%;
             margin-top: 10px;
+            position: relative;
         }
 
-        .btn-save {
-            border-radius: var(--button-radius);
+        .input-wrapper input {
+            flex-grow: 1;
+        }
+
+        .inner-button {
+            position: absolute;
+            right: 5px;
+            top: 50%;
+            transform: translateY(-50%);
+
+            align-items: center;
+            justify-content: center;
+
+            height: calc(100% - 10px);
+            width: auto;
+            min-width: max-content;
+
+            font-size: 14px;
+            font-weight: bold;
+            cursor: pointer;
             border: none;
             background: var(--button-bg);
             color: white;
-            font-weight: bold;
+            border-radius: var(--button-radius);
+            padding: 0 16px;
+            white-space: nowrap;
             margin-top: 0;
-            position: absolute;
-            width: 60px;
-            height: auto;
-            right: 0px;
-            top: 50%;
-            transform: translateY(-50%);
-            font-size: 14px;
-            cursor: pointer;
         }
 
-        .btn-save:hover {
+        .inner-button:hover {
             background: var(--button-hover-bg);
         }
     </style>

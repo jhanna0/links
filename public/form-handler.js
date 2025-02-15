@@ -1,11 +1,16 @@
 document.addEventListener("DOMContentLoaded", () => {
-    const pageNameInput = document.getElementById("page"); // Page Name Input (optional)
-    const goButton = document.getElementById("goButton"); // "Go" Button (optional)
+    // common
+    const form = document.querySelector("form"); // Form
     const linkInput = document.getElementById("link"); // Link Input
     const descriptionInput = document.getElementById("description"); // Description Input
     const linkError = document.getElementById("linkError"); // Link Error Span (optional)
+
+    // home page
+    const pageNameInput = document.getElementById("page"); // Page Name Input (optional)
+    const goButton = document.getElementById("goButton"); // "Go" Button (optional)
     const pageError = document.getElementById("pageError"); // Page Name Error Span (optional)
-    const form = document.querySelector("form"); // Form
+
+    // only table page
     const linksTable = document.querySelector("table"); // Table Body for Updates (optional)
 
     /**
@@ -22,6 +27,12 @@ document.addEventListener("DOMContentLoaded", () => {
         if (pageValue == "") {
             pageError.style.display = "none";
             goButton.style.display = "none";
+            return false;
+        }
+
+        if (pageValue.length > 100) {
+            pageError.style.display = "inline";
+            pageError.textContent = "(Max 100 char)";
             return false;
         }
 
@@ -149,7 +160,9 @@ document.addEventListener("DOMContentLoaded", () => {
             if (pageNameInput && !validatePageName()) return; // Block if page name invalid
             if (linkInput && !validateLink()) return; // Block if link invalid
 
-            console.log("Submitting with valid Page Name & URL:", pageValue, linkValue);
+            if (descriptionValue.length > 100) {
+                return
+            }
 
             // **Submit Form via Fetch API**
             const formData = new URLSearchParams();
