@@ -61,6 +61,10 @@ body {
     margin: 40px auto;
 }
 
+.container+.container {
+    margin-top: 0px;
+}
+
 .hidden {
     display: none;
 }
@@ -206,7 +210,6 @@ table td:first-child {
 
 .error-message {
     color: var(--error-color);
-    font-weight: bold;
     font-size: 0.8rem;
 }
 
