@@ -46,8 +46,6 @@ body {
     margin: 0;
     background: var(--background-gradient);
     color: var(--text-color);
-    /* padding-top: 65px; */
-    /* Matches header height */
 }
 
 /* Main Container */

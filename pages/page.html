@@ -29,8 +29,8 @@
     <link rel="apple-touch-icon" href="/link.png">
 </head>
 
-
 <body class="table-page">
+    <script type="module" src="/page.js"></script>
 
     <div class="container hidden">
 
@@ -39,10 +39,6 @@
             <h1 class="page-heading">
                 <a class="share hover">{{pagename}}</a>
             </h1>
-            <p id="pageInvalidMessage" class="error-message"
-                style="display: none; text-align: center; font-weight: bold; width: 100%; margin: 0;">
-                This page is invalid.
-            </p>
             <p class="subtext">
                 Click page name to copy link, or
                 <a href="javascript:void(0);" class="page-back hover" style="color: var(--table-link)">here</a> to go
@@ -73,72 +69,6 @@
             <button class="btn-submit" type="submit">Stash</button>
         </form>
     </div>
-
-    <script src="/form-handler.js"></script>
-    <script>
-        document.addEventListener("DOMContentLoaded", () => {
-            // Read `allowAppending` from server-side rendering
-            const allowAppending = "{{allowAppending}}" === "true";
-            const formContainer = document.getElementById("formContainer");
-            const pageInvalidMessage = document.getElementById("pageInvalidMessage");
-            const pageHeading = document.querySelector(".page-heading");
-
-            document.querySelectorAll('.container').forEach(container => {
-                container.classList.remove("hidden"); // Remove "hidden" from both containers
-            });
-
-            if (!allowAppending) {
-                if (pageHeading) {
-                    pageHeading.style.pointerEvents = "none";
-                }
-                formContainer.style.pointerEvents = "none";
-                formContainer.style.opacity = 0.75;
-                pageInvalidMessage.style.display = "inline-block"; // Show warning message
-            }
-        });
-    </script>
-    <script>
-        document.addEventListener("DOMContentLoaded", () => {
-            const pageHeading = document.querySelector(".page-back");
-
-            if (pageHeading) {
-                pageHeading.addEventListener("click", () => {
-                    if (document.referrer.endsWith("/")) {
-                        window.history.back(); // Go back if the referrer was "/"
-                    } else {
-                        window.location.href = "/"; // Otherwise, go to "/"
-                    }
-                });
-
-                // Make it look clickable
-                pageHeading.style.cursor = "pointer";
-            }
-        });
-    </script>
-
-    <script>
-        document.addEventListener("DOMContentLoaded", () => {
-            const shareButton = document.querySelector(".share");
-
-            if (shareButton) {
-                shareButton.addEventListener("click", async () => {
-                    try {
-                        await navigator.clipboard.writeText(window.location.href);
-                        // alert("Page URL copied to clipboard! ✅");
-
-                        // Reduce opacity to 0.75 for 3 seconds
-                        shareButton.style.opacity = "0.50";
-                        setTimeout(() => {
-                            shareButton.style.opacity = "1.0";
-                        }, 1200);
-
-                    } catch (err) {
-                        console.error("Clipboard copy failed:", err);
-                    }
-                });
-            }
-        });
-    </script>
 
 </body>
 

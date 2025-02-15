@@ -1,0 +1,40 @@
+.input-wrapper {
+    display: flex;
+    align-items: center;
+    width: 100%;
+    margin-top: 10px;
+    position: relative;
+}
+
+.input-wrapper input {
+    flex-grow: 1;
+}
+
+.inner-button {
+    position: absolute;
+    right: 5px;
+    top: 50%;
+    transform: translateY(-50%);
+
+    align-items: center;
+    justify-content: center;
+
+    height: calc(100% - 10px);
+    width: auto;
+    min-width: max-content;
+
+    font-size: 14px;
+    font-weight: bold;
+    cursor: pointer;
+    border: none;
+    background: var(--button-bg);
+    color: white;
+    border-radius: var(--button-radius);
+    padding: 0 16px;
+    white-space: nowrap;
+    margin-top: 0;
+}
+
+.inner-button:hover {
+    background: var(--button-hover-bg);
+}

@@ -25,19 +25,16 @@
 
     <!-- Favicon and Styles -->
     <link rel="stylesheet" href="/styles.css" />
+    <link rel="stylesheet" href="/index.css" />
     <link rel="icon" type="image/x-icon" href="/link.png">
     <link rel="apple-touch-icon" href="/link.png">
 </head>
 
 <body class="home-page">
 
-    <!-- <header class="site-header">
-        <a href="/" class="home-button">Main</a>
-        <a class="home-button share-button" style="cursor: pointer;">Share</a>
-    </header>
-    <div class="header-space"></div> -->
+    <script type="module" src="/index.js"></script>
 
-    <div class="home-container container hidden">
+    <div class="home-container container">
         <h2 class="page-heading">Stash links on a public page.</h2>
         <p class="subtext">
             A unique enough name can be private.
@@ -94,99 +91,11 @@
         </div>
 
         <!-- API Key Input Section -->
-        <!-- <label for="apiKey"><strong>Enter API Key</strong></label> -->
         <div class="input-wrapper" style="margin-top: 20px;">
             <input type="text" id="apiKey" placeholder="Enter API key">
             <button id="saveApiKey" class="inner-button btn-save">Save</button>
         </div>
     </div>
-
-    <script src="/form-handler.js"></script>
-    <script>
-        document.addEventListener("DOMContentLoaded", () => {
-            const accessContainer = document.querySelector(".access");
-            const accessBtn = document.querySelector(".access-button");
-
-            if (accessBtn && accessContainer) {
-                accessBtn.addEventListener("click", () => {
-                    accessContainer.classList.toggle("hidden");
-                });
-            }
-
-
-            const homeContainer = document.querySelector(".home-container");
-
-            if (homeContainer) {
-                homeContainer.classList.remove("hidden");
-            }
-        });
-
-        document.addEventListener("DOMContentLoaded", () => {
-            const apiKeyInput = document.getElementById("apiKey");
-            const saveButton = document.getElementById("saveApiKey");
-
-            // Load saved API key from local storage (if exists)
-            const savedKey = localStorage.getItem("userApiKey");
-            if (savedKey) {
-                apiKeyInput.value = savedKey;
-            }
-
-            saveButton.addEventListener("click", () => {
-                const key = apiKeyInput.value.trim();
-                if (key) {
-                    localStorage.setItem("userApiKey", key);
-                    alert("API key saved locally.")
-                }
-            });
-        });
-
-
-    </script>
-
-
-
-    <style>
-        .input-wrapper {
-            display: flex;
-            align-items: center;
-            width: 100%;
-            margin-top: 10px;
-            position: relative;
-        }
-
-        .input-wrapper input {
-            flex-grow: 1;
-        }
-
-        .inner-button {
-            position: absolute;
-            right: 5px;
-            top: 50%;
-            transform: translateY(-50%);
-
-            align-items: center;
-            justify-content: center;
-
-            height: calc(100% - 10px);
-            width: auto;
-            min-width: max-content;
-
-            font-size: 14px;
-            font-weight: bold;
-            cursor: pointer;
-            border: none;
-            background: var(--button-bg);
-            color: white;
-            border-radius: var(--button-radius);
-            padding: 0 16px;
-            white-space: nowrap;
-            margin-top: 0;
-        }
-
-        .inner-button:hover {
-            background: var(--button-hover-bg);
-        }
-    </style>
 
 </body>
 
