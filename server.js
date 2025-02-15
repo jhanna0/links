@@ -37,11 +37,12 @@ app.use('/add', minuteLimiter, dailyLimiter);
 
 // ✅ Hardcoded PostgreSQL credentials
 const pool = new Pool({
-    user: 'links_user',
-    host: 'localhost',
-    database: 'links_db',
+    user: env.parsed.USER,
+    host: env.parsed.HOST,
+    database: env.parsed.DB,
     password: env.parsed.PASSWORD,
-    port: 5432
+    port: env.parsed.PORT,
+    ssl: { rejectUnauthorized: false }
 });
 
 // ✅ Test PostgreSQL Connection
