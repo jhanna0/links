@@ -41,23 +41,24 @@
         </p>
 
         <form action="/add" method="POST">
-            <label>Page Name <span id="pageError" class="error-message"></span></label>
+            <label id="pageLabel">Page Name</label>
             <div class="input-wrapper">
-                <input type="text" id="page" name="page" pattern="[a-zA-Z0-9_-]+"
-                    title="Only letters, numbers, dashes, and underscores allowed." maxlength="100" required />
+                <input type="text" id="page" name="page" title="Only letters, numbers, dashes, and underscores allowed."
+                    maxlength="100" required />
                 <button type="button" id="goButton" class="inner-button go-button hidden">Go</button>
             </div>
 
-            <label>Link <span id="linkError" class="error-message"></span></label>
+            <label id="linkLabel">Link</label>
             <div class="input-wrapper">
                 <input type="text" id="link" name="link" maxlength="500" required />
             </div>
 
-            <label>Description</label>
+            <label id="descriptionLabel">Description</label>
             <textarea name="description" id="description" maxlength="100"></textarea>
 
             <button class="btn-submit" type="submit">Stash</button>
         </form>
+
         <p class="subtext hover access-button" style="text-align: center; margin-top: 15px; margin-bottom: 0;">
             Increase Access
         </p>

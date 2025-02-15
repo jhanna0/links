@@ -1,4 +1,6 @@
 // validator.js
+import { ERROR_MESSAGES } from "./messages.js";
+
 /**
  * Validate a page name.
  * @param {string} page - The page name to validate.
@@ -6,17 +8,14 @@
  */
 export function validatePageName(page) {
     if (!page || typeof page !== "string") {
-        return { valid: false, error: "Page name is required." };
+        return { valid: false, error: ERROR_MESSAGES.PAGE_REQUIRED };
     }
     if (page.length > 100) {
-        return { valid: false, error: "Page name cannot exceed 100 characters." };
+        return { valid: false, error: ERROR_MESSAGES.PAGE_TOO_LONG };
     }
     const validPattern = /^[\p{L}\p{N}\+\-\._!~*'()]+$/u;
     if (!validPattern.test(page)) {
-        return {
-            valid: false,
-            error: "Invalid page name. Use only letters, numbers, dashes, underscores, and certain symbols.",
-        };
+        return { valid: false, error: ERROR_MESSAGES.PAGE_INVALID };
     }
     return { valid: true };
 }
@@ -30,24 +29,23 @@ export function validateLink(link) {
     try {
         const urlObj = new URL(link);
         if (urlObj.protocol !== "http:" && urlObj.protocol !== "https:") {
-            return { valid: false, error: "Only HTTP and HTTPS links are allowed." };
+            return { valid: false, error: ERROR_MESSAGES.LINK_HTTP_ONLY };
         }
-        // Simply use the hostname directly—no punycode conversion here.
         const hostname = urlObj.hostname;
         const domainPattern =
             /^(localhost(:\d{1,5})?|[\p{L}0-9-]+(\.[\p{L}0-9-]+)+|(\d{1,3}\.){3}\d{1,3}|\[[a-fA-F0-9:]+\])$/u;
         if (!domainPattern.test(hostname)) {
-            return { valid: false, error: "Invalid domain format." };
+            return { valid: false, error: ERROR_MESSAGES.LINK_DOMAIN_INVALID };
         }
         if (/^(\d{1,3}\.){3}\d{1,3}$/.test(hostname)) {
             const octets = hostname.split(".").map(Number);
             if (octets.some(octet => octet < 0 || octet > 255)) {
-                return { valid: false, error: "Invalid IP address." };
+                return { valid: false, error: ERROR_MESSAGES.LINK_IP_INVALID };
             }
         }
         return { valid: true };
     } catch (error) {
-        return { valid: false, error: "Invalid URL format." };
+        return { valid: false, error: ERROR_MESSAGES.LINK_INVALID };
     }
 }
 
@@ -58,10 +56,10 @@ export function validateLink(link) {
  */
 export function validateDescription(description) {
     if (!description || typeof description !== "string") {
-        return { valid: false, error: "Description is required." };
+        return { valid: false, error: ERROR_MESSAGES.DESCRIPTION_REQUIRED };
     }
     if (description.length > 100) {
-        return { valid: false, error: "Description cannot exceed 100 characters." };
+        return { valid: false, error: ERROR_MESSAGES.DESCRIPTION_TOO_LONG };
     }
     return { valid: true };
 }
