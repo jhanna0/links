@@ -56,8 +56,7 @@ body.table-page {
     flex-direction: column;
     flex-grow: 1;
     /* Only expands when necessary */
-    min-height: auto;
-    min-height: 20px;
+    min-height: 50px;
     overflow-y: auto;
     /* Enables scrolling only when needed */
 }
@@ -68,13 +67,30 @@ body.table-page {
     border-collapse: collapse;
 }
 
-/* Ensure "no rows" message appears correctly */
-#noRowsMessage,
-#invalidMessage {
+/* Wrapper for empty state messages (Centered) */
+#emptyStateWrapper {
     display: flex;
+    flex-direction: column;
     justify-content: center;
     align-items: center;
+    flex-grow: 1;
+    /* Allow it to expand and fill space */
+    width: 100%;
+    min-height: 100%;
+    /* Ensures full height */
+}
+
+/* Messages styling */
+#noRowsMessage,
+#invalidMessage {
+    display: none;
+    /* Default: Hidden */
     text-align: center;
+}
+
+/* Show the empty state wrapper when there are no rows */
+.empty #emptyStateWrapper {
+    display: flex;
 }
 
 /* The form container stays at its natural height at the bottom */
@@ -108,28 +124,18 @@ body.table-page {
     opacity: 0;
 }
 
+#toggleFormContainer {
+    min-height: 45px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
 
 #toggleFormButton {
-    display: inline-flex;
-    /* Keeps it inline while allowing height */
-    align-items: center;
-    /* Ensures vertical centering */
-    justify-content: center;
-    /* Centers text horizontally */
-    height: 30px !important;
-    /* Force it to be 30px */
-    line-height: 30px !important;
-    /* Ensures text doesn’t affect height */
+    height: fit-content;
     font-size: 14px;
-    /* Keep text readable */
-    cursor: pointer;
-    /* Indicate it's clickable */
     user-select: none;
-    /* Prevent accidental selection */
-    padding: 0 10px;
     margin-bottom: 0;
-    /* Adds spacing without affecting height */
-    /* TEMP: Helps debug the actual height */
 }
 
 table tr:hover {
@@ -140,5 +146,9 @@ table tr:hover {
 @media (max-width: 600px) {
     #mainContent>.container {
         margin-bottom: 20px;
+    }
+
+    #toggleFormContainer {
+        height: 35px;
     }
 }

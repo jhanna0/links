@@ -153,6 +153,7 @@ button:hover {
     font-weight: bold;
     color: var(--heading-color);
     text-align: center;
+    margin-top: 15px;
     margin-bottom: 15px;
     word-wrap: break-word;
     /* Ensures long words break */

@@ -69,31 +69,32 @@ document.addEventListener("DOMContentLoaded", () => {
     function updateTableMessage() {
         let allowed = allowAppending.valid;
         const rowCount = linksTable.querySelectorAll("tr").length;
+        const emptyWrapper = document.getElementById("emptyStateWrapper");
+
         if (rowCount === 0) {
+            emptyWrapper.style.display = "flex"; // Show message container
             if (allowed) {
-                noRowsMessage.style.display = "block";
-                invalidMessage.style.display = "none";
+                noRowsMessage.style.display = "block"; // Show "Be the first to add a link."
+                invalidMessage.style.display = "none"; // Hide "This page is invalid."
             } else {
-                invalidMessage.style.display = "block";
-                noRowsMessage.style.display = "none";
+                invalidMessage.style.display = "block"; // Show "This page is invalid."
+                noRowsMessage.style.display = "none"; // Hide "Be the first to add a link."
             }
         } else {
-            noRowsMessage.style.display = "none";
-            invalidMessage.style.display = "none";
+            emptyWrapper.style.display = "none"; // Hide message container when table has rows
         }
     }
 
+
     async function updateLinksTable(page) {
         if (!page) return;
-
         if (!linksTable) return;
 
         try {
             // Current row count for next page
-            //suseptible to row manipulation if user manually adds rows
             const currentCount = linksTable.querySelectorAll("tr").length;
 
-            // Use the centralized request function
+            // Fetch new rows
             const newHTML = await fetchUpdatedTable(page, currentCount);
             if (!newHTML || !newHTML.trim()) {
                 console.log("No new rows to add.");
@@ -104,8 +105,15 @@ document.addEventListener("DOMContentLoaded", () => {
             if (tbody) {
                 tbody.insertAdjacentHTML("beforeend", newHTML);
                 updateTableMessage();
-            }
 
+                // Scroll to the last row after inserting
+                setTimeout(() => {
+                    const lastRow = tbody.querySelector("tr:last-child");
+                    if (lastRow) {
+                        lastRow.scrollIntoView({ behavior: "smooth", block: "nearest" });
+                    }
+                }, 100); // Small delay ensures rendering before scrolling
+            }
         } catch (error) {
             console.error("Error updating table:", error);
         }

@@ -53,11 +53,13 @@
             <!-- Table Wrapper with scrollable table -->
             <div id="tableWrapper">
                 <div id="tableContainer">
-                    <div id="noRowsMessage" style="display: none;">
-                        No links added yet.
-                    </div>
-                    <div id="invalidMessage" style="display: none;">
-                        This page is invalid.
+                    <div id="emptyStateWrapper" style="display: none;">
+                        <div id="noRowsMessage">
+                            Be the first to add a link.
+                        </div>
+                        <div id="invalidMessage">
+                            This page is invalid.
+                        </div>
                     </div>
                     <table id="pageTable">
                         <tbody>
@@ -66,8 +68,10 @@
                     </table>
                 </div>
             </div>
-            <div class="subtext hover" id="toggleFormButton">
-                Hide Form
+            <div id="toggleFormContainer">
+                <span class="subtext hover" id="toggleFormButton">
+                    Hide Form
+                </span>
             </div>
         </div>
     </div>
