@@ -190,14 +190,17 @@ document.addEventListener("DOMContentLoaded", () => {
     }
 
     toggleButton.addEventListener("click", function () {
-        if (formContainer.style.display === "none") {
-            formContainer.style.display = "block";
+        if (formContainer.classList.contains("hidden")) {
+            formContainer.classList.remove("hidden");
+            formContainer.classList.add("visible");
             toggleButton.textContent = "Hide Form";
         } else {
-            formContainer.style.display = "none";
+            formContainer.classList.remove("visible");
+            formContainer.classList.add("hidden");
             toggleButton.textContent = "Show Form";
         }
     });
+
 });
 
 // scrolling

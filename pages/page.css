@@ -89,9 +89,25 @@ body.table-page {
     margin: 40px auto;
 }
 
-#formContainer {
-    transition: all 0.3s ease-in-out;
+.form-container {
+    max-height: 0;
+    opacity: 0;
+    overflow: hidden;
 }
+
+/* When visible */
+.form-container.visible {
+    max-height: 500px;
+    /* Adjust based on your content */
+    opacity: 1;
+}
+
+/* When hidden */
+.form-container.hidden {
+    max-height: 0;
+    opacity: 0;
+}
+
 
 #toggleFormButton {
     display: inline-flex;
@@ -114,6 +130,11 @@ body.table-page {
     margin-bottom: 0;
     /* Adds spacing without affecting height */
     /* TEMP: Helps debug the actual height */
+}
+
+table tr:hover {
+    background-color: var(--table-hover);
+    cursor: pointer;
 }
 
 @media (max-width: 600px) {
