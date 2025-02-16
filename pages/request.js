@@ -35,7 +35,6 @@ export function attachFormSubmission(form, getFormValues, onSuccess, onFailure) 
     form.addEventListener("submit", async (event) => {
         event.preventDefault();
         const values = getFormValues();
-        console.log("values: ", values);
         if (!values) return; // Abort submission if validation fails.
 
         try {
@@ -74,4 +73,20 @@ export function attachFormSubmission(form, getFormValues, onSuccess, onFailure) 
     });
 }
 
+/**
+ * Fetches the latest table content for a given page.
+ * This function only makes the request; `page.js` will handle the response.
+ *
+ * @param {string} page - The page name used to fetch the updated table.
+ * @returns {Promise<Response>} - The raw fetch response.
+ */
+export async function fetchUpdatedTable(page) {
+    if (!page) return null;
 
+    try {
+        return await fetch(`/${page}`); // Return the raw response for `page.js` to handle
+    } catch (error) {
+        console.error("Error fetching updated links:", error);
+        return null;
+    }
+}

@@ -145,7 +145,6 @@ document.addEventListener("DOMContentLoaded", () => {
      * Clears inputs and redirects if necessary.
      */
     function onSuccess(formValues, responseData) {
-        console.log("Submission successful!", responseData);
         if (linkInput) linkInput.value = "";
         if (descriptionInput) descriptionInput.value = "";
         if (goButton) goButton.style.visibility = "hidden";

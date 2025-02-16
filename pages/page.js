@@ -1,6 +1,6 @@
 // page.js
 import { validatePageName, validateLink, validateDescription } from "/common/validator.mjs";
-import { attachFormSubmission } from "./request.js";
+import { attachFormSubmission, fetchUpdatedTable } from "./request.js";
 
 document.addEventListener("DOMContentLoaded", () => {
     // ======================================================
@@ -63,19 +63,23 @@ document.addEventListener("DOMContentLoaded", () => {
 
     async function updateLinksTable(page) {
         if (!linksTable || !page) return;
+
         try {
-            const response = await fetch(`/${page}`);
-            if (!response.ok) {
+            const response = await fetchUpdatedTable(page);
+            if (!response || !response.ok) {
                 console.error("Failed to fetch updated page data.");
                 return;
             }
+
             const htmlText = await response.text();
             const parser = new DOMParser();
             const doc = parser.parseFromString(htmlText, "text/html");
             const newTableBody = doc.querySelector("table tbody");
+
             if (newTableBody) {
                 linksTable.innerHTML = newTableBody.innerHTML;
-                console.log("Table updated successfully!");
+            } else {
+                console.error("Failed to parse table.");
             }
         } catch (error) {
             console.error("Error fetching updated links:", error);
@@ -83,7 +87,6 @@ document.addEventListener("DOMContentLoaded", () => {
     }
 
     function onSuccess(formValues, responseData) {
-        console.log("Submission successful!", responseData);
         if (linkInput) linkInput.value = "";
         if (descriptionInput) descriptionInput.value = "";
 

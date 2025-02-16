@@ -2,7 +2,7 @@
 :root {
     --background-gradient: linear-gradient(to right, #8e44ad, #3498db);
     --container-bg: rgba(255, 255, 255, 1);
-    --container-shadow: rgba(0, 0, 0, 0.05);
+    --container-shadow: rgba(0, 0, 0, 0.2);
     --subtext-color: #737373;
     --text-color: #3a3a3a;
     --heading-color: #111;
