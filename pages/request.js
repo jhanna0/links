@@ -74,17 +74,24 @@ export function attachFormSubmission(form, getFormValues, onSuccess, onFailure) 
 }
 
 /**
- * Fetches the latest table content for a given page.
- * This function only makes the request; `page.js` will handle the response.
+ * Fetches only new rows as raw HTML.
+ * The response is pre-rendered, so the frontend just inserts it.
  *
  * @param {string} page - The page name used to fetch the updated table.
- * @returns {Promise<Response>} - The raw fetch response.
+ * @param {number} offset - The number of rows the frontend already has.
+ * @returns {Promise<string | null>} - The raw HTML response or null on failure.
  */
-export async function fetchUpdatedTable(page) {
+export async function fetchUpdatedTable(page, offset) {
     if (!page) return null;
 
     try {
-        return await fetch(`/${page}`); // Return the raw response for `page.js` to handle
+        const response = await fetch(`/api/${page}/new?offset=${offset}`);
+        if (!response.ok) {
+            console.error("Failed to fetch updated page data.");
+            return null;
+        }
+
+        return await response.text(); // Return raw HTML for `page.js` to handle
     } catch (error) {
         console.error("Error fetching updated links:", error);
         return null;

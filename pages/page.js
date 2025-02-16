@@ -62,27 +62,28 @@ document.addEventListener("DOMContentLoaded", () => {
     }
 
     async function updateLinksTable(page) {
-        if (!linksTable || !page) return;
+        if (!page) return;
+
+        if (!linksTable) return;
+
+        // Get current row count
+        const currentCount = linksTable.querySelectorAll("tr").length;
 
         try {
-            const response = await fetchUpdatedTable(page);
-            if (!response || !response.ok) {
-                console.error("Failed to fetch updated page data.");
+            // Use the centralized request function
+            const newHTML = await fetchUpdatedTable(page, currentCount);
+            if (!newHTML || !newHTML.trim()) {
+                console.log("No new rows to add.");
                 return;
             }
 
-            const htmlText = await response.text();
-            const parser = new DOMParser();
-            const doc = parser.parseFromString(htmlText, "text/html");
-            const newTableBody = doc.querySelector("table tbody");
-
-            if (newTableBody) {
-                linksTable.innerHTML = newTableBody.innerHTML;
-            } else {
-                console.error("Failed to parse table.");
+            const tbody = document.querySelector("#pageTable tbody");
+            if (tbody) {
+                tbody.insertAdjacentHTML("beforeend", newHTML);
             }
+
         } catch (error) {
-            console.error("Error fetching updated links:", error);
+            console.error("Error updating table:", error);
         }
     }
 

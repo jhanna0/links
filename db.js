@@ -37,7 +37,8 @@ const initDB = async () => {
       page TEXT NOT NULL,
       link TEXT NOT NULL,
       description TEXT,
-      created_at TIMESTAMPTZ DEFAULT CURRENT_TIMESTAMP
+      created_at TIMESTAMPTZ DEFAULT CURRENT_TIMESTAMP,
+      CONSTRAINT unique_page_link_description UNIQUE (page, link, description)
     );
   `;
     try {
