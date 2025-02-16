@@ -187,3 +187,23 @@ document.addEventListener("DOMContentLoaded", () => {
         });
     }
 });
+
+// scrolling
+
+document.addEventListener("wheel", (event) => {
+    const tableContainer = document.getElementById("tableContainer");
+
+    if (!tableContainer) return;
+
+    // Detect horizontal swipe (swipe back/forward gesture)
+    if (Math.abs(event.deltaX) > Math.abs(event.deltaY)) {
+        return; // Ignore and allow the browser to handle it
+    }
+
+    // Redirect only vertical scrolls to the table
+    tableContainer.scrollBy({
+        top: event.deltaY
+    });
+
+    event.preventDefault(); // Prevent body scrolling, but not swipe gestures
+}, { passive: false }); // Allows preventDefault to work

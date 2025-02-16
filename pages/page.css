@@ -1,8 +1,88 @@
-#tableContainer {
-    min-height: 20px;
-    /* adjust as needed */
-}
-
+/* Preserve your invalid message styling */
 #invalidMessage {
     color: var(--error-color);
+}
+
+/* Make the overall page a flex column filling the viewport */
+body.table-page {
+    display: flex;
+    flex-direction: column;
+    height: 100vh;
+    overflow: hidden;
+    align-items: stretch;
+}
+
+/* The main content should only take as much space as needed */
+#mainContent {
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+    flex: 0 1 auto;
+    /* Key fix: only grow if needed */
+}
+
+/* Ensure the inner container in #mainContent sizes dynamically */
+#mainContent>.container {
+    display: flex;
+    flex-direction: column;
+    height: auto;
+    /* Key fix: Let it size naturally */
+    flex: 0 1 auto;
+    /* Prevent forced stretching */
+    min-height: 0;
+    overflow: hidden;
+    width: 100%;
+    margin-bottom: 0;
+}
+
+/* Let the top bar take its natural height */
+.top-bar {
+    flex: 0 0 auto;
+}
+
+/* The table wrapper takes only the space it needs */
+#tableWrapper {
+    display: flex;
+    flex-direction: column;
+    flex-grow: 0;
+    /* Key fix: Never forces extra space */
+    overflow: hidden;
+}
+
+/* Let the table size itself, but scroll when necessary */
+#tableContainer {
+    display: flex;
+    flex-direction: column;
+    flex-grow: 1;
+    /* Only expands when necessary */
+    min-height: auto;
+    min-height: 20px;
+    overflow-y: auto;
+    /* Enables scrolling only when needed */
+}
+
+/* The table should size naturally */
+#pageTable {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+/* Ensure "no rows" message appears correctly */
+#noRowsMessage,
+#invalidMessage {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+}
+
+/* The form container stays at its natural height at the bottom */
+#formContainer {
+    flex: 0 0 auto;
+}
+
+/* Ensure form's container keeps its styling */
+#formContainer .container {
+    padding: 30px;
+    margin: 40px auto;
 }

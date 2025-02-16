@@ -1,3 +1,4 @@
+<!-- page.html -->
 <!DOCTYPE html>
 <html lang="en">
 
@@ -33,36 +34,42 @@
 <body class="table-page">
     <script type="module" src="/page.js"></script>
 
-    <div class="container">
-
-        <!-- Top Bar -->
-        <div class="top-bar">
-            <h1 class="page-heading">
-                <a id="pageNameHeading" class="share hover">{{pagename}}</a>
-            </h1>
-            <p class="subtext">
-                Click page name to copy link, or
-                <a href="javascript:void(0);" id="pageHeadingBack" class="hover"
-                    style="color: var(--table-link)">here</a> to go back.
-            </p>
-        </div>
-
-        <!-- Links Table -->
-        <div id="tableContainer">
-            <div id="noRowsMessage" style="display: none;">
-                No links added yet.
+    <!-- Main content area (top bar & table) -->
+    <div id="mainContent">
+        <div class="container">
+            <!-- Top Bar -->
+            <div class="top-bar">
+                <h1 class="page-heading">
+                    <a id="pageNameHeading" class="share hover">{{pagename}}</a>
+                </h1>
+                <p class="subtext">
+                    Click page name to copy link, or
+                    <a href="javascript:void(0);" id="pageHeadingBack" class="hover" style="color: var(--table-link)">
+                        here
+                    </a>
+                    to go back.
+                </p>
             </div>
-            <div id="invalidMessage" style="display: none;">
-                This page is invalid.
+            <!-- Table Wrapper with scrollable table -->
+            <div id="tableWrapper">
+                <div id="tableContainer">
+                    <div id="noRowsMessage" style="display: none;">
+                        No links added yet.
+                    </div>
+                    <div id="invalidMessage" style="display: none;">
+                        This page is invalid.
+                    </div>
+                    <table id="pageTable">
+                        <tbody>
+                            {{links}}
+                        </tbody>
+                    </table>
+                </div>
             </div>
-            <table id="pageTable">
-                <tbody>
-                    {{links}}
-                </tbody>
-            </table>
         </div>
     </div>
 
+    <!-- Stash Form (always visible at bottom) -->
     <div class="container" id="formContainer">
         <form action="/add" method="POST" id="form">
             <input type="hidden" id="pagePage" name="page" value="{{pagename}}" />
@@ -76,7 +83,7 @@
             <button class="btn-submit" type="submit">Stash</button>
         </form>
     </div>
-
 </body>
+
 
 </html>
