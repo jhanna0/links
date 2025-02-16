@@ -1,0 +1,8 @@
+#tableContainer {
+    min-height: 20px;
+    /* adjust as needed */
+}
+
+#invalidMessage {
+    color: var(--error-color);
+}

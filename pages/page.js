@@ -21,6 +21,9 @@ document.addEventListener("DOMContentLoaded", () => {
     const pageHeadingBack = document.getElementById("pageHeadingBack");
     const shareButton = document.getElementById("pageNameHeading");
 
+    const noRowsMessage = document.getElementById("noRowsMessage");
+    const invalidMessage = document.getElementById("invalidMessage");
+
     // Store original labels text
     const originalLinkLabel = linkLabel ? linkLabel.textContent : "";
     const originalDescriptionLabel = descriptionLabel ? descriptionLabel.textContent : "";
@@ -61,15 +64,33 @@ document.addEventListener("DOMContentLoaded", () => {
         return { page, link, description };
     }
 
+    function updateTableMessage() {
+        let allowed = allowAppending.valid;
+        const rowCount = linksTable.querySelectorAll("tr").length;
+        if (rowCount === 0) {
+            if (allowed) {
+                noRowsMessage.style.display = "block";
+                invalidMessage.style.display = "none";
+            } else {
+                invalidMessage.style.display = "block";
+                noRowsMessage.style.display = "none";
+            }
+        } else {
+            noRowsMessage.style.display = "none";
+            invalidMessage.style.display = "none";
+        }
+    }
+
     async function updateLinksTable(page) {
         if (!page) return;
 
         if (!linksTable) return;
 
-        // Get current row count
-        const currentCount = linksTable.querySelectorAll("tr").length;
-
         try {
+            // Current row count for next page
+            //suseptible to row manipulation if user manually adds rows
+            const currentCount = linksTable.querySelectorAll("tr").length;
+
             // Use the centralized request function
             const newHTML = await fetchUpdatedTable(page, currentCount);
             if (!newHTML || !newHTML.trim()) {
@@ -80,6 +101,7 @@ document.addEventListener("DOMContentLoaded", () => {
             const tbody = document.querySelector("#pageTable tbody");
             if (tbody) {
                 tbody.insertAdjacentHTML("beforeend", newHTML);
+                updateTableMessage();
             }
 
         } catch (error) {
@@ -131,6 +153,7 @@ document.addEventListener("DOMContentLoaded", () => {
     // ======================================================
     const pageNameValue = pageNameInput ? pageNameInput.value.trim() : "";
     const allowAppending = validatePageName(pageNameValue);
+    updateTableMessage();
 
     if (!allowAppending) {
         if (formContainer) {

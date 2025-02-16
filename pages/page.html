@@ -25,6 +25,7 @@
 
     <!-- Favicon and Styles -->
     <link rel="stylesheet" href="/styles.css" />
+    <link rel="stylesheet" href="/page.css" />
     <link rel="icon" type="image/x-icon" href="/link.png">
     <link rel="apple-touch-icon" href="/link.png">
 </head>
@@ -47,11 +48,19 @@
         </div>
 
         <!-- Links Table -->
-        <table id="pageTable">
-            <tbody>
-                {{links}}
-            </tbody>
-        </table>
+        <div id="tableContainer">
+            <div id="noRowsMessage" style="display: none;">
+                No links added yet.
+            </div>
+            <div id="invalidMessage" style="display: none;">
+                This page is invalid.
+            </div>
+            <table id="pageTable">
+                <tbody>
+                    {{links}}
+                </tbody>
+            </table>
+        </div>
     </div>
 
     <div class="container" id="formContainer">

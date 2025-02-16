@@ -109,20 +109,6 @@ router.get('/:pagename', async (req, res) => {
                 <td>${escapeHtml(entry.description || "No description")}</td>
             </tr>
         `).join('');
-    } else if (allowAppending) {
-        linksHTML = `
-            <tr>
-                <td colspan="2" style="text-align: left; color: var(--text-color);">
-                    No links added yet.
-                </td>
-            </tr>`;
-    } else {
-        linksHTML = `
-            <tr>
-                <td colspan="2" style="text-align: left; color: var(--error-color);">
-                    This page is invalid.
-                </td>
-            </tr>`;
     }
 
     html = html.replace(/{{links}}/g, linksHTML);
@@ -161,7 +147,7 @@ router.get('/api/:pagename/new', async (req, res) => {
         res.send(linksHTML);
     } catch (err) {
         console.error('Database error:', err);
-        res.status(500).send("<tr><td colspan='2'>Database error.</td></tr>");
+        res.status(500).json({ error: 'Database error' });
     }
 });
 
