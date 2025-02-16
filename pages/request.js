@@ -58,9 +58,10 @@ export function attachFormSubmission(form, getFormValues, onSuccess, onFailure) 
                 alert(responseData?.error || "A server error occurred. Please try again later.");
             }
             else if (response.status >= 400 && response.status < 500) {
-                console.error("Validation error:", responseData?.error || "Unknown validation issue");
-                alert(responseData?.error || "Something went wrong. Please check your input.");
-                onFailure && onFailure(responseData?.error);
+                const errorMsg = responseData?.error || "Unknown validation issue";
+                console.error("Validation error:", errorMsg);
+                alert(errorMsg);
+                onFailure && onFailure(errorMsg);
             }
             else {
                 console.error("Unexpected server response:", responseData?.error || "Unknown error");

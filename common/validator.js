@@ -55,9 +55,6 @@ export function validateLink(link) {
  * @returns {{ valid: boolean, error?: string }}
  */
 export function validateDescription(description) {
-    if (!description || typeof description !== "string") {
-        return { valid: false, error: ERROR_MESSAGES.DESCRIPTION_REQUIRED };
-    }
     if (description.length > 100) {
         return { valid: false, error: ERROR_MESSAGES.DESCRIPTION_TOO_LONG };
     }
