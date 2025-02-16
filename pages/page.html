@@ -32,44 +32,43 @@
 <body class="table-page">
     <script type="module" src="/page.js"></script>
 
-    <div class="container hidden">
+    <div class="container">
 
         <!-- Top Bar -->
         <div class="top-bar">
             <h1 class="page-heading">
-                <a class="share hover">{{pagename}}</a>
+                <a id="pageNameHeading" class="share hover">{{pagename}}</a>
             </h1>
             <p class="subtext">
                 Click page name to copy link, or
-                <a href="javascript:void(0);" class="page-back hover" style="color: var(--table-link)">here</a> to go
-                back.
+                <a href="javascript:void(0);" id="pageHeadingBack" class="hover"
+                    style="color: var(--table-link)">here</a> to go back.
             </p>
         </div>
 
         <!-- Links Table -->
-        <table>
+        <table id="pageTable">
             <tbody>
                 {{links}}
             </tbody>
         </table>
     </div>
 
-    <div class="container hidden" id="formContainer">
-        <form action="/add" method="POST">
-            <input type="hidden" id="page" name="page" value="{{pagename}}" />
+    <div class="container" id="formContainer">
+        <form action="/add" method="POST" id="form">
+            <input type="hidden" id="pagePage" name="page" value="{{pagename}}" />
 
-            <label>Link <span id="linkError" class="error-message"></span></label>
-            <div class="input-wrapper">
-                <input type="text" id="link" name="link" maxlength="500" required />
-            </div>
+            <label for="linkPage" id="linkLabel">Link</label>
+            <input type="text" id="linkPage" name="link" maxlength="500" required />
 
-            <label>Description</label>
-            <input type="text" id="description" name="description" maxlength="100" />
+            <label for="descriptionPage" id="descriptionLabel">Description</label>
+            <input type="text" id="descriptionPage" name="description" maxlength="100" />
 
             <button class="btn-submit" type="submit">Stash</button>
         </form>
     </div>
 
 </body>
+
 
 </html>
