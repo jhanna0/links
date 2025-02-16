@@ -38,7 +38,9 @@
         <h2 class="page-heading">Stash links on a public page.</h2>
         <p class="subtext">
             A unique enough name can be private.
+            <span id="infoButton" class="info-button">Info</span>
         </p>
+
 
         <form action="/add" method="POST">
             <label id="pageLabel">Page Name</label>
@@ -57,48 +59,86 @@
             <button class="btn-submit" type="submit">Stash</button>
         </form>
 
-        <p class="subtext hover access-button" style="text-align: center; margin-top: 15px; margin-bottom: 0;">
+        <p id="accessButton" class="subtext hover access-button"
+            style="text-align: center; margin-top: 15px; margin-bottom: 0;">
             Increase Access
         </p>
     </div>
 
     <!-- Unlimited Access Section -->
-    <div class="container access hidden">
-        <h2 class="page-heading">Increase Access</h2>
-        <p class="subtext">
-            $5 for one month.
-        </p>
+    <!-- Access Modal -->
+    <div id="accessModal" class="modal hidden">
+        <div class="modal-content container">
+            <span class="close-button">&times;</span>
+            <h2 class="page-heading">Increase Access</h2>
+            <p class="subtext">$5 for one month.</p>
 
-        <table class="access-table">
-            <tr>
-                <td><strong>API Limit</strong></td>
-                <td><strong>3 → 20</strong> add links per minute.</td>
-                <td><strong>20 → 100</strong> add links per day.</td>
-            </tr>
-            <tr>
-                <td><strong>API Key</strong></td>
-                <td>Use in the UI or programmatically.</td>
-            </tr>
-            <tr>
-                <td><strong>Anonymous</strong></td>
-                <td>Absolutely no user information is stored.</td>
-            </tr>
-            <tr>
-                <td><strong>Account Free</strong></td>
-                <td>No sign up needed- just attach API key to use.</td>
-            </tr>
-        </table>
+            <table class="access-table">
+                <tr>
+                    <td><strong>API Limit</strong></td>
+                    <td><strong>3 → 20</strong> add links per minute.</td>
+                    <td><strong>20 → 100</strong> add links per day.</td>
+                </tr>
+                <tr>
+                    <td><strong>API Key</strong></td>
+                    <td>Use in the UI or programmatically.</td>
+                </tr>
+                <tr>
+                    <td><strong>Anonymous</strong></td>
+                    <td>Absolutely no user information is stored.</td>
+                </tr>
+                <tr>
+                    <td><strong>Account Free</strong></td>
+                    <td>No sign-up needed - just attach API key to use.</td>
+                </tr>
+            </table>
 
-        <div style="border-bottom: var(--border-style);">
-            <button class="btn-upgrade" style="margin-bottom: 20px;">Get Key</button>
-        </div>
+            <div style="border-bottom: var(--border-style); padding-bottom: 10px;">
+                <button class="btn-upgrade" style="margin-bottom: 20px;">Get Key</button>
+            </div>
 
-        <!-- API Key Input Section -->
-        <div class="input-wrapper" style="margin-top: 20px;">
-            <input type="text" id="apiKey" placeholder="Enter API key">
-            <button id="saveApiKey" class="inner-button btn-save">Save</button>
+            <!-- API Key Input Section -->
+            <div class="input-wrapper" style="margin-top: 20px;">
+                <input type="text" id="apiKey" placeholder="Enter API key">
+                <button id="saveApiKey" class="inner-button btn-save">Save</button>
+            </div>
         </div>
     </div>
+
+    <!-- Info Modal -->
+    <div id="infoModal" class="modal hidden">
+        <div class="modal-content container">
+            <span class="close-button">&times;</span>
+            <h2 class="page-heading">How It Works</h2>
+
+            <table class="info-table">
+                <tr>
+                    <td><strong>Pages Store Links</strong></td>
+                    <td>Each page is a list of links. Anyone can view or add to it.</td>
+                </tr>
+                <tr>
+                    <td><strong>Always Public</strong></td>
+                    <td>There are no private pages—anyone with the name has full access.</td>
+                </tr>
+                <tr>
+                    <td><strong>Links Are Permanent</strong></td>
+                    <td>Once added, a link cannot be removed.</td>
+                </tr>
+                <tr>
+                    <td><strong>No Directory</strong></td>
+                    <td>Pages can only be found by guessing or knowing the name.</td>
+                </tr>
+                <tr>
+                    <td><strong>Obscurity = Privacy</strong></td>
+                    <td>A common name (e.g., <code>/groupchatvideos</code>) is easy to guess. A random one (e.g.,
+                        <code>/b7Qx9fL2</code>) is nearly impossible to find.
+                    </td>
+                </tr>
+            </table>
+
+        </div>
+    </div>
+
 
 </body>
 

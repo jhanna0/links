@@ -8,9 +8,9 @@ import punycode from 'punycode';
 export function parseDisplayName(url) {
     try {
         // Handle special cases like YouTube links
-        if (url.includes("youtube.com") || url.includes("youtu.be")) {
-            return "YouTube";
-        }
+        // if (url.includes("youtube.com") || url.includes("youtu.be")) {
+        //     return "YouTube";
+        // }
 
         // Extract hostname
         const urlObj = new URL(url);
@@ -22,7 +22,8 @@ export function parseDisplayName(url) {
         }
 
         // Remove TLD (.com, .org, etc.)
-        return hostname.replace(/\.[a-zA-Z]{2,}$/, "");
+        // return hostname.replace(/\.[a-zA-Z]{2,}$/, "");
+        return hostname
 
     } catch (error) {
         console.error("Invalid URL:", url);

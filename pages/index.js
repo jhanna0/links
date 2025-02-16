@@ -222,4 +222,24 @@ document.addEventListener("DOMContentLoaded", () => {
             }
         });
     }
+
+    document.getElementById('infoButton').addEventListener('click', function () {
+        document.getElementById('infoModal').style.display = 'flex';
+    });
+
+    document.getElementById('accessButton').addEventListener('click', function () {
+        document.getElementById('accessModal').style.display = 'flex';
+    });
+
+    document.querySelectorAll('.close-button').forEach(button => {
+        button.addEventListener('click', function () {
+            this.parentElement.parentElement.style.display = 'none';
+        });
+    });
+
+    window.addEventListener('click', function (event) {
+        if (event.target.classList.contains('modal')) {
+            event.target.style.display = 'none';
+        }
+    });
 });

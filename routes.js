@@ -137,7 +137,6 @@ router.get('/api/:pagename/new', async (req, res) => {
     }
 });
 
-
 function generateTableRows(entries) {
     return entries.map(entry => `
         <tr onclick="window.open('${entry.link}', '_blank')" style="cursor: pointer;">
