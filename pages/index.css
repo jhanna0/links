@@ -54,6 +54,19 @@
     /* Centers horizontally */
 }
 
+/* Allow scrolling inside modal content */
+.modal-content {
+    max-height: 100vh;
+    /* Ensure it fits in the viewport */
+    overflow-y: auto;
+    /* Enables scrolling inside */
+}
+
+/* Prevent body scrolling when modal is open */
+body.modal-open {
+    overflow: hidden;
+}
+
 .close-button {
     float: right;
     font-size: 20px;
