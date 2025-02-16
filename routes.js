@@ -109,7 +109,7 @@ router.get('/:pagename', async (req, res) => {
 // Serve only new rows based on the current length of the table in the frontend
 router.get('/api/:pagename/new', async (req, res) => {
     const { pagename } = req.params;
-    const offset = parseInt(req.query.offset, 0) || 0; // Number of rows the frontend already has
+    const offset = parseInt(req.query.offset, 10) || 0; // Number of rows the frontend already has
 
     // Validate page name
     const pageValidation = validatePageName(pagename);
