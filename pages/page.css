@@ -1,0 +1,154 @@
+/* Preserve your invalid message styling */
+#invalidMessage {
+    color: var(--error-color);
+}
+
+/* Make the overall page a flex column filling the viewport */
+body.table-page {
+    display: flex;
+    flex-direction: column;
+    height: 100vh;
+    overflow: hidden;
+    align-items: stretch;
+}
+
+/* The main content should only take as much space as needed */
+#mainContent {
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+    flex: 0 1 auto;
+    /* Key fix: only grow if needed */
+}
+
+/* Ensure the inner container in #mainContent sizes dynamically */
+#mainContent>.container {
+    display: flex;
+    flex-direction: column;
+    height: auto;
+    /* Key fix: Let it size naturally */
+    flex: 0 1 auto;
+    /* Prevent forced stretching */
+    min-height: 0;
+    margin-bottom: 40px;
+    overflow: hidden;
+    width: 100%;
+    padding-bottom: 0;
+}
+
+/* Let the top bar take its natural height */
+.top-bar {
+    flex: 0 0 auto;
+}
+
+/* The table wrapper takes only the space it needs */
+#tableWrapper {
+    display: flex;
+    flex-direction: column;
+    flex-grow: 0;
+    /* Key fix: Never forces extra space */
+    overflow: hidden;
+}
+
+/* Let the table size itself, but scroll when necessary */
+#tableContainer {
+    display: flex;
+    flex-direction: column;
+    flex-grow: 1;
+    /* Only expands when necessary */
+    min-height: 50px;
+    overflow-y: auto;
+    /* Enables scrolling only when needed */
+}
+
+/* The table should size naturally */
+#pageTable {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+/* Wrapper for empty state messages (Centered) */
+#emptyStateWrapper {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    flex-grow: 1;
+    /* Allow it to expand and fill space */
+    width: 100%;
+    min-height: 100%;
+    /* Ensures full height */
+}
+
+/* Messages styling */
+#noRowsMessage,
+#invalidMessage {
+    display: none;
+    /* Default: Hidden */
+    text-align: center;
+}
+
+/* Show the empty state wrapper when there are no rows */
+.empty #emptyStateWrapper {
+    display: flex;
+}
+
+/* The form container stays at its natural height at the bottom */
+#formContainer {
+    flex: 0 0 auto;
+    margin-top: 0;
+}
+
+/* Ensure form's container keeps its styling */
+#formContainer .container {
+    padding: 30px;
+    margin: 40px auto;
+}
+
+.form-container {
+    max-height: 0;
+    opacity: 0;
+    overflow: hidden;
+}
+
+/* When visible */
+.form-container.visible {
+    max-height: 500px;
+    /* Adjust based on your content */
+    opacity: 1;
+}
+
+/* When hidden */
+.form-container.hidden {
+    max-height: 0;
+    opacity: 0;
+}
+
+#toggleFormContainer {
+    min-height: 45px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+#toggleFormButton {
+    height: fit-content;
+    font-size: 14px;
+    user-select: none;
+    margin-bottom: 0;
+}
+
+table tr:hover {
+    background-color: var(--table-hover);
+    cursor: pointer;
+}
+
+@media (max-width: 600px) {
+    #mainContent>.container {
+        margin-bottom: 20px;
+    }
+
+    #toggleFormContainer {
+        height: 35px;
+    }
+}

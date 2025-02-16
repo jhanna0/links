@@ -1,3 +1,4 @@
+<!-- page.html -->
 <!DOCTYPE html>
 <html lang="en">
 
@@ -25,121 +26,71 @@
 
     <!-- Favicon and Styles -->
     <link rel="stylesheet" href="/styles.css" />
+    <link rel="stylesheet" href="/page.css" />
     <link rel="icon" type="image/x-icon" href="/link.png">
     <link rel="apple-touch-icon" href="/link.png">
 </head>
 
-
 <body class="table-page">
+    <script type="module" src="/page.js"></script>
 
-    <div class="container hidden">
-
-        <!-- Top Bar -->
-        <div class="top-bar">
-            <h1 class="page-heading">
-                <a class="share hover">{{pagename}}</a>
-            </h1>
-            <p id="pageInvalidMessage" class="error-message"
-                style="display: none; text-align: center; font-weight: bold; width: 100%; margin: 0;">
-                This page is invalid.
-            </p>
-            <p class="subtext">
-                Click page name to copy link, or
-                <a href="javascript:void(0);" class="page-back hover" style="color: var(--table-link)">here</a> to go
-                back.
-            </p>
+    <!-- Main content area (top bar & table) -->
+    <div id="mainContent">
+        <div class="container">
+            <!-- Top Bar -->
+            <div class="top-bar">
+                <h1 class="page-heading">
+                    <a id="pageNameHeading" class="share hover">{{pagename}}</a>
+                </h1>
+                <p class="subtext">
+                    Click page name to copy link, or
+                    <a href="javascript:void(0);" id="pageHeadingBack" class="hover" style="color: var(--table-link)">
+                        here
+                    </a>
+                    to go back.
+                </p>
+            </div>
+            <!-- Table Wrapper with scrollable table -->
+            <div id="tableWrapper">
+                <div id="tableContainer">
+                    <div id="emptyStateWrapper" style="display: none;">
+                        <div id="noRowsMessage">
+                            Be the first to add a link.
+                        </div>
+                        <div id="invalidMessage">
+                            This page is invalid.
+                        </div>
+                    </div>
+                    <table id="pageTable">
+                        <tbody>
+                            {{links}}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+            <div id="toggleFormContainer">
+                <span class="subtext hover" id="toggleFormButton">
+                    Hide Form
+                </span>
+            </div>
         </div>
-
-        <!-- Links Table -->
-        <table>
-            <tbody>
-                {{links}}
-            </tbody>
-        </table>
     </div>
 
-    <div class="container hidden" id="formContainer">
-        <form action="/add" method="POST">
-            <input type="hidden" id="page" name="page" value="{{pagename}}" />
+    <div class="container" id="formContainer">
+        <form action="/add" method="POST" id="form">
+            <input type="hidden" id="pagePage" name="page" value="{{pagename}}" />
 
-            <label>Link <span id="linkError" class="error-message"></span></label>
-            <div class="input-wrapper">
-                <input type="text" id="link" name="link" maxlength="500" required />
-            </div>
+            <label for="linkPage" id="linkLabel">Link</label>
+            <input type="text" id="linkPage" name="link" maxlength="500" required />
 
-            <label>Description</label>
-            <input type="text" id="description" name="description" maxlength="100" />
+            <label for="descriptionPage" id="descriptionLabel">Description</label>
+            <input type="text" id="descriptionPage" name="description" maxlength="100" />
 
             <button class="btn-submit" type="submit">Stash</button>
         </form>
     </div>
 
-    <script src="/form-handler.js"></script>
-    <script>
-        document.addEventListener("DOMContentLoaded", () => {
-            // Read `allowAppending` from server-side rendering
-            const allowAppending = "{{allowAppending}}" === "true";
-            const formContainer = document.getElementById("formContainer");
-            const pageInvalidMessage = document.getElementById("pageInvalidMessage");
-            const pageHeading = document.querySelector(".page-heading");
-
-            document.querySelectorAll('.container').forEach(container => {
-                container.classList.remove("hidden"); // Remove "hidden" from both containers
-            });
-
-            if (!allowAppending) {
-                if (pageHeading) {
-                    pageHeading.style.pointerEvents = "none";
-                }
-                formContainer.style.pointerEvents = "none";
-                formContainer.style.opacity = 0.75;
-                pageInvalidMessage.style.display = "inline-block"; // Show warning message
-            }
-        });
-    </script>
-    <script>
-        document.addEventListener("DOMContentLoaded", () => {
-            const pageHeading = document.querySelector(".page-back");
-
-            if (pageHeading) {
-                pageHeading.addEventListener("click", () => {
-                    if (document.referrer.endsWith("/")) {
-                        window.history.back(); // Go back if the referrer was "/"
-                    } else {
-                        window.location.href = "/"; // Otherwise, go to "/"
-                    }
-                });
-
-                // Make it look clickable
-                pageHeading.style.cursor = "pointer";
-            }
-        });
-    </script>
-
-    <script>
-        document.addEventListener("DOMContentLoaded", () => {
-            const shareButton = document.querySelector(".share");
-
-            if (shareButton) {
-                shareButton.addEventListener("click", async () => {
-                    try {
-                        await navigator.clipboard.writeText(window.location.href);
-                        // alert("Page URL copied to clipboard! ✅");
-
-                        // Reduce opacity to 0.75 for 3 seconds
-                        shareButton.style.opacity = "0.50";
-                        setTimeout(() => {
-                            shareButton.style.opacity = "1.0";
-                        }, 1200);
-
-                    } catch (err) {
-                        console.error("Clipboard copy failed:", err);
-                    }
-                });
-            }
-        });
-    </script>
-
 </body>
+
 
 </html>

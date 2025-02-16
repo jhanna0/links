@@ -2,7 +2,7 @@
 :root {
     --background-gradient: linear-gradient(to right, #8e44ad, #3498db);
     --container-bg: rgba(255, 255, 255, 1);
-    --container-shadow: rgba(0, 0, 0, 0.05);
+    --container-shadow: rgba(0, 0, 0, 0.2);
     --subtext-color: #737373;
     --text-color: #3a3a3a;
     --heading-color: #111;
@@ -21,6 +21,7 @@
     --table-hover: #f3f3f3;
     --table-link: #0068d9;
     --error-color: #D63B3B;
+    --outline-color: #0056b3;
 }
 
 html,
@@ -46,8 +47,6 @@ body {
     margin: 0;
     background: var(--background-gradient);
     color: var(--text-color);
-    /* padding-top: 65px; */
-    /* Matches header height */
 }
 
 /* Main Container */
@@ -99,8 +98,12 @@ textarea {
 
 input:focus,
 textarea:focus {
-    border-color: var(--button-bg);
+    border-color: var(--outline-color);
     outline: none;
+}
+
+form {
+    padding-top: 10px;
 }
 
 /* Form Enhancements */
@@ -109,6 +112,10 @@ form label {
     font-weight: bold;
     margin: 10px 0 5px;
     color: var(--heading-color);
+}
+
+form label:first-of-type {
+    margin-top: 0;
 }
 
 /* Button Styling */
@@ -125,12 +132,16 @@ button {
     margin-top: 15px;
 }
 
-.btn-submit {
-    font-size: 1rem;
+button:focus-visible {
+    outline: 1px solid black;
 }
 
 button:hover {
     background: var(--button-hover-bg);
+}
+
+.btn-submit {
+    font-size: 1rem;
 }
 
 .home-page p {
@@ -142,6 +153,7 @@ button:hover {
     font-weight: bold;
     color: var(--heading-color);
     text-align: center;
+    margin-top: 15px;
     margin-bottom: 15px;
     word-wrap: break-word;
     /* Ensures long words break */
@@ -208,9 +220,12 @@ table td:first-child {
     color: var(--table-link);
 }
 
-.error-message {
+table td:first-child a {
+    color: inherit;
+}
+
+.error {
     color: var(--error-color);
-    font-size: 0.8rem;
 }
 
 .access-list {
