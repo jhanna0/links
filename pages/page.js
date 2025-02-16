@@ -8,6 +8,8 @@ document.addEventListener("DOMContentLoaded", () => {
     // ======================================================
     const form = document.getElementById("form");
     const formContainer = document.getElementById("formContainer");
+    const toggleButton = document.getElementById("toggleFormButton");
+
     const linkInput = document.getElementById("linkPage");
     const descriptionInput = document.getElementById("descriptionPage");
     const pageNameInput = document.getElementById("pagePage"); // Hidden input
@@ -186,6 +188,16 @@ document.addEventListener("DOMContentLoaded", () => {
             }
         });
     }
+
+    toggleButton.addEventListener("click", function () {
+        if (formContainer.style.display === "none") {
+            formContainer.style.display = "block";
+            toggleButton.textContent = "Hide Form";
+        } else {
+            formContainer.style.display = "none";
+            toggleButton.textContent = "Show Form";
+        }
+    });
 });
 
 // scrolling

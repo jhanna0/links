@@ -66,10 +66,12 @@
                     </table>
                 </div>
             </div>
+            <div class="subtext hover" id="toggleFormButton">
+                Hide Form
+            </div>
         </div>
     </div>
 
-    <!-- Stash Form (always visible at bottom) -->
     <div class="container" id="formContainer">
         <form action="/add" method="POST" id="form">
             <input type="hidden" id="pagePage" name="page" value="{{pagename}}" />
@@ -83,6 +85,7 @@
             <button class="btn-submit" type="submit">Stash</button>
         </form>
     </div>
+
 </body>
 
 

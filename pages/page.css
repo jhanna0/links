@@ -30,9 +30,10 @@ body.table-page {
     flex: 0 1 auto;
     /* Prevent forced stretching */
     min-height: 0;
+    margin-bottom: 40px;
     overflow: hidden;
     width: 100%;
-    margin-bottom: 0;
+    padding-bottom: 0;
 }
 
 /* Let the top bar take its natural height */
@@ -79,10 +80,44 @@ body.table-page {
 /* The form container stays at its natural height at the bottom */
 #formContainer {
     flex: 0 0 auto;
+    margin-top: 0;
 }
 
 /* Ensure form's container keeps its styling */
 #formContainer .container {
     padding: 30px;
     margin: 40px auto;
+}
+
+#formContainer {
+    transition: all 0.3s ease-in-out;
+}
+
+#toggleFormButton {
+    display: inline-flex;
+    /* Keeps it inline while allowing height */
+    align-items: center;
+    /* Ensures vertical centering */
+    justify-content: center;
+    /* Centers text horizontally */
+    height: 30px !important;
+    /* Force it to be 30px */
+    line-height: 30px !important;
+    /* Ensures text doesn’t affect height */
+    font-size: 14px;
+    /* Keep text readable */
+    cursor: pointer;
+    /* Indicate it's clickable */
+    user-select: none;
+    /* Prevent accidental selection */
+    padding: 0 10px;
+    margin-bottom: 0;
+    /* Adds spacing without affecting height */
+    /* TEMP: Helps debug the actual height */
+}
+
+@media (max-width: 600px) {
+    #mainContent>.container {
+        margin-bottom: 20px;
+    }
 }
