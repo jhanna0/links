@@ -298,6 +298,23 @@
             opacity: 0.8;
         }
 
+        @keyframes glowEffect {
+            0% {
+                box-shadow: 0 0 10px rgba(255, 200, 0, 0.8);
+            }
+
+            50% {
+                box-shadow: 0 0 20px rgba(255, 200, 0, 1);
+            }
+
+            100% {
+                box-shadow: 0 0 10px rgba(255, 200, 0, 0.8);
+            }
+        }
+
+        .glow {
+            animation: glowEffect 3s ease-in-out;
+        }
 
         @media (max-width: 768px) {
             .main-container {
@@ -351,8 +368,8 @@
                 <div id="pillContainer" class="pill-container">
                     {{links}}
                 </div>
-                <div class="form-container">
-                    <form action="/add" method="POST">
+                <div id="formContainer" class="form-container">
+                    <form id="form" action="/add" method="POST">
                         <input type="hidden" id="pagePage" name="page" value="{{pagename}}" />
                         <input type="text" id="linkPage" name="link" maxlength="500" required placeholder="Link" />
                         <input type="text" id="descriptionPage" name="description" maxlength="100"
