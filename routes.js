@@ -18,7 +18,6 @@ router.get('/', (_, res) => {
     res.sendFile(path.join(__dirname, 'pages', 'index.html'));
 });
 
-
 // Handle form submissions (POST /add)
 router.post('/add', async (req, res) => {
     let { page, link, description = '' } = req.body;
@@ -139,11 +138,18 @@ router.get('/api/:pagename/new', async (req, res) => {
 
 function generateStyledEntries(entries) {
     return entries.map(entry => `
-        <div class="pill" onclick="window.open('${entry.link}', '_blank')">
-            <a href="${entry.link}" target="_blank" title="${entry.link}" onclick="event.stopPropagation();">
-                ${parseDisplayName(entry.link)}
-            </a>
-            <span class="description">${escapeHtml(entry.description || "No description")}</span>
+        <div class="pill">
+            <div class="pill-content" onclick="window.open('${entry.link}', '_blank')">
+                <a href="${entry.link}" target="_blank" title="${entry.link}" onclick="event.stopPropagation();">
+                    ${parseDisplayName(entry.link)}
+                </a>
+                <span class="description">${escapeHtml(entry.description || "No description")}</span>
+            </div>
+
+            <!-- Link Icon (Opens Modal) -->
+            <div class="pill-link-icon" onclick="openLinkModal('${escapeHtml(entry.link)}')">
+                ⋮
+            </div>
         </div>
     `).join('');
 }

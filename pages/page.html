@@ -145,7 +145,7 @@
             margin-top: 20px;
         }
 
-        /* Pill Container & Pill Styles */
+        /* Pill: Ensures Perfect Symmetry */
         .pill-container {
             display: flex;
             flex-direction: column;
@@ -156,31 +156,54 @@
         }
 
         .pill {
-            padding: 0.75rem;
             border: 3px solid black;
             border-radius: 50px;
             background: white;
-            text-align: center;
             transition: all 0.3s ease;
             cursor: pointer;
             min-height: 5.25rem;
 
-            /* ✅ Use Flexbox for vertical centering */
+            /* ✅ Use Flexbox for perfect layout */
             display: flex;
-            flex-direction: column;
-            justify-content: center;
-            /* Centers vertically */
             align-items: center;
-            /* Centers horizontally */
+            justify-content: space-between;
+            width: 100%;
+            /* max-width: 500px; */
+            padding: 0;
+            /* No extra padding inside! */
         }
 
-        /* Pill hover effect */
+        /* Left Spacer: Matches the size of the icon for symmetry */
+        .pill-left-space {
+            width: 40px;
+            /* ✅ Same width as the icon space */
+        }
+
+        /* Pill Content: Keeps Text Centered */
+        .pill-content {
+            flex-grow: 1;
+            text-align: center;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 12px 0;
+            margin-left: 40px;
+            /* Keep spacing inside the content */
+        }
+
+        .pill.placeholder {
+            .pill-content {
+                margin: 0;
+            }
+        }
+
+        /* Pill Hover Effect */
         .pill:hover {
             background: #f0f0f0;
             transform: scale(0.99);
         }
 
-        /* Ensures the link is centered */
+        /* Ensures the link text stays centered */
         .pill a {
             text-decoration: none;
             font-weight: 800;
@@ -198,6 +221,93 @@
             opacity: 0.8;
             text-align: center;
         }
+
+        /* Link Icon: Fixed on the Right */
+        .pill-link-icon {
+            font-size: 1.2em;
+            cursor: pointer;
+            padding: 6px;
+            border-radius: 50%;
+            transition: all 0.2s ease;
+            display: flex;
+            align-items: center;
+            justify-content: left;
+            width: 40px;
+            color: #333;
+            /* ✅ Matches the left space */
+        }
+
+        .pill-link-icon:hover {
+            color: black;
+        }
+
+
+        /* Modal Styling */
+        .modal {
+            position: fixed;
+            /* Ensures it overlays the entire page */
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            background: rgba(0, 0, 0, 0.5);
+            /* Dark overlay effect */
+            display: none;
+            justify-content: center;
+            align-items: center;
+            z-index: 9999;
+            /* Ensures it's above everything */
+        }
+
+        /* Modal Content: Prevent Overflow */
+        .modal-content {
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+            text-align: center;
+            border: 2px solid black;
+            min-width: 300px;
+            max-width: 50%;
+            max-height: 80vh;
+            /* ✅ Prevents modal from growing too large */
+            overflow-y: auto;
+            /* ✅ Enables scrolling if content is too large */
+            z-index: 10000;
+            word-wrap: break-word;
+            /* ✅ Ensures long words (like URLs) break correctly */
+            overflow-wrap: break-word;
+            /* ✅ Alternative for consistent wrapping */
+            white-space: normal;
+            /* ✅ Ensures proper line breaking */
+        }
+
+        /* Ensure the URL is formatted correctly inside the modal */
+        .modal-content p {
+            text-align: center;
+            font-size: 1.1em;
+            /* color: #333; */
+            word-break: break-word;
+            /* ✅ Forces URL to break naturally */
+            overflow-wrap: break-word;
+            /* ✅ Cross-browser compatibility */
+            /* ✅ Aligns text for better readability */
+            padding: 10px;
+            /* background: #f7f7f7; */
+            border-radius: 5px;
+            word-wrap: break-word;
+            max-width: 100%;
+            overflow: hidden;
+        }
+
+
+        .close-button {
+            font-size: 1.5rem;
+            cursor: pointer;
+            position: absolute;
+            top: 10px;
+            right: 15px;
+        }
+
 
         /* Submit button */
         .btn-submit {
@@ -358,6 +468,19 @@
                 border-radius: 20px;
                 /* Keep proportionate */
             }
+
+            .pill-content {
+                margin-left: 20px;
+            }
+
+            .pill-link-icon {
+                width: 20px;
+            }
+
+            .modal-content {
+                max-width: 100%;
+                max-height: 80vh;
+            }
         }
     </style>
 </head>
@@ -397,6 +520,15 @@
             </div>
         </div>
     </div>
+
+    <!-- Link URL Modal -->
+    <div id="linkModal" class="modal hidden">
+        <div class="modal-content">
+            <span class="close-button" onclick="closeLinkModal()">&times;</span>
+            <p id="modalLinkText"></p>
+        </div>
+    </div>
+
 </body>
 
 </html>

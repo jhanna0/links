@@ -66,11 +66,13 @@ document.addEventListener("DOMContentLoaded", () => {
             if (allowed) {
                 // ✅ Create a new placeholder pill
                 const pill = document.createElement("div");
-                pill.classList.add("pill", "placeholder"); // ✅ Add a "placeholder" class
+                pill.classList.add("pill", "placeholder"); // ✅ Add "placeholder" class for styling
 
                 pill.innerHTML = `
-                    <a href="#" class="pill-link">No links yet.</a>
-                    <p class="description">Be the first to add a link to this page!</p>
+                    <div class="pill-content">
+                        <a href="#" class="pill-link">No links yet.</a>
+                        <span class="description">Be the first to add a link to this page!</span>
+                    </div>
                 `;
 
                 pillContainer.appendChild(pill);
@@ -79,11 +81,14 @@ document.addEventListener("DOMContentLoaded", () => {
                 const invalidPill = document.createElement("div");
                 invalidPill.classList.add("pill", "placeholder");
                 invalidPill.innerHTML = `
-                    <a href="#" style="color: var(--error-color);" class="pill-link">This page does not exist!</a>
-                    <p class="description">Due to invalid page name.</p>
+                    <div class="pill-content">
+                        <a href="#" class="pill-link" style="color: var(--error-color);">This page does not exist!</a>
+                        <span class="description">Due to invalid page name.</span>
+                    </div>
                 `;
                 pillContainer.appendChild(invalidPill);
             }
+
         }
     }
 
@@ -218,6 +223,24 @@ document.addEventListener("DOMContentLoaded", () => {
             this.setSelectionRange(0, 0); // ✅ Moves cursor to the start
         }, 0);
     });
-
-
 });
+
+window.openLinkModal = function (link) {
+    const modal = document.getElementById("linkModal");
+    const modalContent = document.getElementById("modalLinkText");
+
+    if (modal && modalContent) {
+        modalContent.textContent = link;
+        modal.style.display = "flex"; // Show modal
+    }
+};
+
+window.addEventListener('click', function (event) {
+    if (event.target.classList.contains('modal')) {
+        event.target.style.display = 'none';
+    }
+});
+
+window.closeLinkModal = function () {
+    document.getElementById("linkModal").style.display = "none";
+};
