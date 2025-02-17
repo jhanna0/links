@@ -52,7 +52,7 @@ document.addEventListener("DOMContentLoaded", () => {
     }
 
     function updateTableMessage() {
-        let allowed = allowAppending.valid;
+        let allowed = allowAppending;
 
         // ✅ Remove any existing placeholder pills before counting
         const existingPlaceholders = pillContainer.querySelectorAll(".pill.placeholder");
@@ -151,7 +151,7 @@ document.addEventListener("DOMContentLoaded", () => {
     // Additional Page Functionality
     // ======================================================
     const pageNameValue = pageNameInput ? pageNameInput.value.trim() : "";
-    const allowAppending = validatePageName(pageNameValue);
+    const allowAppending = validatePageName(pageNameValue).valid;
     updateTableMessage();
 
     if (!allowAppending) {

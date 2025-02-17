@@ -1,5 +1,6 @@
 export const ERROR_MESSAGES = {
     PAGE_REQUIRED: "Page name is required.",
+    PAGE_SPACES: "Page Name cannot have spaces.",
     PAGE_TOO_LONG: "Page name cannot exceed 100 characters.",
     PAGE_INVALID: "Invalid page name.",
 

@@ -9,137 +9,430 @@
     <!-- Basic SEO -->
     <meta name="description" content="Store links on a public page without an account.">
 
-    <!-- Open Graph (Facebook, LinkedIn, WhatsApp) -->
+    <!-- Open Graph & Twitter Meta Tags -->
     <meta property="og:title" content="Link Stash" />
     <meta property="og:description" content="Store links on a public page without an account." />
     <meta property="og:image" content="https://linkstash.co/link.png" />
     <meta property="og:url" content="https://linkstash.co/" />
     <meta property="og:type" content="website" />
-
-    <!-- Twitter Card (Twitter/X) -->
     <meta name="twitter:card" content="summary_large_image" />
     <meta name="twitter:title" content="Link Stash" />
     <meta name="twitter:description" content="Store links on a public page without an account." />
     <meta name="twitter:image" content="https://linkstash.co/link.png" />
     <meta name="twitter:url" content="https://linkstash.co/" />
 
-    <!-- Favicon and Styles -->
-    <link rel="stylesheet" href="/styles.css" />
+    <!-- Styles -->
+    <!-- <link rel="stylesheet" href="/styles.css" /> -->
     <link rel="stylesheet" href="/index.css" />
     <link rel="icon" type="image/x-icon" href="/link.png">
     <link rel="apple-touch-icon" href="/link.png">
+
+    <style>
+        :root {
+            --background-gradient: linear-gradient(to right, #F6F3EE, #EDE6DA);
+        }
+
+        /* Basic Reset */
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        html,
+        body {
+            font-family: 'Inter', sans-serif;
+            background: var(--background-gradient);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            width: 100vw;
+            justify-content: center;
+        }
+
+        /* Main Container */
+        .home-container {
+            background: white;
+            border: 3px solid black;
+            border-radius: 50px;
+            box-shadow: 4px 4px 0px black, 8px 8px 15px rgba(0, 0, 0, 0.1);
+            text-align: center;
+            width: 640px;
+            padding: 2rem;
+            margin: 0 auto;
+        }
+
+        /* Page Title */
+        .page-heading {
+            font-size: 2.5em;
+            font-weight: 900;
+            letter-spacing: 2px;
+            margin-bottom: 10px;
+        }
+
+        .subtext {
+            font-size: 1.1em;
+            color: black;
+            opacity: 0.8;
+            margin-bottom: 1rem;
+        }
+
+        /* Page Name Input Section */
+        .input-section {
+            margin-top: 1.5rem;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .input-label {
+            font-size: 1.1em;
+            font-weight: bold;
+            margin-bottom: 0.5rem;
+        }
+
+        .input-wrapper {
+            display: flex;
+            justify-content: center;
+            width: 100%;
+            width: 80%;
+        }
+
+        .input-wrapper input {
+            border: 0;
+            border-radius: 0;
+            border-bottom: 2px solid black;
+            /* border-radius: 50px; */
+            padding: 10px 15px;
+            font-size: 1.2rem;
+            text-align: center;
+            width: 100%;
+            outline: none;
+        }
+
+        /* Go Button */
+        .btn-go {
+            margin-top: 1.5rem;
+            padding: 10px 18px;
+            font-size: 1.1em;
+            font-weight: bold;
+            text-transform: uppercase;
+            background: black;
+            color: white;
+            border: 3px solid black;
+            border-radius: 50px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            width: 80%;
+        }
+
+        .btn-go:hover {
+            background: white;
+            color: black;
+        }
+
+        /* Footer Links */
+        .footer-links {
+            margin-top: 20px;
+            font-size: 1em;
+        }
+
+        .footer-links span {
+            cursor: pointer;
+            font-weight: bold;
+            text-decoration: underline;
+            transition: color 0.3s ease;
+        }
+
+        .footer-links span:hover {
+            color: #777;
+        }
+
+        @media (max-width: 768px) {
+            .home-container {
+                width: 90%;
+                padding: 1.5rem;
+            }
+
+            .input-wrapper {
+                width: 100%;
+            }
+
+            .input-wrapper input {
+                font-size: 1rem;
+                padding: 8px 12px;
+            }
+
+            .btn-go {
+                font-size: 1em;
+                padding: 8px 14px;
+                width: 100%;
+            }
+        }
+
+        /* Modal Styling */
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 1000;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.5);
+            justify-content: center;
+            align-items: center;
+        }
+
+        /* Modal Content */
+        .modal-content {
+            background: white;
+            border: 3px solid black;
+            border-radius: 30px;
+            padding: 20px;
+            width: 90%;
+            max-width: 500px;
+            text-align: center;
+            box-shadow: 4px 4px 0px black, 8px 8px 15px rgba(0, 0, 0, 0.1);
+            position: relative;
+        }
+
+        /* Close Button */
+        .close-button {
+            cursor: pointer;
+            font-size: 1.5rem;
+            font-weight: bold;
+            position: absolute;
+            top: 10px;
+            right: 15px;
+        }
+
+        /* Feature & Info Lists */
+        .feature-list,
+        .info-list {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+            margin-top: 15px;
+            text-align: left;
+        }
+
+        /* Ensure spans break to new lines */
+        .feature-item span {
+            display: block;
+        }
+
+        /* Each Feature/Info Item */
+        .feature-item,
+        .info-item {
+            background: #f8f8f8;
+            border: 2px solid black;
+            border-radius: 20px;
+            padding: 10px 15px;
+            font-size: 1rem;
+        }
+
+        /* Text inside Feature/Info Items */
+        .feature-item p,
+        .info-item p {
+            font-weight: normal;
+            margin-top: 5px;
+        }
+
+        /* Buttons */
+        .btn-upgrade,
+        .btn-save {
+            padding: 10px 18px;
+            font-size: 1rem;
+            font-weight: bold;
+            text-transform: uppercase;
+            background: black;
+            border: 3px solid black;
+            border-radius: 50px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            margin-top: 15px;
+            color: white;
+        }
+
+        .btn-upgrade {
+            width: 100%;
+        }
+
+        .btn-upgrade:hover,
+        .btn-save:hover {
+            background: white;
+            color: black;
+        }
+
+        .input-wrapper input {
+            border: 3px solid black;
+            border-radius: 50px;
+            padding: 10px 15px;
+            font-size: 1.2rem;
+            text-align: center;
+            width: 100%;
+            outline: none;
+            /* background-color: #f8f8f8; */
+        }
+
+        /* ✅ Wrapper specifically for buttons inside inputs */
+        .button-input-wrapper {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            /* ✅ Ensures centering */
+            width: 100%;
+            /* ✅ Prevents excessive stretching */
+            position: relative;
+            width: 100%;
+            /* ✅ Centers it */
+            margin-top: 2rem;
+        }
+
+        /* ✅ Input field takes up remaining space */
+        .button-input-wrapper input {
+            flex-grow: 1;
+            padding: 10px;
+            border: 2px solid black;
+            border-radius: 20px;
+            text-align: center;
+            font-size: 1rem;
+            width: 100%;
+        }
+
+        /* ✅ Save button inside input wrapper */
+        .button-input-wrapper .btn-save {
+            position: absolute;
+            right: 5px;
+            top: 50%;
+            transform: translateY(-50%);
+            height: calc(100% - 10px);
+            min-width: max-content;
+            padding: 0 16px;
+
+            font-size: 14px;
+            font-weight: bold;
+            cursor: pointer;
+            border: none;
+            background: black;
+            color: white;
+            border-radius: 20px;
+            white-space: nowrap;
+            margin-top: 0;
+            border: 2px solid black;
+        }
+
+        /* ✅ Button hover effect */
+        .button-input-wrapper .btn-save:hover {
+            background: white;
+            color: black;
+            border: 2px solid black;
+        }
+    </style>
 </head>
 
-<body class="home-page">
-
+<body>
     <script type="module" src="/index.js"></script>
 
-    <div class="home-container container">
-        <h2 class="page-heading">Stash links on a public page.</h2>
+    <!-- Main Content -->
+    <div class="home-container">
+        <h1 class="page-heading">Find a Stash Page</h1>
         <p class="subtext">
-            A unique enough name can be private.
-            <span id="infoButton" class="info-button">Info</span>
+            Enter a page name to access or create a new stash.
         </p>
 
-
-        <form action="/add" method="POST">
-            <label id="pageLabel">Page Name</label>
+        <!-- Page Name Input -->
+        <div class="input-section">
+            <!-- <label class="input-label" for="page">Page Name</label> -->
             <div class="input-wrapper">
-                <input type="text" id="page" name="page" title="Only letters, numbers, dashes, and underscores allowed."
-                    maxlength="100" required />
-                <button type="button" id="goButton" class="inner-button go-button hidden">Go</button>
+                <input type="text" id="page" name="page" placeholder="Page Name"
+                    title="Only letters, numbers, dashes, and underscores allowed." maxlength="100" required />
             </div>
 
-            <label id="linkLabel">Link</label>
-            <input type="text" id="link" name="link" maxlength="500" required />
+            <!-- Go Button -->
+            <button type="button" id="goButton" class="btn-go">Go</button>
+        </div>
 
-            <label id="descriptionLabel">Description</label>
-            <textarea name="description" id="description" maxlength="100"></textarea>
+        <!-- Footer Links -->
+        <div class="footer-links">
+            <span id="infoButton">How It Works</span> | <span id="accessButton">Increase Access</span>
+        </div>
 
-            <button class="btn-submit" type="submit">Stash</button>
-        </form>
+        <!-- Unlimited Access Modal -->
+        <div id="accessModal" class="modal hidden">
+            <div class="modal-content">
+                <span class="close-button">&times;</span>
+                <h2 class="page-heading">Increase Access</h2>
+                <p class="subtext">$5 for one month.</p>
 
-        <p id="accessButton" class="subtext hover access-button"
-            style="text-align: center; margin-top: 15px; margin-bottom: 0;">
-            Increase Access
-        </p>
-    </div>
+                <div class="feature-list">
+                    <div class="feature-item">
+                        <strong>API Limit</strong>
+                        <p> <strong>3 → 20</strong> links per minute</p>
+                        <p><strong>20 → 100</strong> links per day</p>
+                    </div>
+                    <div class="feature-item">
+                        <strong>API Key</strong>
+                        <p>Use in the UI or programmatically.</p>
+                    </div>
+                    <div class="feature-item">
+                        <strong>Anonymous</strong>
+                        <p>Absolutely no user information is stored.</p>
+                    </div>
+                    <div class="feature-item">
+                        <strong>Account-Free</strong>
+                        <p>No sign-up needed—just attach an API key.</p>
+                    </div>
+                </div>
 
-    <!-- Unlimited Access Section -->
-    <!-- Access Modal -->
-    <div id="accessModal" class="modal hidden">
-        <div class="modal-content container">
-            <span class="close-button">&times;</span>
-            <h2 class="page-heading">Increase Access</h2>
-            <p class="subtext">$5 for one month.</p>
+                <div class="button-container">
+                    <button class="btn-upgrade">Get Key</button>
+                </div>
 
-            <table class="access-table">
-                <tr>
-                    <td><strong>API Limit</strong></td>
-                    <td><strong>3 → 20</strong> add links per minute.</td>
-                    <td><strong>20 → 100</strong> add links per day.</td>
-                </tr>
-                <tr>
-                    <td><strong>API Key</strong></td>
-                    <td>Use in the UI or programmatically.</td>
-                </tr>
-                <tr>
-                    <td><strong>Anonymous</strong></td>
-                    <td>Absolutely no user information is stored.</td>
-                </tr>
-                <tr>
-                    <td><strong>Account Free</strong></td>
-                    <td>No sign-up needed - just attach API key to use.</td>
-                </tr>
-            </table>
-
-            <div style="border-bottom: var(--border-style); padding-bottom: 10px;">
-                <button class="btn-upgrade" style="margin-bottom: 20px;">Get Key</button>
-            </div>
-
-            <!-- API Key Input Section -->
-            <div class="input-wrapper" style="margin-top: 20px;">
-                <input type="text" id="apiKey" placeholder="Enter API key">
-                <button id="saveApiKey" class="inner-button btn-save">Save</button>
+                <!-- API Key Input Section -->
+                <div class="button-input-wrapper input-wrapper">
+                    <input type="text" id="apiKey" placeholder="Enter API key">
+                    <button id="saveApiKey" class="btn-save">Save</button>
+                </div>
             </div>
         </div>
-    </div>
 
-    <!-- Info Modal -->
-    <div id="infoModal" class="modal hidden">
-        <div class="modal-content container">
-            <span class="close-button">&times;</span>
-            <h2 class="page-heading">How It Works</h2>
+        <!-- Info Modal -->
+        <div id="infoModal" class="modal hidden">
+            <div class="modal-content">
+                <span class="close-button">&times;</span>
+                <h2 class="page-heading">How It Works</h2>
 
-            <table class="info-table">
-                <tr>
-                    <td><strong>Pages Store Links</strong></td>
-                    <td>Each page is a list of links. Anyone can view or add to it.</td>
-                </tr>
-                <tr>
-                    <td><strong>Always Public</strong></td>
-                    <td>There are no private pages—anyone with the name has full access.</td>
-                </tr>
-                <tr>
-                    <td><strong>Links Are Permanent</strong></td>
-                    <td>Once added, a link cannot be removed.</td>
-                </tr>
-                <tr>
-                    <td><strong>No Directory</strong></td>
-                    <td>Pages can only be found by guessing or knowing the name.</td>
-                </tr>
-                <tr>
-                    <td><strong>Obscurity = Privacy</strong></td>
-                    <td>A common name (e.g., <code>/groupchatvideos</code>) is easy to guess. A random one (e.g.,
-                        <code>/b7Qx9fL2</code>) is nearly impossible to find.
-                    </td>
-                </tr>
-            </table>
-
+                <div class="info-list">
+                    <div class="info-item">
+                        <strong>Pages Store Links</strong>
+                        <p>Each page is a list of links. Anyone can view or add to it.</p>
+                    </div>
+                    <div class="info-item">
+                        <strong>No Ownership</strong>
+                        <p>There are no private pages—anyone with the name has full access.</p>
+                    </div>
+                    <div class="info-item">
+                        <strong>No Directory</strong>
+                        <p>Pages can only be found by knowing or guessing their name.</p>
+                    </div>
+                    <div class="info-item">
+                        <strong>Links Are Permanent</strong>
+                        <p>Once added, a link cannot be removed.</p>
+                    </div>
+                    <div class="info-item">
+                        <strong>Obscurity = Privacy</strong>
+                        <p>A common name (e.g., <code>/groupchatvideos</code>) is easy to guess. A random one (e.g.,
+                            <code>/b7Qx9fL2</code>) is nearly impossible to find.
+                        </p>
+                    </div>
+                </div>
+            </div>
         </div>
+
     </div>
-
-
 </body>
 
 </html>

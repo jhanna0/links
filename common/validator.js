@@ -10,6 +10,11 @@ export function validatePageName(page) {
     if (!page || typeof page !== "string") {
         return { valid: false, error: ERROR_MESSAGES.PAGE_REQUIRED };
     }
+
+    if (page.includes(' ')) {
+        return { valid: false, error: ERROR_MESSAGES.PAGE_SPACES };
+    }
+
     if (page.length > 100) {
         return { valid: false, error: ERROR_MESSAGES.PAGE_TOO_LONG };
     }
