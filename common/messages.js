@@ -6,7 +6,7 @@ export const ERROR_MESSAGES = {
 
     LINK_INVALID: "Invalid link URL format.",
     LINK_HTTP_ONLY: "Only HTTP and HTTPS links are allowed.",
-    LINK_DOMAIN_INVALID: "Invalid link domain format.",
+    LINK_DOMAIN_INVALID: "Invalid link URL format.",
     LINK_IP_INVALID: "Invalid link IP address.",
 
     DESCRIPTION_TOO_LONG: "Description cannot exceed 100 characters.",

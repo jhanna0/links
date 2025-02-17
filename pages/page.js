@@ -1,6 +1,7 @@
 // page.js
 import { validatePageName, validateLink, validateDescription } from "/common/validator.mjs";
 import { attachFormSubmission, fetchUpdatedTable } from "./request.js";
+import "/alert.js";
 
 document.addEventListener("DOMContentLoaded", () => {
     // ======================================================
@@ -43,7 +44,7 @@ document.addEventListener("DOMContentLoaded", () => {
         if (description) {
             const descriptionResult = validateDescription(description);
             if (!descriptionResult.valid) {
-                alert("descriptionResult.error")
+                alert(descriptionResult.error)
                 return null;
             }
         }

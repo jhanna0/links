@@ -1,15 +1,11 @@
 // homePage.js
-import { validatePageName, validateLink, validateDescription } from "/common/validator.mjs";
-import { attachFormSubmission } from "./request.js";
+import { validatePageName } from "/common/validator.mjs";
+import "/alert.js";
 
 document.addEventListener("DOMContentLoaded", () => {
     // ===============================
     // Element Selections
     // ===============================
-    // Form & related inputs
-    const form = document.querySelector("form");
-    const linkInput = document.getElementById("link");
-    const descriptionInput = document.getElementById("description");
 
     // Home page–specific elements
     const pageNameInput = document.getElementById("page");
