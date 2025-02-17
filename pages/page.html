@@ -164,14 +164,23 @@
             transition: all 0.3s ease;
             cursor: pointer;
             min-height: 5.25rem;
-            /* ✅ Now explicitly set */
+
+            /* ✅ Use Flexbox for vertical centering */
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            /* Centers vertically */
+            align-items: center;
+            /* Centers horizontally */
         }
 
+        /* Pill hover effect */
         .pill:hover {
             background: #f0f0f0;
             transform: scale(0.99);
         }
 
+        /* Ensures the link is centered */
         .pill a {
             text-decoration: none;
             font-weight: 800;
@@ -181,6 +190,7 @@
             margin-bottom: 0.08rem;
         }
 
+        /* Ensures the description is centered */
         .description {
             font-size: 1em;
             font-weight: 500;

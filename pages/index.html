@@ -133,10 +133,10 @@
         }
 
         /* Remove default blue focus outline and add custom style */
-        /* ALL BUTTONS NEED THIS */
-        .btn-go:focus {
+        /* ALL BUTTONS NEED THIS, although, highlighting when tabbed is good UIUX */
+        /* .btn-go:focus {
             outline: none;
-        }
+        } */
 
         /* Footer Links */
         .footer-links {
@@ -177,7 +177,7 @@
             }
         }
 
-        /* Modal Styling */
+        /* Modal Styling - Fullscreen & Scrollable */
         .modal {
             display: none;
             position: fixed;
@@ -187,22 +187,50 @@
             width: 100%;
             height: 100%;
             background-color: rgba(0, 0, 0, 0.5);
+            overflow-y: auto;
+            /* Allows page scrolling if modal is too large */
             justify-content: center;
             align-items: center;
+            /* Keeps modal centered */
+            /* padding: 20px; */
+            /* Adds spacing to prevent sticky edges */
         }
 
-        /* Modal Content */
+        /* Modal Content - Centers and Scrolls When Needed */
         .modal-content {
             background: white;
             border: 3px solid black;
             border-radius: 30px;
             padding: 20px;
-            width: 90%;
+            width: 100%;
             max-width: 500px;
+            /* Limits width on larger screens */
             text-align: center;
             box-shadow: 4px 4px 0px black, 8px 8px 15px rgba(0, 0, 0, 0.1);
             position: relative;
+
+            /* Enables scrolling inside modal when needed */
+            max-height: 90vh;
+            /* Prevents it from exceeding screen height */
+            overflow-y: auto;
+            /* Enables scrolling inside */
         }
+
+        /* Prevents the modal content from being cut off */
+        .modal-content:focus {
+            outline: none;
+        }
+
+        /* Ensures mobile full width and scrolling */
+        @media (max-width: 768px) {
+            .modal-content {
+                width: 95%;
+                /* Closer to full width on small screens */
+                max-width: none;
+                /* Removes max-width restriction */
+            }
+        }
+
 
         /* Close Button */
         .close-button {
