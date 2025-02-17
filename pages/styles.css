@@ -1,28 +1,79 @@
 /* 🎨 Color & Styling Variables */
 :root {
-    --background-gradient: linear-gradient(to right, #8e44ad, #3498db);
-    --container-bg: rgba(255, 255, 255, 1);
+    /* BACKGROUND */
+
+    --background-gradient: linear-gradient(to right, #F6F3EE, #EDE6DA);
+    /* Soft warm tones */
+    /* Ultra-light gray */
+    /* Charcoal fade */
+    /* Warm minimal beige */
+    /* Warm neutral gray */
+    /* Muted cool blue */
+    /* Muted steel blue */
+    /* Warm neutral tones */
+    /* Muted purples */
+    /* Soft neutral tones */
+    /* Deep muted blue */
+    /* Sleek dark mode */
+    /* Soft light gray with depth */
+
+    /* CONTAINERS */
+    --container-bg: #FFFFFF;
+    /* Clean, bright white */
     --container-shadow: rgba(0, 0, 0, 0.2);
-    --subtext-color: #737373;
-    --text-color: #3a3a3a;
-    --heading-color: #111;
-    --border-color: #ddd;
+    /* Deeper shadow for strong contrast */
+
+    /* TEXT */
+    --text-color: #121212;
+    /* Pure black but softened slightly */
+    --heading-color: #000000;
+    /* Strong black for emphasis */
+    --subtext-color: #505050;
+    /* Muted dark gray for softer contrast */
+
+    /* BORDERS */
+    --border-color: #A0A0A0;
+    /* Neutral gray, not too harsh */
     --border-style: 1px solid var(--border-color);
-    --input-bg: #ffffff;
-    --input-border: #ccc;
-    --button-bg: linear-gradient(to right, #007bff, #0056b3);
-    --button-hover-bg: linear-gradient(to right, #0056b3, #003f80);
-    --secondary-button-bg: #666;
-    --secondary-button-hover-bg: #444;
-    --button-radius: 8px;
-    --button-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
-    --table-bg: #ffffff;
-    --table-border: #ddd;
-    --table-hover: #f3f3f3;
-    --table-link: #0068d9;
-    --error-color: #D63B3B;
-    --outline-color: #0056b3;
+
+    /* INPUTS */
+    --input-bg: #FFFFFF;
+    /* Pure white for clarity */
+    --input-border: #888888;
+    /* Darker muted border */
+
+    /* BUTTONS */
+    --button-bg: linear-gradient(to right, #161616, #3C3C3C);
+    /* Deep gray-black gradient */
+    --button-hover-bg: linear-gradient(to right, #000000, #222222);
+    /* Even darker hover effect */
+
+    /* SECONDARY BUTTONS */
+    --secondary-button-bg: #5A5A5A;
+    /* Muted dark gray for less primary actions */
+    --secondary-button-hover-bg: #3A3A3A;
+    /* Darker hover */
+
+    /* BUTTON STYLES */
+    --button-radius: 50px;
+    /* Soft rounded edges */
+    --button-shadow: 0px 4px 10px rgba(0, 0, 0, 0.15);
+    /* Slightly stronger shadow */
+
+    /* TABLE */
+    --table-bg: #FFFFFF;
+    --table-border: #BDBDBD;
+    --table-hover: #EAEAEA;
+    --table-link: #161616;
+    /* Deep neutral black-gray */
+
+    /* ERROR */
+    --error-color: #D43F3F;
+    /* Warmer but bold red */
+    --outline-color: #3C3C3C;
+    /* Dark gray to match modern contrast */
 }
+
 
 html,
 body {
@@ -52,12 +103,12 @@ body {
 
 /* Main Container */
 .container {
-    background: var(--container-bg);
-    padding: 30px;
+    /* background: var(--container-bg); */
+    padding: 10px;
     border-radius: 12px;
-    box-shadow: 0 5px 15px var(--container-shadow);
-    width: 90%;
-    max-width: 450px;
+    /* box-shadow: 0 5px 15px var(--container-shadow); */
+    /* width: 90%; */
+    max-width: 580px;
     margin: 40px auto;
 }
 
