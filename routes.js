@@ -99,7 +99,7 @@ router.get('/:pagename', async (req, res) => {
 
     let linksHTML = "";
     if (pageData.length) {
-        linksHTML = generateTableRows(pageData)
+        linksHTML = generateStyledEntries(pageData)
     }
 
     html = html.replace(/{{links}}/g, linksHTML);
@@ -128,7 +128,7 @@ router.get('/api/:pagename/new', async (req, res) => {
         const reversedRows = result.rows.reverse();
 
         // Convert new rows to HTML format using `parseDisplayName`
-        const linksHTML = generateTableRows(reversedRows)
+        const linksHTML = generateStyledEntries(reversedRows)
 
         res.send(linksHTML);
     } catch (err) {
@@ -137,16 +137,14 @@ router.get('/api/:pagename/new', async (req, res) => {
     }
 });
 
-function generateTableRows(entries) {
+function generateStyledEntries(entries) {
     return entries.map(entry => `
-        <tr onclick="window.open('${entry.link}', '_blank')" style="cursor: pointer;">
-            <td>
-                <a href="${entry.link}" target="_blank" title="${entry.link}" onclick="event.stopPropagation();">
-                    ${parseDisplayName(entry.link)}
-                </a>
-            </td>
-            <td>${escapeHtml(entry.description || "No description")}</td>
-        </tr>
+        <div class="pill" onclick="window.open('${entry.link}', '_blank')">
+            <a href="${entry.link}" target="_blank" title="${entry.link}" onclick="event.stopPropagation();">
+                ${parseDisplayName(entry.link)}
+            </a>
+            <span class="description">${escapeHtml(entry.description || "No description")}</span>
+        </div>
     `).join('');
 }
 

@@ -13,22 +13,11 @@ document.addEventListener("DOMContentLoaded", () => {
     const linkInput = document.getElementById("linkPage");
     const descriptionInput = document.getElementById("descriptionPage");
     const pageNameInput = document.getElementById("pagePage"); // Hidden input
-    const linksTable = document.getElementById("pageTable");
-
-    // Labels
-    const linkLabel = document.getElementById("linkLabel");
-    const descriptionLabel = document.getElementById("descriptionLabel");
+    const pillContainer = document.getElementById("pillContainer");
 
     // Page Navigation & Buttons
     const pageHeadingBack = document.getElementById("pageHeadingBack");
-    const shareButton = document.getElementById("pageNameHeading");
-
-    const noRowsMessage = document.getElementById("noRowsMessage");
-    const invalidMessage = document.getElementById("invalidMessage");
-
-    // Store original labels text
-    const originalLinkLabel = linkLabel ? linkLabel.textContent : "";
-    const originalDescriptionLabel = descriptionLabel ? descriptionLabel.textContent : "";
+    const shareButton = document.getElementById("copyLinkButton");
 
     // ======================================================
     // Form Validation & Submission
@@ -46,20 +35,16 @@ document.addEventListener("DOMContentLoaded", () => {
 
             const linkResult = validateLink(link);
             if (!linkResult.valid) {
-                if (linkLabel) linkLabel.textContent = linkResult.error;
+                alert(linkResult.error)
                 return null;
-            } else {
-                if (linkLabel) linkLabel.textContent = originalLinkLabel;
             }
         }
 
         if (description) {
             const descriptionResult = validateDescription(description);
             if (!descriptionResult.valid) {
-                if (descriptionLabel) descriptionLabel.textContent = descriptionResult.error;
+                alert("descriptionResult.error")
                 return null;
-            } else {
-                if (descriptionLabel) descriptionLabel.textContent = originalDescriptionLabel;
             }
         }
 
@@ -67,76 +52,95 @@ document.addEventListener("DOMContentLoaded", () => {
     }
 
     function updateTableMessage() {
-        let allowed = allowAppending.valid;
-        const rowCount = linksTable.querySelectorAll("tr").length;
-        const emptyWrapper = document.getElementById("emptyStateWrapper");
+        let allowed = allowAppending;
 
-        if (rowCount === 0) {
-            emptyWrapper.style.display = "flex"; // Show message container
+        // ✅ Remove any existing placeholder pills before counting
+        const existingPlaceholders = pillContainer.querySelectorAll(".pill.placeholder");
+        existingPlaceholders.forEach((pill) => pill.remove());
+
+        const pillCount = pillContainer.querySelectorAll(".pill").length;
+
+        if (pillCount === 0) {
+            pillContainer.innerHTML = ""; // Clear any existing content
+
             if (allowed) {
-                noRowsMessage.style.display = "block"; // Show "Be the first to add a link."
-                invalidMessage.style.display = "none"; // Hide "This page is invalid."
+                // ✅ Create a new placeholder pill
+                const pill = document.createElement("div");
+                pill.classList.add("pill", "placeholder"); // ✅ Add a "placeholder" class
+
+                pill.innerHTML = `
+                    <a href="#" class="pill-link">No links yet.</a>
+                    <p class="description">Be the first to add a link to this page!</p>
+                `;
+
+                pillContainer.appendChild(pill);
             } else {
-                invalidMessage.style.display = "block"; // Show "This page is invalid."
-                noRowsMessage.style.display = "none"; // Hide "Be the first to add a link."
+                // ✅ Show an invalid page pill instead
+                const invalidPill = document.createElement("div");
+                invalidPill.classList.add("pill", "placeholder");
+                invalidPill.innerHTML = `
+                    <a href="#" style="color: var(--error-color);" class="pill-link">This page does not exist!</a>
+                    <p class="description">Due to invalid page name.</p>
+                `;
+                pillContainer.appendChild(invalidPill);
             }
-        } else {
-            emptyWrapper.style.display = "none"; // Hide message container when table has rows
         }
     }
 
-
-    async function updateLinksTable(page) {
+    async function updateLinksPillContainer(page) {
         if (!page) return;
-        if (!linksTable) return;
+        if (!pillContainer) return;
 
         try {
-            // Current row count for next page
-            const currentCount = linksTable.querySelectorAll("tr").length;
+            // ✅ Select placeholder (if it exists)
+            const placeholderPill = pillContainer.querySelector(".pill.placeholder");
 
-            // Fetch new rows
-            const newHTML = await fetchUpdatedTable(page, currentCount);
+            // ✅ Current pill count (excluding placeholder)
+            let pillCount = pillContainer.querySelectorAll(".pill").length;
+            if (placeholderPill) pillCount -= 1; // Ignore placeholder in count
+
+            // ✅ Fetch new pills
+            const newHTML = await fetchUpdatedTable(page, pillCount);
             if (!newHTML || !newHTML.trim()) {
-                console.log("No new rows to add.");
+                console.log("No new pills to add.");
                 return;
             }
 
-            const tbody = document.querySelector("#pageTable tbody");
-            if (tbody) {
-                tbody.insertAdjacentHTML("beforeend", newHTML);
-                updateTableMessage();
-
-                // Scroll to the last row after inserting
-                setTimeout(() => {
-                    const lastRow = tbody.querySelector("tr:last-child");
-                    if (lastRow) {
-                        lastRow.scrollIntoView({ behavior: "smooth", block: "nearest" });
-                    }
-                }, 100); // Small delay ensures rendering before scrolling
+            if (placeholderPill) {
+                // ✅ Replace the placeholder pill completely with the new pill(s)
+                placeholderPill.outerHTML = newHTML;
+            } else {
+                // ✅ Just insert new pills normally if no placeholder exists
+                pillContainer.insertAdjacentHTML("beforeend", newHTML);
             }
+
+            updateTableMessage(); // ✅ Updates UI state if needed
+
+            // ✅ Smoothly scroll to the last added pill
+            setTimeout(() => {
+                const lastPill = pillContainer.querySelector(".pill:last-child");
+                if (lastPill) {
+                    lastPill.scrollIntoView({ behavior: "smooth", block: "nearest" });
+                }
+            }, 100);
         } catch (error) {
-            console.error("Error updating table:", error);
+            console.error("Error updating pill container:", error);
         }
     }
 
-    function onSuccess(formValues, responseData) {
+    function onSuccess(formValues, _) {
         if (linkInput) linkInput.value = "";
         if (descriptionInput) descriptionInput.value = "";
 
         if (formValues.page && window.location.pathname !== `/${formValues.page}`) {
             window.location.href = `/${formValues.page}`;
         } else {
-            updateLinksTable(formValues.page);
+            updateLinksPillContainer(formValues.page);
         }
     }
 
     function onFailure(errorMessage) {
-        console.error("Submission failed:", errorMessage);
-        if (errorMessage.includes("link")) {
-            if (linkLabel) linkLabel.textContent = errorMessage;
-        } else if (errorMessage.includes("description")) {
-            if (descriptionLabel) descriptionLabel.textContent = errorMessage;
-        }
+        alert(errorMessage);
     }
 
     if (form) {
@@ -144,25 +148,10 @@ document.addEventListener("DOMContentLoaded", () => {
     }
 
     // ======================================================
-    // Live Input Validations
-    // ======================================================
-    if (linkInput) {
-        linkInput.addEventListener("input", () => {
-            if (linkLabel) linkLabel.textContent = originalLinkLabel;
-        });
-    }
-
-    if (descriptionInput) {
-        descriptionInput.addEventListener("input", () => {
-            if (descriptionLabel) descriptionLabel.textContent = originalDescriptionLabel;
-        });
-    }
-
-    // ======================================================
     // Additional Page Functionality
     // ======================================================
     const pageNameValue = pageNameInput ? pageNameInput.value.trim() : "";
-    const allowAppending = validatePageName(pageNameValue);
+    const allowAppending = validatePageName(pageNameValue).valid;
     updateTableMessage();
 
     if (!allowAppending) {
@@ -198,35 +187,37 @@ document.addEventListener("DOMContentLoaded", () => {
     }
 
     toggleButton.addEventListener("click", function () {
-        if (formContainer.classList.contains("hidden")) {
-            formContainer.classList.remove("hidden");
-            formContainer.classList.add("visible");
-            toggleButton.textContent = "Hide Form";
-        } else {
-            formContainer.classList.remove("visible");
-            formContainer.classList.add("hidden");
-            toggleButton.textContent = "Show Form";
+        if (formContainer) {
+            formContainer.scrollIntoView({ behavior: "smooth", block: "start" });
+            formContainer.classList.add("glow");
+
+            setTimeout(() => {
+                formContainer.classList.remove("glow");
+            }, 3000);
         }
     });
 
-});
+    linkInput.addEventListener("paste", function (event) {
+        event.preventDefault(); // ✅ Prevents the default paste behavior
 
-// scrolling
+        let pasteData = (event.clipboardData || window.clipboardData).getData("text");
+        this.value = pasteData; // ✅ Inserts the pasted text manually
 
-document.addEventListener("wheel", (event) => {
-    const tableContainer = document.getElementById("tableContainer");
-
-    if (!tableContainer) return;
-
-    // Detect horizontal swipe (swipe back/forward gesture)
-    if (Math.abs(event.deltaX) > Math.abs(event.deltaY)) {
-        return; // Ignore and allow the browser to handle it
-    }
-
-    // Redirect only vertical scrolls to the table
-    tableContainer.scrollBy({
-        top: event.deltaY
+        setTimeout(() => {
+            this.setSelectionRange(0, 0); // ✅ Moves cursor to the start
+        }, 0);
     });
 
-    event.preventDefault(); // Prevent body scrolling, but not swipe gestures
-}, { passive: false }); // Allows preventDefault to work
+    descriptionInput.addEventListener("paste", function (event) {
+        event.preventDefault(); // ✅ Prevents the default paste behavior
+
+        let pasteData = (event.clipboardData || window.clipboardData).getData("text");
+        this.value = pasteData; // ✅ Inserts the pasted text manually
+
+        setTimeout(() => {
+            this.setSelectionRange(0, 0); // ✅ Moves cursor to the start
+        }, 0);
+    });
+
+
+});

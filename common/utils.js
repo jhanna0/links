@@ -22,8 +22,8 @@ export function parseDisplayName(url) {
         }
 
         // Remove TLD (.com, .org, etc.)
-        // return hostname.replace(/\.[a-zA-Z]{2,}$/, "");
-        return hostname
+        return hostname.replace(/\.[a-zA-Z]{2,}$/, "");
+        // return hostname
 
     } catch (error) {
         console.error("Invalid URL:", url);

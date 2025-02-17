@@ -1,12 +1,10 @@
-<!-- page.html -->
 <!DOCTYPE html>
 <html lang="en">
 
 <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Stash - {{pagename}}</title>
-
+    <title>Stash | {{pagename}}</title>
     <!-- Basic SEO -->
     <meta name="description" content="View links on page {{pagename}}.">
 
@@ -25,72 +23,369 @@
     <meta name="twitter:url" content="https://linkstash.co/{{pagename}}" />
 
     <!-- Favicon and Styles -->
-    <link rel="stylesheet" href="/styles.css" />
+    <!-- <link rel="stylesheet" href="/styles.css" /> -->
     <link rel="stylesheet" href="/page.css" />
     <link rel="icon" type="image/x-icon" href="/link.png">
     <link rel="apple-touch-icon" href="/link.png">
+    <style>
+        :root {
+            --background-gradient: linear-gradient(to right, #F6F3EE, #EDE6DA);
+            --error-color: #D43F3F;
+        }
+
+        /* Basic Reset */
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        html,
+        body {
+            font-family: 'Inter', sans-serif;
+            background: var(--background-gradient);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            width: 100vw;
+            /* Ensure full width */
+        }
+
+        /* ✅ Keep the header full width and separate from content */
+        .header-wrapper {
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+            width: 100vw;
+            /* ✅ Full width */
+            background: transparent;
+            padding-top: 2rem;
+            display: flex;
+            justify-content: center;
+            /* ✅ Centers header-content */
+        }
+
+        /* ✅ Ensure background cover fully extends */
+        .header-wrapper::before {
+            content: "";
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            /* ✅ Full width */
+            height: 50%;
+            /* ✅ Covers the top gap */
+            background: var(--background-gradient);
+            background-size: cover;
+            background-position: top left;
+            z-index: -1;
+        }
+
+        /* ✅ Header content is centered and constrained */
+        .header-content {
+            background: white;
+            border: 3px solid black;
+            border-radius: 50px;
+            padding: 20px 35px;
+            box-shadow: 4px 4px 0px black, 8px 8px 15px rgba(0, 0, 0, 0.1);
+            text-align: center;
+            width: 640px;
+            margin: 0 auto;
+        }
+
+        .header-content h1 {
+            font-size: 2.5em;
+            font-weight: 900;
+            letter-spacing: 2px;
+            margin-bottom: 10px;
+        }
+
+        .header-content h1 a {
+            text-decoration: none;
+            color: black;
+        }
+
+        .action-buttons {
+            display: flex;
+            gap: 10px;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+
+        .action-buttons button {
+            padding: 5px 15px;
+            border: 3px solid black;
+            border-radius: 30px;
+            background: white;
+            text-transform: uppercase;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .action-buttons button:hover {
+            background: black;
+            color: white;
+        }
+
+        /* ✅ Keep main content centered */
+        .main-container {
+            width: 640px;
+            margin: 0 auto;
+        }
+
+        .container {
+            width: 100%;
+            margin: 0 auto;
+        }
+
+        .main-content {
+            margin-top: 20px;
+        }
+
+        /* Pill Container & Pill Styles */
+        .pill-container {
+            display: flex;
+            flex-direction: column;
+            gap: 0.75rem;
+            margin-bottom: 20px;
+            min-height: 5.25rem;
+            /* ✅ Equivalent to calculated pill height */
+        }
+
+        .pill {
+            padding: 0.75rem;
+            border: 3px solid black;
+            border-radius: 50px;
+            background: white;
+            text-align: center;
+            transition: all 0.3s ease;
+            cursor: pointer;
+            min-height: 5.25rem;
+            /* ✅ Now explicitly set */
+        }
+
+        .pill:hover {
+            background: #f0f0f0;
+            transform: scale(0.99);
+        }
+
+        .pill a {
+            text-decoration: none;
+            font-weight: 800;
+            font-size: 1.2em;
+            color: black;
+            display: block;
+            margin-bottom: 0.08rem;
+        }
+
+        .description {
+            font-size: 1em;
+            font-weight: 500;
+            color: #333;
+            opacity: 0.8;
+            text-align: center;
+        }
+
+        /* Submit button */
+        .btn-submit {
+            padding: 10px 18px;
+            /* ✅ Slightly increased for balance */
+            font-size: 1rem;
+            font-weight: bold;
+            text-transform: uppercase;
+            background: black;
+            color: white;
+            border: 2px solid black;
+            border-radius: 20px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            margin-top: 5px;
+            max-width: 80%;
+            /* ✅ Prevents it from collapsing upwards */
+        }
+
+        .btn-submit:hover {
+            background: white;
+            color: black;
+        }
+
+        /* Form Container Styling */
+        .form-container {
+            background: white;
+            border: 2px solid black;
+            border-radius: 50px;
+            box-shadow: 4px 4px 0px black, 8px 8px 15px rgba(0, 0, 0, 0.1);
+            margin-bottom: 2rem;
+            margin-top: 0;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            /* ✅ Keeps everything stable */
+            padding: 1rem;
+            /* ✅ Ensures the form has enough space */
+            /* ✅ Prevents jumping */
+        }
+
+        /* Form layout */
+        .form-container form {
+            display: flex;
+            flex-direction: column;
+            gap: 5px;
+            /* ✅ Ensures uniform spacing between elements */
+            width: 100%;
+            align-items: center;
+            padding: 0rem 2rem;
+            /* ✅ Gives some breathing room */
+        }
+
+        /* Form inputs (No borders, clean look) */
+        .form-container input {
+            border: none;
+            background: none;
+            text-align: center;
+            font-size: 1.2rem;
+            font-weight: bold;
+            outline: none;
+            padding: 10px;
+            /* ✅ Increased slightly for consistency */
+            width: 100%;
+            max-width: 80%;
+            /* ✅ Prevents inputs from stretching too wide */
+            margin: 0;
+            /* ✅ Adds spacing to prevent jumpiness */
+        }
+
+        /* Description input tweaks */
+        .form-container input[name="description"] {
+            font-size: 1rem;
+            color: #777;
+            font-weight: normal;
+        }
+
+        .form-container input[name="link"] {
+            border-radius: 0;
+            border-bottom: 1px solid #777;
+        }
+
+        .form-container input[name="description"] {
+            color: #777;
+            font-weight: normal;
+            font-size: 1em;
+            /* Lighter gray */
+            /* opacity: 0.7; */
+        }
+
+        /* Make placeholders more readable & consistent */
+        .form-container input::placeholder {
+            color: black;
+            /* ✅ Ensures visibility */
+            font-weight: 500;
+            /* ✅ Slightly bold for contrast */
+            opacity: 0.7;
+            /* ✅ More visible than before */
+        }
+
+        /* Keep description slightly distinct, but more readable */
+        .form-container input[name="description"]::placeholder {
+            color: black;
+            font-weight: 500;
+            font-style: normal;
+            /* ✅ Remove italics */
+            opacity: 0.6;
+            /* ✅ Subtle distinction */
+        }
+
+        @keyframes highlightEffect {
+            0% {
+                transform: scale(1);
+                border: 2px solid black;
+            }
+
+            50% {
+                transform: scale(1.04);
+                border: 2px solid rgba(0, 0, 0, 0.6);
+                /* Subtle fade */
+            }
+
+            100% {
+                transform: scale(1);
+                border: 2px solid black;
+            }
+        }
+
+        .glow {
+            animation: highlightEffect 2s ease-in-out;
+        }
+
+
+        @media (max-width: 768px) {
+            .main-container {
+                width: 90%;
+            }
+
+            .pill {
+                padding: 7px;
+            }
+
+            .header-content {
+                width: 90%;
+            }
+
+            .action-buttons {
+                gap: 5px;
+                /* Less space between buttons */
+            }
+
+            .action-buttons button {
+                padding: 4px 10px;
+                /* Smaller padding */
+                font-size: 0.9em;
+                /* Reduce font size */
+                border-radius: 20px;
+                /* Keep proportionate */
+            }
+        }
+    </style>
 </head>
 
-<body class="table-page">
+<body>
     <script type="module" src="/page.js"></script>
 
-    <!-- Main content area (top bar & table) -->
-    <div id="mainContent">
-        <div class="container">
-            <!-- Top Bar -->
-            <div class="top-bar">
-                <h1 class="page-heading">
-                    <a id="pageNameHeading" class="share hover">{{pagename}}</a>
-                </h1>
-                <p class="subtext">
-                    Click page name to copy link, or
-                    <a href="javascript:void(0);" id="pageHeadingBack" class="hover" style="color: var(--table-link)">
-                        here
-                    </a>
-                    to go back.
-                </p>
-            </div>
-            <!-- Table Wrapper with scrollable table -->
-            <div id="tableWrapper">
-                <div id="tableContainer">
-                    <div id="emptyStateWrapper" style="display: none;">
-                        <div id="noRowsMessage">
-                            Be the first to add a link.
-                        </div>
-                        <div id="invalidMessage">
-                            This page is invalid.
-                        </div>
-                    </div>
-                    <table id="pageTable">
-                        <tbody>
-                            {{links}}
-                        </tbody>
-                    </table>
-                </div>
-            </div>
-            <div id="toggleFormContainer">
-                <span class="subtext hover" id="toggleFormButton">
-                    Hide Form
-                </span>
+    <!-- ✅ Keep the header full width, OUTSIDE of `.main-container` -->
+    <div class="header-wrapper">
+        <div class="header-content">
+            <h1><a id="pageNameHeading" href="#">{{pagename}}</a></h1>
+            <div class="action-buttons">
+                <button id="pageHeadingBack">Go Back</button>
+                <button id="toggleFormButton">Add Link</button>
+                <button id="copyLinkButton">Copy Link</button>
             </div>
         </div>
     </div>
 
-    <div class="container" id="formContainer">
-        <form action="/add" method="POST" id="form">
-            <input type="hidden" id="pagePage" name="page" value="{{pagename}}" />
+    <!-- ✅ Keep the main content centered -->
+    <div class="main-container">
+        <div class="container">
+            <div class="main-content">
+                <div id="pillContainer" class="pill-container">
+                    {{links}}
+                </div>
+                <div id="formContainer" class="form-container">
+                    <form id="form" action="/add" method="POST">
+                        <input type="hidden" id="pagePage" name="page" value="{{pagename}}" />
+                        <input type="text" id="linkPage" name="link" maxlength="500" required placeholder="Link" />
+                        <input type="text" id="descriptionPage" name="description" maxlength="100"
+                            placeholder="Description (optional)" />
+                        <button type="submit" class="btn-submit">Stash</button>
+                    </form>
+                </div>
 
-            <label for="linkPage" id="linkLabel">Link</label>
-            <input type="text" id="linkPage" name="link" maxlength="500" required />
-
-            <label for="descriptionPage" id="descriptionLabel">Description</label>
-            <input type="text" id="descriptionPage" name="description" maxlength="100" />
-
-            <button class="btn-submit" type="submit">Stash</button>
-        </form>
+            </div>
+        </div>
     </div>
-
 </body>
-
 
 </html>
