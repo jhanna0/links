@@ -298,23 +298,28 @@
             /* ✅ Subtle distinction */
         }
 
-        @keyframes glowEffect {
+        @keyframes highlightEffect {
             0% {
-                box-shadow: 0 0 10px rgba(255, 200, 0, 0.8);
+                transform: scale(1);
+                border: 2px solid black;
             }
 
             50% {
-                box-shadow: 0 0 20px rgba(255, 200, 0, 1);
+                transform: scale(1.04);
+                border: 2px solid rgba(0, 0, 0, 0.6);
+                /* Subtle fade */
             }
 
             100% {
-                box-shadow: 0 0 10px rgba(255, 200, 0, 0.8);
+                transform: scale(1);
+                border: 2px solid black;
             }
         }
 
         .glow {
-            animation: glowEffect 3s ease-in-out;
+            animation: highlightEffect 2s ease-in-out;
         }
+
 
         @media (max-width: 768px) {
             .main-container {
