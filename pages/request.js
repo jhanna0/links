@@ -40,6 +40,8 @@ export function attachFormSubmission(form, getFormValues, onSuccess, onFailure) 
         try {
             const { response, responseData } = await submitForm(form, values);
 
+            // console.log(response, responseData)
+
             if (!response) {
                 console.error("No response from server.");
                 alert("Unable to connect to the server. Please try again later.");
@@ -48,7 +50,6 @@ export function attachFormSubmission(form, getFormValues, onSuccess, onFailure) 
 
             if (response.status === 429) {
                 console.error("Rate limit exceeded:", responseData?.error);
-                alert(response.error);
             }
             else if (response.ok) {
                 onSuccess && onSuccess(values, responseData);
@@ -87,6 +88,14 @@ export async function fetchUpdatedTable(page, offset) {
 
     try {
         const response = await fetch(`/api/${page}/new?offset=${offset}`);
+
+        if (response.status === 429) {
+            // Handle rate limiting explicitly
+            console.warn("Rate limit exceeded: Too many GET requests.");
+            alert("You've reached the limit for viewing new links. Try again later.");
+            return null; // Stop processing
+        }
+
         if (!response.ok) {
             console.error("Failed to fetch updated page data.");
             return null;
@@ -95,6 +104,7 @@ export async function fetchUpdatedTable(page, offset) {
         return await response.text(); // Return raw HTML for `page.js` to handle
     } catch (error) {
         console.error("Error fetching updated links:", error);
+        alert("An unknown issue occurred.");
         return null;
     }
 }
