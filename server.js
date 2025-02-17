@@ -16,12 +16,12 @@ const __dirname = path.dirname(__filename);
 
 const postLimiter = rateLimit({
     windowMs: 24 * 60 * 60 * 1000, // 24 hours
-    max: 1, // Limit each IP to 20 requests per day
+    max: 20, // Limit each IP to 20 requests per day
     statusCode: 429,
     headers: true,
     keyGenerator: (req) => req.ip,
     handler: (req, res) => {
-        res.status(429).json({ error: "You may only add 20 links per day." });
+        res.status(429).json({ error: "You may only add 20 links per day without an API key." });
     },
 });
 
@@ -32,14 +32,14 @@ const postMinuteLimiter = rateLimit({
     headers: true,
     keyGenerator: (req) => req.ip,
     handler: (req, res) => {
-        res.status(429).json({ error: "You may only add 5 links per minute." });
+        res.status(429).json({ error: "You may only add 5 links per minute without an API key." });
     },
 });
 
 // 🔹 Global GET Rate Limit - 5 requests per 24 hours
 const getDailyLimiter = rateLimit({
     windowMs: 24 * 60 * 60 * 1000, // 24 hours
-    max: 5, // Limit each IP to 5 GET requests per day
+    max: 200, // Limit each IP to 5 GET requests per day
     statusCode: 429,
     headers: true,
     keyGenerator: (req) => req.ip,
