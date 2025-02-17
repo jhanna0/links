@@ -14,6 +14,7 @@ document.addEventListener("DOMContentLoaded", () => {
     const descriptionInput = document.getElementById("descriptionPage");
     const pageNameInput = document.getElementById("pagePage"); // Hidden input
     const linksTable = document.getElementById("pageTable");
+    const pillContainer = document.getElementById("pillContainer");
 
     // Labels
     const linkLabel = document.getElementById("linkLabel");
@@ -21,7 +22,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
     // Page Navigation & Buttons
     const pageHeadingBack = document.getElementById("pageHeadingBack");
-    const shareButton = document.getElementById("pageNameHeading");
+    const shareButton = document.getElementById("copyLinkButton");
 
     const noRowsMessage = document.getElementById("noRowsMessage");
     const invalidMessage = document.getElementById("invalidMessage");
@@ -67,24 +68,40 @@ document.addEventListener("DOMContentLoaded", () => {
     }
 
     function updateTableMessage() {
+        console.log("running")
         let allowed = allowAppending.valid;
-        const rowCount = linksTable.querySelectorAll("tr").length;
-        const emptyWrapper = document.getElementById("emptyStateWrapper");
+        console.log(allowed)
 
-        if (rowCount === 0) {
-            emptyWrapper.style.display = "flex"; // Show message container
+        const pillCount = pillContainer.querySelectorAll(".pill").length;
+
+        if (pillCount === 0) {
+            pillContainer.innerHTML = ""; // Clear any existing content
+
             if (allowed) {
-                noRowsMessage.style.display = "block"; // Show "Be the first to add a link."
-                invalidMessage.style.display = "none"; // Hide "This page is invalid."
+                // ✅ Create a new pill dynamically with a placeholder link
+                const pill = document.createElement("div");
+                pill.classList.add("pill");
+
+                // ✅ Add a sample link inside the pill
+                pill.innerHTML = `
+                    <a href="#" class="pill-link">No links yet.</a>
+                    <p class="description">Be the first to add a link to this page!</p>
+                `;
+
+                // ✅ Append the new pill to the container
+                pillContainer.appendChild(pill);
             } else {
-                invalidMessage.style.display = "block"; // Show "This page is invalid."
-                noRowsMessage.style.display = "none"; // Hide "Be the first to add a link."
+                // ✅ Show an invalid page pill instead
+                const invalidPill = document.createElement("div");
+                invalidPill.classList.add("pill");
+                invalidPill.innerHTML = `
+                    <a href="#" style="color: var(--error-color);" class="pill-link">This page does not exist!</a>
+                    <p class="description">Due to invalid page name.</p>
+                `;
+                pillContainer.appendChild(invalidPill);
             }
-        } else {
-            emptyWrapper.style.display = "none"; // Hide message container when table has rows
         }
     }
-
 
     async function updateLinksTable(page) {
         if (!page) return;
@@ -208,6 +225,29 @@ document.addEventListener("DOMContentLoaded", () => {
             toggleButton.textContent = "Show Form";
         }
     });
+
+    linkInput.addEventListener("paste", function (event) {
+        event.preventDefault(); // ✅ Prevents the default paste behavior
+
+        let pasteData = (event.clipboardData || window.clipboardData).getData("text");
+        this.value = pasteData; // ✅ Inserts the pasted text manually
+
+        setTimeout(() => {
+            this.setSelectionRange(0, 0); // ✅ Moves cursor to the start
+        }, 0);
+    });
+
+    descriptionInput.addEventListener("paste", function (event) {
+        event.preventDefault(); // ✅ Prevents the default paste behavior
+
+        let pasteData = (event.clipboardData || window.clipboardData).getData("text");
+        this.value = pasteData; // ✅ Inserts the pasted text manually
+
+        setTimeout(() => {
+            this.setSelectionRange(0, 0); // ✅ Moves cursor to the start
+        }, 0);
+    });
+
 
 });
 

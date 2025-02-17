@@ -96,7 +96,8 @@ body.table-page {
 /* The form container stays at its natural height at the bottom */
 #formContainer {
     flex: 0 0 auto;
-    margin-top: 0;
+    /* margin-top: 0; */
+    margin-top: 10px;
 }
 
 /* Ensure form's container keeps its styling */
@@ -106,14 +107,15 @@ body.table-page {
 }
 
 .form-container {
-    max-height: 0;
-    opacity: 0;
+    background-color: white;
+    /* max-height: 0; */
+    /* opacity: 0; */
     overflow: hidden;
 }
 
 /* When visible */
 .form-container.visible {
-    max-height: 500px;
+    /* max-height: 500px; */
     /* Adjust based on your content */
     opacity: 1;
 }
@@ -151,4 +153,342 @@ table tr:hover {
     #toggleFormContainer {
         height: 35px;
     }
+}
+
+/* ======= General Styles ======= */
+.pill-container {
+    display: flex;
+    flex-direction: column;
+    /* Stack pills in a single column */
+    align-items: center;
+    /* Center pills horizontally */
+    gap: 10px;
+    /* padding: 10px; */
+    width: 100%;
+}
+
+.pill {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    padding: 10px;
+    border: 3px solid black;
+    border-radius: 50px;
+    background-color: white;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    width: 100%;
+    /* max-width: 500px; */
+    /* Ensures a readable width */
+    font-family: 'Poppins', sans-serif;
+}
+
+.pill:hover {
+    background-color: #f0f0f0;
+    transform: scale(0.99);
+}
+
+/* Refined Link Styling */
+.pill a {
+    text-decoration: none;
+    font-weight: 800;
+    font-size: 1.2em;
+    color: black;
+    display: block;
+    width: 100%;
+    text-align: center;
+    transition: color 0.3s ease;
+}
+
+.pill a:hover {
+    color: #555;
+}
+
+/* Refined Description Styling */
+.description {
+    font-size: 1em;
+    font-weight: 500;
+    color: #333;
+    opacity: 0.8;
+    text-align: center;
+    line-height: 1.4;
+    margin-top: 5px;
+    /* width: 90%; */
+}
+
+/* Make Pills More Structured */
+.pill-content {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 100%;
+    padding: 10px;
+}
+
+
+/* ======= Header Styles ======= */
+.pill-header {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    background: linear-gradient(135deg, #ffffff, #f8f8f8);
+    border: 3px solid black;
+    border-radius: 50px;
+    padding: 20px 35px;
+    /* margin: 30px 0px; */
+    box-shadow: 4px 4px 0px black, 8px 8px 15px rgba(0, 0, 0, 0.1);
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+    margin-bottom: 1.5rem;
+}
+
+.pill-header:hover {
+    /* transform: scale(1.02); */
+    box-shadow: 6px 6px 0px black, 10px 10px 20px rgba(0, 0, 0, 0.15);
+}
+
+.page-heading {
+    font-size: 3em;
+    font-weight: 900;
+    /* text-transform: uppercase; */
+    letter-spacing: 2px;
+    margin: 0;
+    /* font-family: 'Poppins', sans-serif; */
+}
+
+.page-heading a {
+    text-decoration: none;
+    color: black;
+
+    /* -webkit-text-stroke: 3px black; */
+    /* text-stroke: 3px black; */
+    /* transition: transform 0.2s ease; */
+}
+
+.page-heading a:hover {
+    /* transform: scale(1.05); */
+    /* opacity: 0.9; */
+}
+
+.subtext {
+    font-size: 1em;
+    color: black;
+    margin-top: 8px;
+    font-style: italic;
+    font-weight: 500;
+}
+
+.subtext a {
+    font-weight: bold;
+    text-decoration: none;
+    color: black;
+    transition: color 0.3s ease;
+}
+
+.subtext a:hover {
+    color: #777;
+}
+
+/* FORM CONTAINER: Keep it sleek & compact */
+.form-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    padding: 15px;
+    margin: 20px auto;
+    width: 100%;
+    /* max-width: 350px; */
+    background: white;
+    border: 2px solid black;
+    border-radius: 30px;
+    box-shadow: 4px 4px 0px black, 8px 8px 15px rgba(0, 0, 0, 0.1);
+    transition: all 0.3s ease;
+}
+
+.form-container form {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    width: 100%;
+    padding: 15px 20px;
+}
+
+/* LINK INPUT STYLED AS A PILL TITLE */
+.form-pill {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    background: white;
+    border: 3px solid black;
+    border-radius: 50px;
+    padding: 12px;
+    width: 100%;
+    text-align: center;
+}
+
+/* Bold Link Title */
+.form-pill-title {
+    font-weight: bold;
+    font-size: 1.2em;
+    color: black;
+    text-transform: uppercase;
+}
+
+/* Link Input: Looks like part of the pill */
+.form-pill input {
+    border: none;
+    background: none;
+    text-align: center;
+    font-size: 1em;
+    font-weight: bold;
+    width: 100%;
+    outline: none;
+    padding-top: 5px;
+}
+
+/* DESCRIPTION INPUT: Muted text below like the pills */
+.form-description input {
+    width: 100%;
+    text-align: center;
+    border: none;
+    font-size: 1em;
+    font-weight: 500;
+    color: gray;
+    background: none;
+    outline: none;
+}
+
+/* FORM BUTTON: Styled to match pills */
+.btn-submit {
+    padding: 10px 16px;
+    font-size: 1em;
+    font-weight: bold;
+    text-transform: uppercase;
+    background: linear-gradient(90deg, #4A90E2, #007AFF);
+    color: white;
+    border: 2px solid black;
+    border-radius: 20px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    width: 100%;
+}
+
+.btn-submit:hover {
+    background: linear-gradient(90deg, #007AFF, #4A90E2);
+    box-shadow: 2px 2px 10px rgba(0, 0, 0, 0.2);
+}
+
+/* Make inputs slightly interactive */
+.form-container input:focus {
+    /* background-color: #f8f8f8; */
+    transform: scale(1.02);
+}
+
+/* Sleeker Submit Button */
+.btn-submit {
+    padding: 8px 16px;
+    font-size: 1em;
+    font-weight: bold;
+    text-transform: uppercase;
+    background-color: white;
+    /* color: black; */
+    border: 2px solid black;
+    border-radius: 20px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+/* .btn-submit:hover {
+    background-color: black;
+    color: white;
+    transform: scale(1.05);
+} */
+
+/* ======= Form Toggle Button (Sleek & Unified) ======= */
+.form-toggle {
+    margin-top: 10px;
+}
+
+.form-toggle span {
+    font-weight: bold;
+    cursor: pointer;
+    font-size: 0.9em;
+    text-transform: uppercase;
+    padding: 4px 12px;
+    border: 2px solid black;
+    border-radius: 20px;
+    background: white;
+    transition: all 0.3s ease;
+    display: inline-block;
+}
+
+.form-toggle span:hover {
+    background: black;
+    color: white;
+}
+
+/* Hide form when collapsed */
+.hidden {
+    display: none;
+}
+
+
+/* ======= Animations ======= */
+.icon {
+    font-size: 1.2em;
+    margin-right: 5px;
+    display: inline-block;
+    animation: sparkle 1.5s infinite ease-in-out alternate;
+}
+
+@keyframes sparkle {
+    0% {
+        transform: scale(1);
+        opacity: 0.7;
+    }
+
+    100% {
+        transform: scale(1.2);
+        opacity: 1;
+    }
+}
+
+/* ======= Utility Classes ======= */
+.hidden {
+    display: none;
+}
+
+/* ======= Action Buttons (Same Style as "Add Link") ======= */
+.action-buttons {
+    display: flex;
+    gap: 10px;
+    margin-top: 15px;
+}
+
+.btn-toggle {
+    font-weight: bold;
+    cursor: pointer;
+    font-size: 1.1em;
+    text-transform: uppercase;
+    padding: 5px 15px;
+    border: 3px solid black;
+    border-radius: 30px;
+    font-size: 14px;
+    background: white;
+    transition: all 0.3s ease;
+    display: inline-block;
+}
+
+.btn-toggle:hover {
+    background: black;
+    color: white;
+}
+
+/* ======= Hidden Form Toggle ======= */
+.hidden {
+    display: none;
 }
