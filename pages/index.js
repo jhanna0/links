@@ -100,4 +100,50 @@ document.addEventListener("DOMContentLoaded", () => {
             goButton.click(); // Simulate a click on the Go button
         }
     });
+
+
+    // Function to generate a random string
+    function generateRandomString(length) {
+        const characters = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
+        let result = "";
+        for (let i = 0; i < length; i++) {
+            result += characters.charAt(Math.floor(Math.random() * characters.length));
+        }
+        return result;
+    }
+
+    // Function to copy text to clipboard
+    function copyPrivatePageInfo() {
+        const url = document.getElementById("privatePageUrl").innerText;
+        const postPass = document.getElementById("postingPassword").innerText;
+        const viewPass = document.getElementById("viewingPassword").innerText;
+        const fullText = `🔒 Private Page Info:\nURL: ${url}\n📩 Posting Password: ${postPass}\n👀 Viewing Password: ${viewPass}`;
+
+        navigator.clipboard.writeText(fullText).then(() => {
+            alert("Copied Private Page Info!");
+        });
+    }
+
+    // Event Listener for "Create Private Page" Button
+    document.getElementById("createPrivatePage").addEventListener("click", function () {
+        const randomPageId = generateRandomString(8);
+        const postingPass = generateRandomString(12);
+        const viewingPass = generateRandomString(12);
+
+        // Set the generated values
+        document.getElementById("privatePageUrl").innerText = `https://linkstash.co/${randomPageId}`;
+        document.getElementById("postingPassword").innerText = postingPass;
+        document.getElementById("viewingPassword").innerText = viewingPass;
+
+        // Show the modal
+        document.getElementById("privatePageModal").style.display = "flex";
+    });
+
+    // Close Modal
+    document.querySelectorAll(".close-button").forEach(button => {
+        button.addEventListener("click", function () {
+            this.closest(".modal").style.display = "none";
+        });
+    });
 });
+

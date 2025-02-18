@@ -224,24 +224,24 @@ document.addEventListener("DOMContentLoaded", () => {
             this.setSelectionRange(0, 0); // ✅ Moves cursor to the start
         }, 0);
     });
-});
 
-window.openLinkModal = function (link) {
-    const modal = document.getElementById("linkModal");
-    const modalContent = document.getElementById("modalLinkText");
+    window.openLinkModal = function (link) {
+        const modal = document.getElementById("linkModal");
+        const modalContent = document.getElementById("modalLinkText");
 
-    if (modal && modalContent) {
-        modalContent.textContent = link;
-        modal.style.display = "flex"; // Show modal
+        if (modal && modalContent) {
+            modalContent.textContent = link;
+            modal.style.display = "flex"; // Show modal
+        }
+    };
+
+    window.addEventListener('click', function (event) {
+        if (event.target.classList.contains('modal')) {
+            event.target.style.display = 'none';
+        }
+    });
+
+    window.closeLinkModal = function () {
+        document.getElementById("linkModal").style.display = "none";
     }
-};
-
-window.addEventListener('click', function (event) {
-    if (event.target.classList.contains('modal')) {
-        event.target.style.display = 'none';
-    }
 });
-
-window.closeLinkModal = function () {
-    document.getElementById("linkModal").style.display = "none";
-};

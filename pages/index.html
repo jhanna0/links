@@ -114,7 +114,7 @@
 
         /* Go Button */
         .btn-go {
-            margin-top: 1.5rem;
+            margin-top: 1rem;
             padding: 10px 18px;
             font-size: 1.1em;
             font-weight: bold;
@@ -141,7 +141,7 @@
 
         /* Footer Links */
         .footer-links {
-            margin-top: 20px;
+            margin-top: 1rem;
             font-size: 1em;
         }
 
@@ -379,7 +379,6 @@
 
         <!-- Page Name Input -->
         <div class="input-section">
-            <!-- <label class="input-label" for="page">Page Name</label> -->
             <div class="input-wrapper">
                 <input type="text" id="page" name="page" placeholder="Page Name"
                     title="Only letters, numbers, dashes, and underscores allowed." maxlength="100" required />
@@ -387,95 +386,228 @@
 
             <!-- Go Button -->
             <button type="button" id="goButton" class="btn-go">Go</button>
+
+            <!-- New Private Page Button (Styled Differently) -->
+            <!-- <button type="button" id="createPrivatePage" class="btn-secondary">
+                Create Private Page
+            </button> -->
         </div>
 
         <!-- Footer Links -->
         <div class="footer-links">
             <span id="infoButton">How It Works</span> | <span id="accessButton">Increase Access</span>
         </div>
-
-        <!-- Unlimited Access Modal -->
-        <div id="accessModal" class="modal hidden">
-            <div class="modal-content">
-                <span class="close-button">&times;</span>
-                <h2 class="page-heading">Increase Access</h2>
-                <p class="subtext">$5 for one month.</p>
-
-                <div class="feature-list">
-                    <div class="feature-item">
-                        <strong>Increase Link Submitting Limit</strong>
-                        <p> <strong>3 → 20</strong> links per minute.</p>
-                        <p><strong>20 → 100</strong> links per day</p>
-                    </div>
-                    <div class="feature-item">
-                        <strong>Account-Free</strong>
-                        <p>No sign-up needed—just attach your key.</p>
-                    </div>
-                    <div class="feature-item">
-                        <strong>API Key</strong>
-                        <p>Use in the UI or programmatically.</p>
-                    </div>
-                    <div class="feature-item">
-                        <strong>Anonymous</strong>
-                        <p>Absolutely no user information is stored.</p>
-                    </div>
-                </div>
-
-                <div class="button-container">
-                    <button class="btn-upgrade">Get Key</button>
-                </div>
-
-                <!-- API Key Input Section -->
-                <div class="button-input-wrapper input-wrapper">
-                    <input style="text-align: left;" type="text" id="apiKey" placeholder="Enter API key">
-                    <button id="saveApiKey" class="btn-save">Save</button>
-                </div>
-            </div>
-        </div>
-
-        <!-- Info Modal -->
-        <div id="infoModal" class="modal hidden">
-            <div class="modal-content">
-                <span class="close-button">&times;</span>
-                <h2 class="page-heading">How It Works</h2>
-
-                <div class="info-list">
-                    <div class="info-item">
-                        <strong>Pages Store Links</strong>
-                        <p>Each page is a list of links. Anyone can view or add to it.</p>
-                    </div>
-                    <div class="info-item">
-                        <strong>No Ownership- No Accounts</strong>
-                        <p>There are no private pages—anyone with the name has full access. No user data is stored when
-                            posting.</p>
-                    </div>
-                    <div class="info-item">
-                        <strong>No Directory</strong>
-                        <p>Pages can only be found by knowing or guessing their name.</p>
-                    </div>
-                    <div class="info-item">
-                        <strong>Links Are Permanent</strong>
-                        <p>Once added, a link cannot be removed from a page.</p>
-                    </div>
-                    <!-- mention that /funnyvideos is basically publicly shared at that point -->
-                    <div class="info-item">
-                        <strong>Obscurity = Privacy</strong>
-                        <p>A common name <code>/funnyvideos</code> is easy to guess. A random one
-                            <code>/b7Qx9fL2</code> is nearly impossible to find.
-                        </p>
-                    </div>
-
-                    <!-- Responsibility Disclaimer -->
-                    <div class="info-item">
-                        <strong>You Are Responsible</strong>
-                        <p>By posting, you acknowledge that you alone are fully responsible for the content you
-                            share. Do not post anything illegal, or harmful.</p>
-                    </div>
-                </div>
-            </div>
-        </div>
-
     </div>
+
+    <!-- Unlimited Access Modal -->
+    <div id="accessModal" class="modal hidden">
+        <div class="modal-content">
+            <span class="close-button">&times;</span>
+            <h2 class="page-heading">Increase Access</h2>
+            <p class="subtext">$5 for one month.</p>
+
+            <div class="feature-list">
+                <div class="feature-item">
+                    <strong>Increase Link Submitting Limit</strong>
+                    <p> <strong>3 → 20</strong> links per minute.</p>
+                    <p><strong>20 → 100</strong> links per day</p>
+                </div>
+                <div class="feature-item">
+                    <strong>Account-Free</strong>
+                    <p>No sign-up needed.</p>
+                </div>
+                <div class="feature-item">
+                    <strong>Free Range Key</strong>
+                    <p>Use in the UI or programmatically.</p>
+                </div>
+                <div class="feature-item">
+                    <strong>Anonymous</strong>
+                    <p>Absolutely no user information is stored.</p>
+                </div>
+            </div>
+
+            <div class="button-container">
+                <button class="btn-upgrade">Get Key</button>
+            </div>
+
+            <!-- API Key Input Section -->
+            <div class="button-input-wrapper input-wrapper">
+                <input style="text-align: left;" type="text" id="apiKey" placeholder="Enter key">
+                <button id="saveApiKey" class="btn-save">Save</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Info Modal -->
+    <div id="infoModal" class="modal hidden">
+        <div class="modal-content">
+            <span class="close-button">&times;</span>
+            <h2 class="page-heading">How It Works</h2>
+
+            <div class="info-list">
+                <div class="info-item">
+                    <strong>Pages Store Links</strong>
+                    <p>Each page is a list of links. Anyone can view or add to it.</p>
+                </div>
+                <div class="info-item">
+                    <strong>No Ownership- No Accounts</strong>
+                    <p>There are no private pages—anyone with the name has full access. No user data is stored when
+                        posting.</p>
+                </div>
+                <div class="info-item">
+                    <strong>No Directory</strong>
+                    <p>Pages can only be found by knowing or guessing their name.</p>
+                </div>
+                <div class="info-item">
+                    <strong>Links Are Permanent</strong>
+                    <p>Once added, a link cannot be removed from a page.</p>
+                </div>
+                <!-- mention that /funnyvideos is basically publicly shared at that point -->
+                <div class="info-item">
+                    <strong>Obscurity = Privacy</strong>
+                    <p>A common name <code>/funnyvideos</code> is easy to guess. A random one
+                        <code>/b7Qx9fL2</code> is nearly impossible to find.
+                    </p>
+                </div>
+
+                <!-- Responsibility Disclaimer -->
+                <div class="info-item">
+                    <strong>You Are Responsible</strong>
+                    <p>By posting, you acknowledge that you alone are fully responsible for the content you
+                        share. Do not post anything illegal, or harmful.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div id="privatePageModal" class="modal hidden">
+        <div class="modal-content">
+            <span class="close-button">&times;</span>
+            <!-- Title with Copy Icon -->
+            <div class="modal-header">
+                <h2 class="page-heading">Private Page Created</h2>
+                <!-- <span class="copy-icon" onclick="copyPrivatePageInfo()">📋</span> -->
+            </div>
+            <p class="subtext">Share the correct password for the desired level of access.</p>
+
+            <!-- Private Info Section -->
+            <div class="private-info">
+                <div class="private-box">
+                    <h4>Private URL</h4>
+                    <p id="privatePageUrl">Generating...</p>
+                </div>
+                <div class="private-box">
+                    <h4>Posting Password</h4>
+                    <p id="postingPassword">Generating...</p>
+                </div>
+                <div class="private-box">
+                    <h4>Viewing Password</h4>
+                    <p id="viewingPassword">Generating...</p>
+                </div>
+
+                <!-- <button class="copy-button" onclick="copyPrivatePageInfo()">📋 Copy All</button> -->
+
+            </div>
+
+            <!-- Instructions (No changes to .info-item) -->
+            <div class="info-list" style="margin-top: 1.5rem;">
+                <div class="info-item">
+                    <strong>How It Works</strong>
+                    <p>This page is private and can only be accessed by those with the URL.</p>
+                </div>
+                <div class="info-item">
+                    <strong>Posting Access</strong>
+                    <p>Users with the <strong>posting password</strong> can add content.</p>
+                </div>
+                <div class="info-item">
+                    <strong>Viewing Access</strong>
+                    <p>Users with the <strong>viewing password</strong> can see content, but not edit.</p>
+                </div>
+                <div class="info-item">
+                    <strong>Keep It Secure</strong>
+                    <p>Do not share the posting password unless you trust the user.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <style>
+        /* Secondary Button Styling */
+        .btn-secondary {
+            padding: 8px 15px;
+            font-size: 1em;
+            margin-top: 1.5rem;
+            font-weight: bold;
+            background: white;
+            color: black;
+            border: 2px solid black;
+            border-radius: 50px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            justify-content: center;
+            width: 80%;
+        }
+
+        .btn-secondary:hover {
+            background: black;
+            color: white;
+        }
+
+        /* Private Info Styling (Scoped to Modal) */
+        .private-info {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+            /* margin-bottom: 15px; */
+        }
+
+        .private-box {
+            background: white;
+            border: 2px solid black;
+            padding: 12px;
+            border-radius: 15px;
+            text-align: center;
+            font-weight: bold;
+        }
+
+        .private-box h4 {
+            margin-bottom: 0.25rem;
+        }
+
+        .private-box p {
+            font-size: 1rem;
+            font-family: monospace;
+            background: #F6F3EE;
+            padding: 8px;
+            border-radius: 8px;
+            display: inline-block;
+            width: 100%;
+            text-align: center;
+            border: 2px solid #777;
+        }
+
+        /* Single Copy Button (Sits Below) */
+        .copy-button {
+            font-size: 1rem;
+            font-weight: bold;
+            padding: 10px 15px;
+            border-radius: 50px;
+            background: white;
+            color: black;
+            border: 2px solid black;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            width: auto;
+            margin-top: 10px;
+        }
+
+        .copy-button:hover {
+            background: black;
+            color: white;
+        }
+    </style>
 </body>
 
 </html>
