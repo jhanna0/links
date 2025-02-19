@@ -6,10 +6,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Link Stash</title>
 
-    <!-- Basic SEO -->
+    <!-- Basic SEO & Social Meta Tags -->
     <meta name="description" content="Store links on a public page without an account.">
-
-    <!-- Open Graph & Twitter Meta Tags -->
     <meta property="og:title" content="Link Stash" />
     <meta property="og:description" content="Store links on a public page without an account." />
     <meta property="og:image" content="https://linkstash.co/link.png" />
@@ -21,19 +19,31 @@
     <meta name="twitter:image" content="https://linkstash.co/link.png" />
     <meta name="twitter:url" content="https://linkstash.co/" />
 
-    <!-- Styles -->
-    <!-- <link rel="stylesheet" href="/styles.css" /> -->
-    <!-- <link rel="stylesheet" href="/index.css" /> -->
     <link rel="icon" type="image/x-icon" href="/favicon.png">
     <link rel="apple-touch-icon" href="/link.png">
     <link rel="stylesheet" href="alert.css">
 
     <style>
+        /*---------------------------------------*\
+        # Variables & Utility Classes
+    \*---------------------------------------*/
         :root {
             --background-gradient: linear-gradient(to right, #F6F3EE, #EDE6DA);
+            --font-family: 'Inter', sans-serif;
+            --primary-color: #000;
+            --secondary-color: #fff;
+            --border-width-3: 3px;
+            --border-width-2: 2px;
+            --radius-large: 50px;
+            --radius-medium: 30px;
+            --radius-small: 20px;
+            --shadow-standard: 4px 4px 0px var(--primary-color), 8px 8px 15px rgba(0, 0, 0, 0.1);
+            --margin-large: 1.5rem;
+            --margin-medium: 1rem;
+            --margin-small: 0.5rem;
         }
 
-        /* Basic Reset */
+        /* Basic Reset & Global Styles */
         * {
             box-sizing: border-box;
             margin: 0;
@@ -42,30 +52,36 @@
 
         html,
         body {
-            font-family: 'Inter', sans-serif;
+            font-family: var(--font-family);
             background: var(--background-gradient);
             min-height: 100vh;
             display: flex;
             flex-direction: column;
             align-items: center;
-            width: 100vw;
             justify-content: center;
+            width: 100vw;
         }
 
-        /* Main Container */
-        .home-container {
-            background: white;
-            border: 3px solid black;
-            border-radius: 50px;
-            box-shadow: 4px 4px 0px black, 8px 8px 15px rgba(0, 0, 0, 0.1);
+        .text-center {
             text-align: center;
+        }
+
+        /*---------------------------------------*\
+         # Base Components
+    \*---------------------------------------*/
+        /* Card / Container */
+        .card {
+            background: var(--secondary-color);
+            border: var(--border-width-3) solid var(--primary-color);
+            border-radius: var(--radius-large);
+            box-shadow: var(--shadow-standard);
             width: 640px;
             padding: 2rem;
             margin: 0 auto;
         }
 
-        /* Page Title */
-        .page-heading {
+        /* Headings & Subtext */
+        .heading {
             font-size: 2.5em;
             font-weight: 900;
             letter-spacing: 2px;
@@ -74,74 +90,111 @@
 
         .subtext {
             font-size: 1.1em;
-            color: black;
+            color: var(--primary-color);
             opacity: 0.8;
             margin-bottom: 1rem;
         }
 
-        /* Page Name Input Section */
+        /* Input Section */
         .input-section {
-            margin-top: 1.5rem;
+            margin-top: var(--margin-large);
             display: flex;
             flex-direction: column;
             align-items: center;
         }
 
-        .input-label {
-            font-size: 1.1em;
-            font-weight: bold;
-            margin-bottom: 0.5rem;
-        }
-
-        .input-wrapper {
-            display: flex;
-            justify-content: center;
-            width: 100%;
+        .input-wrapper,
+        .button-input-wrapper {
             width: 80%;
+            margin: 0 auto;
+            position: relative;
         }
 
-        .input-wrapper input {
-            border: 0;
-            border-radius: 0;
-            border-bottom: 2px solid black;
-            /* border-radius: 50px; */
-            padding: 10px 15px;
-            font-size: 1.2rem;
-            text-align: center;
+        .input-wrapper input,
+        .button-input-wrapper input {
             width: 100%;
+            padding: 10px 15px;
+            font-size: 16px;
+            text-align: center;
             outline: none;
         }
 
-        /* Go Button */
-        .btn-go {
-            margin-top: 1rem;
+        /* Standard input style */
+        .input-wrapper input {
+            border: var(--border-width-3) solid var(--primary-color);
+            border-radius: var(--radius-large);
+        }
+
+        .button-input-wrapper input {
+            border: var(--border-width-2) solid var(--primary-color);
+            border-radius: var(--radius-small);
+        }
+
+        /*---------------------------------------*\
+             # Buttons
+    \*---------------------------------------*/
+        .btn {
             padding: 10px 18px;
-            font-size: 1.1em;
+            font-size: 1em;
             font-weight: bold;
             text-transform: uppercase;
-            background: black;
-            color: white;
-            border: 3px solid black;
-            border-radius: 50px;
+            background: var(--primary-color);
+            color: var(--secondary-color);
+            border: var(--border-width-3) solid var(--primary-color);
+            border-radius: var(--radius-large);
             cursor: pointer;
             transition: all 0.3s ease;
-            width: 80%;
+            display: inline-block;
         }
 
-        .btn-go:hover {
-            background: white;
-            color: black;
+        .btn:hover {
+            background: var(--secondary-color);
+            color: var(--primary-color);
         }
 
-        /* Remove default blue focus outline and add custom style */
-        /* ALL BUTTONS NEED THIS, although, highlighting when tabbed is good UIUX */
-        /* .btn-go:focus {
-            outline: none;
-        } */
+        /* Modifier for secondary buttons */
+        .btn--secondary {
+            background: var(--secondary-color);
+            color: var(--primary-color);
+        }
 
-        /* Footer Links */
+        .btn--secondary:hover {
+            background: var(--primary-color);
+            color: var(--secondary-color);
+        }
+
+        .btn--full {
+            width: 100%;
+            margin-top: var(--margin-medium);
+        }
+
+        /* Button inside an input group (positioned absolutely) */
+        .button-input-wrapper .btn {
+            position: absolute;
+            right: 5px;
+            top: 50%;
+            transform: translateY(-50%);
+            min-width: max-content;
+            padding: 0 16px;
+            font-size: 14px;
+            white-space: nowrap;
+            border: var(--border-width-2) solid var(--primary-color);
+            border-radius: var(--radius-small);
+            background: var(--primary-color);
+            color: var(--secondary-color);
+            height: 70%;
+        }
+
+        .button-input-wrapper .btn:hover {
+            background: var(--secondary-color);
+            color: var(--primary-color);
+        }
+
+        /*---------------------------------------*\
+           # Footer & Links
+    \*---------------------------------------*/
         .footer-links {
-            margin-top: 1.5rem;
+            margin-top: var(--margin-medium);
             font-size: 1em;
         }
 
@@ -156,29 +209,9 @@
             color: #777;
         }
 
-        @media (max-width: 768px) {
-            .home-container {
-                width: 90%;
-                padding: 1.5rem;
-            }
-
-            .input-wrapper {
-                width: 100%;
-            }
-
-            .input-wrapper input {
-                font-size: 1rem;
-                padding: 8px 12px;
-            }
-
-            .btn-go {
-                font-size: 1em;
-                padding: 8px 14px;
-                width: 100%;
-            }
-        }
-
-        /* Modal Styling - Fullscreen & Scrollable */
+        /*---------------------------------------*\
+              # Modal Styles
+    \*---------------------------------------*/
         .modal {
             display: none;
             position: fixed;
@@ -189,50 +222,24 @@
             height: 100%;
             background-color: rgba(0, 0, 0, 0.5);
             overflow-y: auto;
-            /* Allows page scrolling if modal is too large */
             justify-content: center;
             align-items: center;
-            /* Keeps modal centered */
-            /* padding: 20px; */
-            /* Adds spacing to prevent sticky edges */
         }
 
-        /* Modal Content - Centers and Scrolls When Needed */
         .modal-content {
-            background: white;
-            border: 3px solid black;
-            border-radius: 30px;
+            background: var(--secondary-color);
+            border: var(--border-width-3) solid var(--primary-color);
+            border-radius: var(--radius-medium);
             padding: 20px;
             width: 100%;
             max-width: 500px;
-            /* Limits width on larger screens */
-            text-align: center;
-            box-shadow: 4px 4px 0px black, 8px 8px 15px rgba(0, 0, 0, 0.1);
+            box-shadow: var(--shadow-standard);
             position: relative;
-
-            /* Enables scrolling inside modal when needed */
+            text-align: center;
             max-height: 90vh;
-            /* Prevents it from exceeding screen height */
             overflow-y: auto;
-            /* Enables scrolling inside */
         }
 
-        /* Prevents the modal content from being cut off */
-        .modal-content:focus {
-            outline: none;
-        }
-
-        /* Ensures mobile full width and scrolling */
-        @media (max-width: 768px) {
-            .modal-content {
-                width: 95%;
-                /* Closer to full width on small screens */
-                max-width: none;
-                /* Removes max-width restriction */
-            }
-        }
-
-        /* Close Button */
         .close-button {
             cursor: pointer;
             font-size: 1.5rem;
@@ -242,7 +249,9 @@
             right: 15px;
         }
 
-        /* Feature & Info Lists */
+        /*---------------------------------------*\
+             # List Items (Features/Info)
+    \*---------------------------------------*/
         .feature-list,
         .info-list {
             display: flex;
@@ -252,315 +261,33 @@
             text-align: left;
         }
 
-        /* Ensure spans break to new lines */
-        .feature-item span {
-            display: block;
-        }
-
-        /* Each Feature/Info Item */
         .feature-item,
         .info-item {
             background: #f8f8f8;
-            border: 2px solid black;
-            border-radius: 20px;
+            border: var(--border-width-2) solid var(--primary-color);
+            border-radius: var(--radius-small);
             padding: 10px 15px;
             font-size: 1rem;
         }
 
-        /* Text inside Feature/Info Items */
         .feature-item p,
         .info-item p {
             font-weight: normal;
             margin-top: 5px;
         }
 
-        /* Buttons */
-        .btn-upgrade,
-        .btn-save {
-            padding: 10px 18px;
-            font-size: 1rem;
-            font-weight: bold;
-            text-transform: uppercase;
-            background: black;
-            border: 3px solid black;
-            border-radius: 50px;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            margin-top: 15px;
-            color: white;
-        }
-
-        .btn-upgrade {
-            width: 100%;
-        }
-
-        .btn-upgrade:hover,
-        .btn-save:hover {
-            background: white;
-            color: black;
-        }
-
-        .input-wrapper input {
-            border: 3px solid black;
-            border-radius: 50px;
-            padding: 10px 15px;
-            font-size: 1.2rem;
-            text-align: center;
-            width: 100%;
-            outline: none;
-            /* background-color: #f8f8f8; */
-        }
-
-        /* ✅ Wrapper specifically for buttons inside inputs */
-        .button-input-wrapper {
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            /* ✅ Ensures centering */
-            width: 100%;
-            /* ✅ Prevents excessive stretching */
-            position: relative;
-            width: 100%;
-            /* ✅ Centers it */
-            margin-top: 2rem;
-        }
-
-        /* ✅ Input field takes up remaining space */
-        .button-input-wrapper input {
-            flex-grow: 1;
-            padding: 10px;
-            border: 2px solid black;
-            border-radius: 20px;
-            text-align: center;
-            font-size: 1rem;
-            width: 100%;
-        }
-
-        /* ✅ Save button inside input wrapper */
-        .button-input-wrapper .btn-save {
-            position: absolute;
-            right: 5px;
-            top: 50%;
-            transform: translateY(-50%);
-            height: calc(100% - 10px);
-            min-width: max-content;
-            padding: 0 16px;
-
-            font-size: 14px;
-            font-weight: bold;
-            cursor: pointer;
-            border: none;
-            background: black;
-            color: white;
-            border-radius: 20px;
-            white-space: nowrap;
-            margin-top: 0;
-            border: 2px solid black;
-        }
-
-        /* ✅ Button hover effect */
-        .button-input-wrapper .btn-save:hover {
-            background: white;
-            color: black;
-            border: 2px solid black;
-        }
-    </style>
-</head>
-
-<body>
-
-    <!-- Main Content -->
-    <div class="home-container">
-        <h1 class="page-heading">Link Stash</h1>
-        <p class="subtext">
-            Enter a page name to access or create a new stash.
-        </p>
-
-        <!-- Page Name Input -->
-        <div class="input-section">
-            <div class="input-wrapper">
-                <input type="text" id="page" name="page" placeholder="Page Name"
-                    title="Only letters, numbers, dashes, and underscores allowed." maxlength="100" required />
-            </div>
-
-            <!-- Go Button -->
-            <button type="button" id="goButton" class="btn-go">Go</button>
-
-            <!-- New Private Page Button (Styled Differently) -->
-            <button type="button" id="createPrivatePage" class="btn-secondary">
-                Create Private Page
-            </button>
-        </div>
-
-        <!-- Footer Links -->
-        <div class="footer-links">
-            <span id="infoButton">How It Works</span> | <span id="accessButton">Increase Access</span>
-        </div>
-    </div>
-
-    <!-- Unlimited Access Modal -->
-    <div id="accessModal" class="modal hidden">
-        <div class="modal-content">
-            <span class="close-button">&times;</span>
-            <h2 class="page-heading">Increase Access</h2>
-            <p class="subtext">$5 for one month.</p>
-
-            <div class="feature-list">
-                <div class="feature-item">
-                    <strong>Increase Link Submitting Limit</strong>
-                    <p> <strong>3 → 20</strong> links per minute.</p>
-                    <p><strong>20 → 100</strong> links per day</p>
-                </div>
-                <div class="feature-item">
-                    <strong>Increase Private Page Creation Limit</strong>
-                    <p> <strong>1 → 5</strong> private pages per day.</p>
-                </div>
-                <div class="feature-item">
-                    <strong>Account-Free</strong>
-                    <p>No sign-up needed.</p>
-                </div>
-                <div class="feature-item">
-                    <strong>Anonymous</strong>
-                    <p>Absolutely no user information is stored.</p>
-                </div>
-            </div>
-
-            <div class="button-container">
-                <button class="btn-upgrade">Get Key</button>
-            </div>
-
-            <!-- API Key Input Section -->
-            <div class="button-input-wrapper input-wrapper">
-                <input style="text-align: left;" type="text" id="apiKey" placeholder="Enter key">
-                <button id="saveApiKey" class="btn-save">Save</button>
-            </div>
-        </div>
-    </div>
-
-    <!-- Info Modal -->
-    <div id="infoModal" class="modal hidden">
-        <div class="modal-content">
-            <span class="close-button">&times;</span>
-            <h2 class="page-heading">How It Works</h2>
-
-            <div class="info-list">
-                <div class="info-item">
-                    <strong>Pages Store Links</strong>
-                    <p>Each page is a list of links. Anyone can view or add to it.</p>
-                </div>
-                <div class="info-item">
-                    <strong>No Ownership- No Accounts</strong>
-                    <p>No one owns pages- anyone with the name has full access. No user data is stored when
-                        posting.</p>
-                </div>
-                <div class="info-item">
-                    <strong>No Directory</strong>
-                    <p>Pages can only be found by knowing or guessing their name.</p>
-                </div>
-                <div class="info-item">
-                    <strong>Links Are Permanent</strong>
-                    <p>Once added, a link cannot be removed from a page.</p>
-                </div>
-                <!-- mention that /funnyvideos is basically publicly shared at that point -->
-                <div class="info-item">
-                    <strong>Obscurity = Privacy</strong>
-                    <p>A common name <code>/funnyvideos</code> is easy to guess. A random one
-                        <code>/b7Qx9fL2</code> is nearly impossible to find.
-                    </p>
-                </div>
-
-                <!-- Responsibility Disclaimer -->
-                <div class="info-item">
-                    <strong>You Are Responsible</strong>
-                    <p>By posting, you acknowledge that you alone are fully responsible for the content you
-                        share. Do not post anything illegal, or harmful.</p>
-                </div>
-            </div>
-        </div>
-    </div>
-    <div id="privatePageModal" class="modal hidden">
-        <div class="modal-content">
-            <span class="close-button">&times;</span>
-            <h2 class="page-heading">Create Private Page</h2>
-            <p class="subtext">Share the correct password for the desired level of access.</p>
-
-            <!-- Private Info Section -->
-            <div class="private-info">
-                <div class="private-box">
-                    <h4>Private URL</h4>
-                    <p id="privatePageUrl">...</p>
-                </div>
-                <div class="private-box">
-                    <h4>Posting Password</h4>
-                    <p id="postingPassword">...</p>
-                </div>
-                <div class="private-box">
-                    <h4>Viewing Password</h4>
-                    <p id="viewingPassword">...</p>
-                </div>
-            </div>
-
-            <!-- Instructions -->
-            <div class="info-list" style="margin-top: 1.5rem;">
-                <div class="info-item">
-                    <strong>How It Works</strong>
-                    <p>This page is private and can only be accessed by those with the URL.</p>
-                </div>
-                <div class="info-item">
-                    <strong>Posting Access</strong>
-                    <p>Users with the <strong>posting password</strong> can add content.</p>
-                </div>
-                <div class="info-item">
-                    <strong>Viewing Access</strong>
-                    <p>Users with the <strong>viewing password</strong> can see content, but not edit.</p>
-                </div>
-                <div class="info-item">
-                    <strong>Keep It Secure</strong>
-                    <p>Do not share the posting password unless you trust the user.</p>
-                </div>
-            </div>
-            <button id="generateButton" style="width: 100%; margin-top: 1.5rem;" class="copy-button">Generate</button>
-
-        </div>
-    </div>
-
-
-    <style>
-        /* Secondary Button Styling */
-        .btn-secondary {
-            padding: 8px 15px;
-            font-size: 1em;
-            margin-top: 1rem;
-            font-weight: bold;
-            background: white;
-            color: black;
-            border: 2px solid black;
-            border-radius: 50px;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            display: flex;
-            align-items: center;
-            gap: 8px;
-            justify-content: center;
-            width: 80%;
-        }
-
-        .btn-secondary:hover {
-            background: black;
-            color: white;
-        }
-
-        /* Private Info Styling (Scoped to Modal) */
+        /*---------------------------------------*\
+             # Private Page Modal
+    \*---------------------------------------*/
         .private-info {
             display: flex;
             flex-direction: column;
             gap: 12px;
-            /* margin-bottom: 15px; */
         }
 
         .private-box {
-            background: white;
-            border: 2px solid black;
+            background: var(--secondary-color);
+            border: var(--border-width-2) solid var(--primary-color);
             padding: 12px;
             border-radius: 15px;
             text-align: center;
@@ -583,27 +310,189 @@
             border: 2px solid #777;
         }
 
-        /* Single Copy Button (Sits Below) */
-        .copy-button {
-            font-size: 1rem;
-            font-weight: bold;
-            padding: 10px 15px;
-            border-radius: 50px;
-            background: black;
-            color: white;
-            border: 2px solid black;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            width: auto;
-            margin-top: 10px;
-        }
+        /*---------------------------------------*\
+                 # Responsive
+    \*---------------------------------------*/
+        @media (max-width: 768px) {
+            .card {
+                width: 90%;
+                padding: 1.5rem;
+            }
 
-        .copy-button:hover {
-            background: white;
-            color: black;
+            .input-wrapper,
+            .button-input-wrapper {
+                width: 100%;
+            }
+
+            .input-wrapper input,
+            .button-input-wrapper input {
+                font-size: 16px;
+                padding: 8px 12px;
+            }
+
+            .btn {
+                font-size: 1em;
+                padding: 8px 14px;
+                width: 100%;
+            }
+
+            .modal-content {
+                width: 95%;
+                max-width: none;
+            }
         }
     </style>
+</head>
 
+<body class="text-center">
+
+    <!-- Main Content -->
+    <div class="card">
+        <h1 class="heading">Link Stash</h1>
+        <p class="subtext">Enter a page name to access or create a new stash.</p>
+
+        <!-- Page Name Input Section -->
+        <div class="input-section">
+            <div class="button-input-wrapper">
+                <input type="text" id="page" name="page" placeholder="Page Name"
+                    title="Only letters, numbers, dashes, and underscores allowed." maxlength="100" required />
+                <!-- Using the base .btn class for the 'Go' button -->
+                <button type="button" id="goButton" class="btn">Go</button>
+            </div>
+        </div>
+
+        <!-- Footer Links (2 Links) -->
+        <div class="footer-links">
+            <span id="infoButton">How It Works</span> |
+            <span id="accessButton">Increase Access</span> |
+            <span id="createPrivatePage">
+                Create Private Page
+            </span>
+        </div>
+    </div>
+
+    <!-- Unlimited Access Modal -->
+    <div id="accessModal" class="modal">
+        <div class="modal-content">
+            <span class="close-button">&times;</span>
+            <h2 class="heading">Increase Access</h2>
+            <p class="subtext">$5 for one month.</p>
+
+            <div class="feature-list">
+                <div class="feature-item">
+                    <strong>Increase Link Submitting Limit</strong>
+                    <p><strong>3 → 20</strong> links per minute.</p>
+                    <p><strong>20 → 100</strong> links per day</p>
+                </div>
+                <div class="feature-item">
+                    <strong>Increase Private Page Creation Limit</strong>
+                    <p><strong>1 → 5</strong> private pages per day.</p>
+                </div>
+                <div class="feature-item">
+                    <strong>Account-Free</strong>
+                    <p>No sign-up needed.</p>
+                </div>
+                <div class="feature-item">
+                    <strong>Anonymous</strong>
+                    <p>Absolutely no user information is stored.</p>
+                </div>
+            </div>
+
+            <button class="btn btn--full">Get
+                Key</button>
+
+            <!-- API Key Input Section -->
+            <div class="button-input-wrapper" style="margin-top: var(--margin-large); width: 100%;">
+                <input style="text-align: left;" type="text" id="apiKey" placeholder="Enter key">
+                <button id="saveApiKey" class="btn">Save</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Info Modal -->
+    <div id="infoModal" class="modal">
+        <div class="modal-content">
+            <span class="close-button">&times;</span>
+            <h2 class="heading">How It Works</h2>
+
+            <div class="info-list">
+                <div class="info-item">
+                    <strong>Pages Store Links</strong>
+                    <p>Each page is a list of links. Anyone can view or add to it.</p>
+                </div>
+                <div class="info-item">
+                    <strong>No Ownership- No Accounts</strong>
+                    <p>No one owns pages—anyone with the name has full access. No user data is stored when posting.</p>
+                </div>
+                <div class="info-item">
+                    <strong>No Directory</strong>
+                    <p>Pages can only be found by knowing or guessing their name.</p>
+                </div>
+                <div class="info-item">
+                    <strong>Links Are Permanent</strong>
+                    <p>Once added, a link cannot be removed from a page.</p>
+                </div>
+                <div class="info-item">
+                    <strong>Obscurity = Privacy</strong>
+                    <p>A common name <code>/funnyvideos</code> is easy to guess. A random one <code>/b7Qx9fL2</code> is
+                        nearly impossible to find.</p>
+                </div>
+                <div class="info-item">
+                    <strong>You Are Responsible</strong>
+                    <p>By posting, you acknowledge that you alone are fully responsible for the content you share. Do
+                        not post anything illegal, or harmful.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Private Page Modal -->
+    <div id="privatePageModal" class="modal">
+        <div class="modal-content">
+            <span class="close-button">&times;</span>
+            <h2 class="heading">Create Private Page</h2>
+            <p class="subtext">Share the correct password for the desired level of access.</p>
+
+            <!-- Private Info Section -->
+            <div class="private-info">
+                <div class="private-box">
+                    <h4>Private URL</h4>
+                    <p id="privatePageUrl">...</p>
+                </div>
+                <div class="private-box">
+                    <h4>Posting Password</h4>
+                    <p id="postingPassword">...</p>
+                </div>
+                <div class="private-box">
+                    <h4>Viewing Password</h4>
+                    <p id="viewingPassword">...</p>
+                </div>
+            </div>
+
+            <!-- Instructions -->
+            <div class="info-list" style="margin-top: var(--margin-large);">
+                <div class="info-item">
+                    <strong>How It Works</strong>
+                    <p>This page is private and can only be accessed by those with the URL.</p>
+                </div>
+                <div class="info-item">
+                    <strong>Posting Access</strong>
+                    <p>Users with the <strong>posting password</strong> can add content.</p>
+                </div>
+                <div class="info-item">
+                    <strong>Viewing Access</strong>
+                    <p>Users with the <strong>viewing password</strong> can see content, but not edit.</p>
+                </div>
+                <div class="info-item">
+                    <strong>Keep It Secure</strong>
+                    <p>Do not share the posting password unless you trust the user.</p>
+                </div>
+            </div>
+            <button id="generateButton" class="btn btn--full">Generate</button>
+        </div>
+    </div>
+
+    <!-- External Scripts -->
     <script type="module" src="/index.js"></script>
     <script src="/privatePageModal.js"></script>
 </body>
