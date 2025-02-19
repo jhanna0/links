@@ -15,6 +15,7 @@
     --margin-large: 1.5rem;
     --margin-medium: 1rem;
     --margin-small: 0.5rem;
+    --backdrop: rgba(0, 0, 0, 0.5);
 }
 
 /* Basic Reset & Global Styles */
@@ -194,7 +195,7 @@ body {
     top: 0;
     width: 100%;
     height: 100%;
-    background-color: rgba(0, 0, 0, 0.5);
+    background-color: var(----backdrop);
     overflow-y: auto;
     justify-content: center;
     align-items: center;

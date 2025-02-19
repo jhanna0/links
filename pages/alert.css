@@ -1,85 +1,80 @@
-/* ✅ Full-page dark overlay */
+/* alert.css */
+
+/* Full-page dark overlay */
 .alert-backdrop {
     position: fixed;
     top: 0;
     left: 0;
     width: 100vw;
     height: 100vh;
-    background: rgba(0, 0, 0, 0.5);
-    /* ✅ Semi-transparent black */
+    background: var(--backdrop);
     z-index: 9998;
-    /* ✅ Ensures it's behind the alert */
     display: none;
-    /* ✅ Hidden by default */
     opacity: 0;
     transition: opacity 0.3s ease;
-    /* ✅ Smooth fade-in */
 }
 
-/* ✅ Show the backdrop when alert is active */
 .alert-backdrop.visible {
-    opacity: 1;
     display: block;
+    opacity: 1;
 }
 
-/* ✅ The alert itself */
+/* The alert modal */
 #customAlert {
     position: fixed;
     top: 50%;
     left: 50%;
     transform: translate(-50%, -50%);
     width: 340px;
-    background: white;
-    border: 3px solid black;
-    border-radius: 30px;
-    box-shadow: 4px 4px 0px black, 8px 8px 15px rgba(0, 0, 0, 0.1);
+    background: var(--secondary-color);
+    border: var(--border-width-3) solid var(--primary-color);
+    border-radius: var(--radius-medium);
+    box-shadow: var(--shadow-standard);
     text-align: center;
     padding: 20px;
     z-index: 9999;
-    /* ✅ Ensures it's above the backdrop */
     display: none;
     flex-direction: column;
     align-items: center;
     opacity: 0;
-    /* ✅ Start hidden */
     transition: opacity 0.3s ease, transform 0.3s ease;
 }
 
-/* ✅ Make the alert fade in when activated */
 #customAlert.visible {
+    display: flex;
     opacity: 1;
     transform: translate(-50%, -50%) scale(1);
 }
 
-/* ✅ Alert message text */
+/* Alert message text */
 #customAlert p {
     font-size: 1.1em;
     font-weight: bold;
-    color: black;
+    color: var(--primary-color);
     margin-bottom: 15px;
 }
 
-/* ✅ Close button (styled like other buttons) */
+/* Close button (using our button styles) */
 .btn-close-alert {
     padding: 10px 18px;
     font-size: 1rem;
     font-weight: bold;
     text-transform: uppercase;
-    background: black;
-    color: white;
-    border: 3px solid black;
-    border-radius: 50px;
+    background: var(--primary-color);
+    color: var(--secondary-color);
+    border: var(--border-width-3) solid var(--primary-color);
+    border-radius: var(--radius-large);
     cursor: pointer;
     transition: all 0.3s ease;
     width: 80%;
 }
 
 .btn-close-alert:hover {
-    background: white;
-    color: black;
+    background: var(--secondary-color);
+    color: var(--primary-color);
 }
 
-/* ✅ Responsive fix */
+/* Responsive adjustments */
 @media (max-width: 768px) {
     #customAlert {
         width: 90%;
