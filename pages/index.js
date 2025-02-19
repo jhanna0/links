@@ -77,9 +77,9 @@ document.addEventListener("DOMContentLoaded", () => {
         document.getElementById('infoModal').style.display = 'flex';
     });
 
-    document.getElementById('accessButton').addEventListener('click', function () {
-        document.getElementById('accessModal').style.display = 'flex';
-    });
+    // document.getElementById('accessButton').addEventListener('click', function () {
+    //     document.getElementById('accessModal').style.display = 'flex';
+    // });
 
     document.querySelectorAll('.close-button').forEach(button => {
         button.addEventListener('click', function () {
@@ -119,51 +119,5 @@ document.addEventListener("DOMContentLoaded", () => {
             this.closest(".modal").style.display = "none";
         });
     });
-
-    // // Event Listener for "Create Private Page" Button
-    // document.getElementById("createPrivatePage").addEventListener("click", function () {
-    //     document.getElementById("privatePageModal").style.display = "flex";
-    // });
-
-    // const generateButton = document.getElementById("generateButton");
-    // console.log("clicked: ", generateButton)
-    // if (generateButton) {
-    //     generateButton.addEventListener("click", generatePrivatePage);
-    // }
-
-    // async function generatePrivatePage() {
-    //     try {
-    //         // Show "Generating..." while waiting for response
-    //         document.getElementById("privatePageUrl").innerText = "...";
-    //         document.getElementById("postingPassword").innerText = "...";
-    //         document.getElementById("viewingPassword").innerText = "...";
-
-    //         // Call backend to create private page
-    //         const response = await fetch("/create-private-page", {
-    //             method: "POST",
-    //             headers: { "Content-Type": "application/json" }
-    //         });
-
-    //         const data = await response.json();
-
-    //         if (!data.success) {
-    //             throw new Error(data.error || "Failed to generate private page.");
-    //         }
-
-    //         // ✅ Make the URL a clickable link
-    //         const privatePageUrlElem = document.getElementById("privatePageUrl");
-    //         privatePageUrlElem.innerHTML = `<a href="${data.pageUrl}" style="color: black;" target="_blank" rel="noopener noreferrer">${data.pageUrl}</a>`;
-
-    //         // Update the passwords
-    //         document.getElementById("postingPassword").innerText = data.postingPassword;
-    //         document.getElementById("viewingPassword").innerText = data.viewingPassword;
-
-    //         // Show the modal
-    //         document.getElementById("privatePageModal").style.display = "flex";
-    //     } catch (error) {
-    //         console.error("Error creating private page:", error);
-    //         alert("❌ Error creating private page. Please try again.");
-    //     }
-    // }
 
 });

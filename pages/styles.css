@@ -1,346 +1,321 @@
-/* 🎨 Color & Styling Variables */
+/*---------------------------------------*\
+    # Variables & Utility Classes
+\*---------------------------------------*/
 :root {
-    /* BACKGROUND */
-
     --background-gradient: linear-gradient(to right, #F6F3EE, #EDE6DA);
-    /* Soft warm tones */
-    /* Ultra-light gray */
-    /* Charcoal fade */
-    /* Warm minimal beige */
-    /* Warm neutral gray */
-    /* Muted cool blue */
-    /* Muted steel blue */
-    /* Warm neutral tones */
-    /* Muted purples */
-    /* Soft neutral tones */
-    /* Deep muted blue */
-    /* Sleek dark mode */
-    /* Soft light gray with depth */
-
-    /* CONTAINERS */
-    --container-bg: #FFFFFF;
-    /* Clean, bright white */
-    --container-shadow: rgba(0, 0, 0, 0.2);
-    /* Deeper shadow for strong contrast */
-
-    /* TEXT */
-    --text-color: #121212;
-    /* Pure black but softened slightly */
-    --heading-color: #000000;
-    /* Strong black for emphasis */
-    --subtext-color: #505050;
-    /* Muted dark gray for softer contrast */
-
-    /* BORDERS */
-    --border-color: #A0A0A0;
-    /* Neutral gray, not too harsh */
-    --border-style: 1px solid var(--border-color);
-
-    /* INPUTS */
-    --input-bg: #FFFFFF;
-    /* Pure white for clarity */
-    --input-border: #888888;
-    /* Darker muted border */
-
-    /* BUTTONS */
-    --button-bg: linear-gradient(to right, #161616, #3C3C3C);
-    /* Deep gray-black gradient */
-    --button-hover-bg: linear-gradient(to right, #000000, #222222);
-    /* Even darker hover effect */
-
-    /* SECONDARY BUTTONS */
-    --secondary-button-bg: #5A5A5A;
-    /* Muted dark gray for less primary actions */
-    --secondary-button-hover-bg: #3A3A3A;
-    /* Darker hover */
-
-    /* BUTTON STYLES */
-    --button-radius: 50px;
-    /* Soft rounded edges */
-    --button-shadow: 0px 4px 10px rgba(0, 0, 0, 0.15);
-    /* Slightly stronger shadow */
-
-    /* TABLE */
-    --table-bg: #FFFFFF;
-    --table-border: #BDBDBD;
-    --table-hover: #EAEAEA;
-    --table-link: #161616;
-    /* Deep neutral black-gray */
-
-    /* ERROR */
-    --error-color: #D43F3F;
-    /* Warmer but bold red */
-    --outline-color: #3C3C3C;
-    /* Dark gray to match modern contrast */
+    --font-family: 'Inter', sans-serif;
+    --primary-color: #000;
+    --secondary-color: #fff;
+    --border-width-3: 3px;
+    --border-width-2: 2px;
+    --radius-large: 50px;
+    --radius-medium: 30px;
+    --radius-small: 20px;
+    --shadow-standard: 4px 4px 0px var(--primary-color), 8px 8px 15px rgba(0, 0, 0, 0.1);
+    --margin-large: 1.5rem;
+    --margin-medium: 1rem;
+    --margin-small: 0.5rem;
 }
 
+/* Basic Reset & Global Styles */
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
 
 html,
 body {
-    width: 100%;
-    height: 100%;
-    overflow: hidden;
-}
-
-/* Ensure all elements respect the screen width */
-* {
-    box-sizing: border-box;
-    max-width: 100%;
-}
-
-/* General Page Styling */
-body {
-    font-family: 'Inter', sans-serif;
+    font-family: var(--font-family);
+    background: var(--background-gradient);
     display: flex;
     flex-direction: column;
     align-items: center;
     justify-content: center;
-    min-height: 100vh;
-    margin: 0;
-    background: var(--background-gradient);
-    color: var(--text-color);
+    width: 100vw;
 }
 
-/* Main Container */
-.container {
-    /* background: var(--container-bg); */
-    padding: 10px;
-    border-radius: 12px;
-    /* box-shadow: 0 5px 15px var(--container-shadow); */
-    /* width: 90%; */
-    max-width: 580px;
-    margin: 40px auto;
-}
-
-.container+.container {
-    margin-top: 0px;
-}
-
-.hidden {
-    display: none;
-}
-
-/* Link Styling */
-a {
-    text-decoration: none;
-    font-weight: bold;
-}
-
-a:hover {
-    text-decoration: underline;
-}
-
-input {
-    height: 40px;
-}
-
-/* Input & Button Styling */
-input,
-textarea {
-    width: 100%;
-    padding: 10px;
-    border-radius: var(--button-radius);
-    border: 1px solid var(--input-border);
-    background: var(--input-bg);
-    color: var(--text-color);
-    font-size: 16px;
-    font-family: 'Inter', sans-serif;
-    box-sizing: border-box;
-}
-
-input:focus,
-textarea:focus {
-    border-color: var(--outline-color);
-    outline: none;
-}
-
-form {
-    padding-top: 10px;
-}
-
-/* Form Enhancements */
-form label {
-    display: block;
-    font-weight: bold;
-    margin: 10px 0 5px;
-    color: var(--heading-color);
-}
-
-form label:first-of-type {
-    margin-top: 0;
-}
-
-/* Button Styling */
-button {
-    width: 100%;
-    padding: 12px;
-    border-radius: var(--button-radius);
-    border: none;
-    background: var(--button-bg);
-    font-weight: bold;
-    color: white;
-    cursor: pointer;
-    box-shadow: var(--button-shadow);
-    margin-top: 15px;
-}
-
-button:focus-visible {
-    outline: 1px solid black;
-}
-
-button:hover {
-    background: var(--button-hover-bg);
-}
-
-.btn-submit {
-    font-size: 1rem;
-}
-
-.home-page p {
-    margin-bottom: 25px;
-}
-
-.page-heading {
-    font-size: 1.6rem;
-    font-weight: bold;
-    color: var(--heading-color);
+.text-center {
     text-align: center;
-    margin-top: 15px;
-    margin-bottom: 15px;
-    word-wrap: break-word;
-    /* Ensures long words break */
-    overflow-wrap: break-word;
-    /* Ensures breaking works in modern browsers */
-    white-space: normal;
-    /* Allows text to wrap naturally */
-    max-width: 100%;
-    /* Prevents overflow */
+}
+
+/*---------------------------------------*\
+    # Base Components
+\*---------------------------------------*/
+/* Card / Container */
+.card {
+    background: var(--secondary-color);
+    border: var(--border-width-3) solid var(--primary-color);
+    border-radius: var(--radius-large);
+    box-shadow: var(--shadow-standard);
+    width: 640px;
+    padding: 2rem;
+    margin: 0 auto;
+}
+
+/* Headings & Subtext */
+.heading {
+    font-size: 2.5em;
+    font-weight: 900;
+    letter-spacing: 2px;
+    margin-bottom: 10px;
 }
 
 .subtext {
-    font-size: 0.95rem;
-    color: var(--subtext-color);
-    text-align: center;
-    margin-bottom: 20px;
-    /* opacity: 0.85; */
-    /* Slightly muted */
+    font-size: 1.1em;
+    color: var(--primary-color);
+    opacity: 0.8;
+    margin-bottom: 1rem;
 }
 
-.hover:hover {
-    text-decoration: underline;
-    cursor: pointer;
-}
-
-/* Table Styles */
-
-table,
-tbody,
-tr,
-th,
-td {
-    display: block;
-    width: 100%;
-}
-
-tr {
-    /* margin-bottom: 10px; */
-    /* Add spacing between stacked rows */
-    border-bottom: var(--border-style);
-    padding: 10px 0;
-}
-
-tr:last-child {
-    border-bottom: none;
-}
-
-td {
-    text-align: left;
-    padding-top: 8px;
-    position: relative;
-}
-
-/* First column acts as a label for the second */
-td a {
-    font-weight: bold;
-    padding-bottom: 4px;
-}
-
-/* Remove padding-right from first column since it's stacked */
-table td:first-child {
-    padding-right: 0;
-    padding-top: 0;
-    color: var(--table-link);
-}
-
-table td:first-child a {
-    color: inherit;
-}
-
-.error {
-    color: var(--error-color);
-}
-
-.access-list {
-    list-style: none;
-    padding: 0;
-    text-align: left;
-    margin-bottom: 20px;
-}
-
-.access-list li {
-    padding: 8px 0;
-    font-size: 0.95rem;
-    color: var(--text-color);
+/* Input Section */
+.input-section {
+    margin-top: var(--margin-large);
     display: flex;
+    flex-direction: column;
     align-items: center;
 }
 
-.access-list li strong {
-    color: var(--heading-color);
+.input-wrapper,
+.button-input-wrapper {
+    width: 80%;
+    margin: 0 auto;
+    position: relative;
 }
 
-.btn-upgrade {
-    background: var(--button-bg);
-    border-radius: var(--button-radius);
-    font-size: 1rem;
-    padding: 12px;
-    font-weight: bold;
-    color: white;
-    cursor: pointer;
-    box-shadow: var(--button-shadow);
+.input-wrapper input,
+.button-input-wrapper input {
     width: 100%;
+    padding: 10px 15px;
+    font-size: 16px;
+    text-align: center;
+    outline: none;
+}
+
+/* Standard input style */
+.input-wrapper input {
+    border: var(--border-width-3) solid var(--primary-color);
+    border-radius: var(--radius-large);
+}
+
+.button-input-wrapper input {
+    border: var(--border-width-2) solid var(--primary-color);
+    border-radius: var(--radius-small);
+}
+
+/*---------------------------------------*\
+    # Buttons & Modifiers
+\*---------------------------------------*/
+.btn {
+    padding: 10px 18px;
+    font-size: 1em;
+    font-weight: bold;
+    text-transform: uppercase;
+    background: var(--primary-color);
+    color: var(--secondary-color);
+    border: var(--border-width-3) solid var(--primary-color);
+    border-radius: var(--radius-large);
+    cursor: pointer;
+    transition: all 0.3s ease;
+    display: inline-block;
+}
+
+.btn:hover {
+    background: var(--secondary-color);
+    color: var(--primary-color);
+}
+
+/* Secondary Button Modifier (also our default for page.html action buttons) */
+.btn--secondary {
+    background: var(--secondary-color);
+    color: var(--primary-color);
+}
+
+.btn--secondary:hover {
+    background: var(--primary-color);
+    color: var(--secondary-color);
+}
+
+/* Full-width Button Modifier */
+.btn--full {
+    width: 100%;
+    margin-top: var(--margin-medium);
+}
+
+/* Button inside an input group (override width on mobile later) */
+.button-input-wrapper .btn {
+    position: absolute;
+    right: 5px;
+    top: 50%;
+    transform: translateY(-50%);
+    min-width: max-content;
+    padding: 0 16px;
+    font-size: 14px;
+    white-space: nowrap;
+    border: var(--border-width-2) solid var(--primary-color);
+    border-radius: var(--radius-small);
+    background: var(--primary-color);
+    color: var(--secondary-color);
+    height: 70%;
+}
+
+.button-input-wrapper .btn:hover {
+    background: var(--secondary-color);
+    color: var(--primary-color);
+}
+
+/*---------------------------------------*\
+    # Footer & Global Links
+\*---------------------------------------*/
+.footer-links {
+    margin-top: var(--margin-medium);
+    font-size: 1em;
+}
+
+.footer-links span {
+    cursor: pointer;
+    font-weight: bold;
+    text-decoration: underline;
+    transition: color 0.3s ease;
+}
+
+.footer-links span:hover {
+    color: #777;
+}
+
+/*---------------------------------------*\
+    # Modal Global Styles
+\*---------------------------------------*/
+.modal {
+    display: none;
+    position: fixed;
+    z-index: 1000;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.5);
+    overflow-y: auto;
+    justify-content: center;
+    align-items: center;
+}
+
+.modal-content {
+    background: var(--secondary-color);
+    border: var(--border-width-3) solid var(--primary-color);
+    border-radius: var(--radius-medium);
+    padding: 20px;
+    width: 100%;
+    max-width: 500px;
+    box-shadow: var(--shadow-standard);
+    position: relative;
+    text-align: center;
+    max-height: 90vh;
+    overflow-y: auto;
+}
+
+.close-button {
+    cursor: pointer;
+    font-size: 1.5rem;
+    font-weight: bold;
+    position: absolute;
+    top: 10px;
+    right: 15px;
+}
+
+/*---------------------------------------*\
+    # List Items (Features/Info)
+\*---------------------------------------*/
+.feature-list,
+.info-list {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
     margin-top: 15px;
-    border: none;
+    text-align: left;
 }
 
-.btn-upgrade:hover {
-    background: var(--button-hover-bg);
+.feature-item,
+.info-item {
+    background: #f8f8f8;
+    border: var(--border-width-2) solid var(--primary-color);
+    border-radius: var(--radius-small);
+    padding: 10px 15px;
+    font-size: 1rem;
 }
 
+.feature-item p,
+.info-item p {
+    font-weight: normal;
+    margin-top: 5px;
+}
 
-/* Responsive Adjustments */
-@media (max-width: 600px) {
-    .container {
-        border-radius: 0;
+/*---------------------------------------*\
+    # Private Page Modal Styles
+\*---------------------------------------*/
+.private-info {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+.private-box {
+    background: var(--secondary-color);
+    border: var(--border-width-2) solid var(--primary-color);
+    padding: 12px;
+    border-radius: 15px;
+    text-align: center;
+    font-weight: bold;
+}
+
+.private-box h4 {
+    margin-bottom: 0.25rem;
+}
+
+.private-box p {
+    font-size: 1rem;
+    font-family: monospace;
+    background: #F6F3EE;
+    padding: 8px;
+    border-radius: 8px;
+    display: inline-block;
+    width: 100%;
+    text-align: center;
+    border: 2px solid #777;
+}
+
+/*---------------------------------------*\
+    # Responsive Overrides
+\*---------------------------------------*/
+@media (max-width: 768px) {
+    .card {
+        width: 90%;
+        padding: 1.5rem;
+    }
+
+    .input-wrapper,
+    .button-input-wrapper {
         width: 100%;
-        margin: 20px auto;
-        padding: 20px;
     }
 
-    .back-peel-button {
-        border-radius: 0 0px 0 12px;
+    .input-wrapper input,
+    .button-input-wrapper input {
+        font-size: 16px;
+        padding: 8px 12px;
     }
 
-    .page-heading {
-        font-size: 1.4rem;
+    .btn {
+        font-size: 1em;
+        padding: 8px 14px;
+        width: 100%;
     }
 
-    a:hover {
-        text-decoration: none;
+    .button-input-wrapper .btn {
+        width: auto;
     }
 
-    .hover:hover {
-        text-decoration: none;
+    .modal-content {
+        width: 95%;
+        max-width: none;
     }
-
 }

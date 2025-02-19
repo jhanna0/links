@@ -109,7 +109,7 @@ router.get('/:pagename', async (req, res) => {
             }
 
             // 🔒 Get stored credentials
-            const { posting_password, viewing_password, salt } = privatePageResult.rows[0];
+            const { posting_password, viewing_password } = privatePageResult.rows[0];
 
             // ✅ Check for the auth token in the cookie for this page
             const authCookieName = `auth_${pagename}`;
@@ -190,35 +190,45 @@ router.get('/api/:pagename/new', async (req, res) => {
 
 router.post('/create-private-page', async (req, res) => {
     try {
-        // Generate unique page name & passwords
-        const pageName = "~" + generateSecureString(8);
+        let pageName;
+        let attempts = 0;
+        // Try up to 5 times to generate a unique page name
+        do {
+            pageName = "~" + generateSecureString(8);
+            const checkResult = await pool.query('SELECT 1 FROM private_pages WHERE page = $1', [pageName]);
+            if (checkResult.rowCount === 0) break;
+            attempts++;
+        } while (attempts < 5);
+
+        if (attempts >= 5) {
+            return res.status(500).json({ error: 'Could not generate a unique page name, please try again.' });
+        }
+
         const postingPassword = generateSecureString(8);
         const viewingPassword = generateSecureString(8);
 
-        // Generate salt & hash passwords
         const salt = generateSalt();
         const hashedPostingPassword = hashPassword(postingPassword, salt);
         const hashedViewingPassword = hashPassword(viewingPassword, salt);
 
-        // Store in database
-        await pool.query(`
-            INSERT INTO private_pages (page, posting_password, viewing_password, salt)
-            VALUES ($1, $2, $3, $4)
-        `, [pageName, hashedPostingPassword, hashedViewingPassword, salt]);
+        await pool.query(
+            `INSERT INTO private_pages (page, posting_password, viewing_password, salt)
+         VALUES ($1, $2, $3, $4)`,
+            [pageName, hashedPostingPassword, hashedViewingPassword, salt]
+        );
 
-        // ✅ Send response with raw passwords
         res.json({
             success: true,
             pageUrl: `https://linkstash.co/${pageName}`,
             postingPassword,
             viewingPassword
         });
-
     } catch (err) {
         console.error('❌ Error creating private page:', err);
         res.status(500).json({ error: 'Internal server error' });
     }
 });
+
 
 // POST /login for authenticating private pages
 router.post('/verify', async (req, res) => {

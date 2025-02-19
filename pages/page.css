@@ -1,494 +1,288 @@
-/* Preserve your invalid message styling */
-#invalidMessage {
-    color: var(--error-color);
-}
+/*---------------------------------------*\
+    # Page-Specific Styles (page.html)
+\*---------------------------------------*/
 
-/* Make the overall page a flex column filling the viewport */
-body.table-page {
+/* Header (Page Title & Action Buttons) */
+.header-wrapper {
+    position: sticky;
+    top: 0;
+    z-index: 1000;
+    width: 100vw;
+    background: transparent;
+    padding-top: 2rem;
     display: flex;
-    flex-direction: column;
-    height: 100vh;
-    overflow: hidden;
-    align-items: stretch;
-}
-
-/* The main content should only take as much space as needed */
-#mainContent {
-    display: flex;
-    flex-direction: column;
-    overflow: hidden;
-    flex: 0 1 auto;
-    /* Key fix: only grow if needed */
-}
-
-/* Ensure the inner container in #mainContent sizes dynamically */
-#mainContent>.container {
-    display: flex;
-    flex-direction: column;
-    height: auto;
-    /* Key fix: Let it size naturally */
-    flex: 0 1 auto;
-    /* Prevent forced stretching */
-    min-height: 0;
-    margin-bottom: 40px;
-    overflow: hidden;
-    width: 100%;
-    padding-bottom: 0;
-}
-
-/* Let the top bar take its natural height */
-.top-bar {
-    flex: 0 0 auto;
-}
-
-/* The table wrapper takes only the space it needs */
-#tableWrapper {
-    display: flex;
-    flex-direction: column;
-    flex-grow: 0;
-    /* Key fix: Never forces extra space */
-    overflow: hidden;
-}
-
-/* Let the table size itself, but scroll when necessary */
-#tableContainer {
-    display: flex;
-    flex-direction: column;
-    flex-grow: 1;
-    /* Only expands when necessary */
-    min-height: 50px;
-    overflow-y: auto;
-    /* Enables scrolling only when needed */
-}
-
-/* The table should size naturally */
-#pageTable {
-    width: 100%;
-    border-collapse: collapse;
-}
-
-/* Wrapper for empty state messages (Centered) */
-#emptyStateWrapper {
-    display: flex;
-    flex-direction: column;
     justify-content: center;
-    align-items: center;
-    flex-grow: 1;
-    /* Allow it to expand and fill space */
-    width: 100%;
-    min-height: 100%;
-    /* Ensures full height */
 }
 
-/* Messages styling */
-#noRowsMessage,
-#invalidMessage {
-    display: none;
-    /* Default: Hidden */
+.header-wrapper::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 50%;
+    background: var(--background-gradient);
+    background-size: cover;
+    background-position: top left;
+    z-index: -1;
+}
+
+.header-content {
+    background: var(--secondary-color);
+    border: var(--border-width-3) solid var(--primary-color);
+    border-radius: var(--radius-large);
+    padding: 20px 35px;
+    box-shadow: var(--shadow-standard);
     text-align: center;
+    width: 640px;
+    margin: 0 auto;
 }
 
-/* Show the empty state wrapper when there are no rows */
-.empty #emptyStateWrapper {
+.header-content h1 {
+    font-size: 2.5em;
+    font-weight: 900;
+    letter-spacing: 2px;
+    margin-bottom: 10px;
+}
+
+.header-content h1 a {
+    text-decoration: none;
+    color: var(--primary-color);
+}
+
+/* Action Buttons in Header (using default secondary button style) */
+.action-buttons {
     display: flex;
-}
-
-/* The form container stays at its natural height at the bottom */
-#formContainer {
-    flex: 0 0 auto;
-    /* margin-top: 0; */
-    margin-top: 10px;
-}
-
-/* Ensure form's container keeps its styling */
-#formContainer .container {
-    padding: 30px;
-    margin: 40px auto;
-}
-
-.form-container {
-    background-color: white;
-    /* max-height: 0; */
-    /* opacity: 0; */
-    overflow: hidden;
-}
-
-/* When visible */
-.form-container.visible {
-    /* max-height: 500px; */
-    /* Adjust based on your content */
-    opacity: 1;
-}
-
-/* When hidden */
-.form-container.hidden {
-    max-height: 0;
-    opacity: 0;
-}
-
-#toggleFormContainer {
-    min-height: 45px;
-    display: flex;
+    gap: 10px;
     justify-content: center;
-    align-items: center;
+    flex-wrap: wrap;
 }
 
-#toggleFormButton {
-    height: fit-content;
-    font-size: 14px;
-    user-select: none;
-    margin-bottom: 0;
-}
-
-table tr:hover {
-    background-color: var(--table-hover);
+.action-buttons button {
+    /* Use .btn--secondary for default secondary styling */
+    @extend .btn;
+    padding: 5px 15px;
+    border: var(--border-width-3) solid var(--primary-color);
+    border-radius: var(--radius-medium);
+    background: var(--secondary-color);
+    text-transform: uppercase;
+    font-weight: bold;
     cursor: pointer;
+    transition: all 0.3s ease;
+    color: var(--primary-color);
 }
 
-@media (max-width: 600px) {
-    #mainContent>.container {
-        margin-bottom: 20px;
-    }
-
-    #toggleFormContainer {
-        height: 35px;
-    }
+.action-buttons button:hover {
+    background: var(--primary-color);
+    color: var(--secondary-color);
 }
 
-/* ======= General Styles ======= */
+/* Main Page Content Layout */
+.main-container {
+    width: 640px;
+    margin: 0 auto;
+}
+
+.container {
+    width: 100%;
+    margin: 0 auto;
+}
+
+.main-content {
+    margin-top: 20px;
+}
+
+/* Pill (Link Entry) Styles */
 .pill-container {
     display: flex;
     flex-direction: column;
-    /* Stack pills in a single column */
-    align-items: center;
-    /* Center pills horizontally */
-    gap: 10px;
-    /* padding: 10px; */
-    width: 100%;
+    gap: 0.75rem;
+    margin-bottom: 20px;
+    min-height: 5.25rem;
 }
 
 .pill {
+    border: var(--border-width-3) solid var(--primary-color);
+    border-radius: var(--radius-large);
+    background: var(--secondary-color);
+    transition: all 0.3s ease;
+    cursor: pointer;
+    min-height: 5.25rem;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    width: 100%;
+    padding: 0;
+}
+
+.pill-left-space {
+    width: 40px;
+}
+
+.pill-content {
+    flex-grow: 1;
+    text-align: center;
     display: flex;
     flex-direction: column;
     align-items: center;
-    justify-content: center;
-    text-align: center;
-    padding: 10px;
-    border: 3px solid black;
-    border-radius: 50px;
-    background-color: white;
-    cursor: pointer;
-    transition: all 0.3s ease;
-    width: 100%;
-    /* max-width: 500px; */
-    /* Ensures a readable width */
-    font-family: 'Poppins', sans-serif;
+    padding: 12px 0;
+    margin-left: 40px;
 }
 
 .pill:hover {
-    background-color: #f0f0f0;
+    background: #f0f0f0;
     transform: scale(0.99);
 }
 
-/* Refined Link Styling */
 .pill a {
     text-decoration: none;
     font-weight: 800;
     font-size: 1.2em;
-    color: black;
+    color: var(--primary-color);
     display: block;
-    width: 100%;
-    text-align: center;
-    transition: color 0.3s ease;
+    margin-bottom: 0.4rem;
 }
 
-.pill a:hover {
-    color: #555;
-}
-
-/* Refined Description Styling */
 .description {
     font-size: 1em;
     font-weight: 500;
     color: #333;
     opacity: 0.8;
     text-align: center;
-    line-height: 1.4;
-    margin-top: 5px;
-    /* width: 90%; */
 }
 
-/* Make Pills More Structured */
-.pill-content {
+.pill-link-icon {
+    font-size: 1.2em;
+    cursor: pointer;
+    padding: 6px;
+    border-radius: 50%;
+    transition: all 0.2s ease;
     display: flex;
-    flex-direction: column;
     align-items: center;
-    width: 100%;
-    padding: 10px;
+    justify-content: left;
+    width: 40px;
+    color: #333;
 }
 
+.pill-link-icon:hover {
+    color: var(--primary-color);
+}
 
-/* ======= Header Styles ======= */
-.pill-header {
+/* Form (Add Link) Styles */
+.form-container {
+    background: var(--secondary-color);
+    border: var(--border-width-2) solid var(--primary-color);
+    border-radius: var(--radius-large);
+    box-shadow: var(--shadow-standard);
+    margin: 0 auto var(--margin-large);
     display: flex;
     flex-direction: column;
     align-items: center;
     justify-content: center;
-    text-align: center;
-    background: linear-gradient(135deg, #ffffff, #f8f8f8);
-    border: 3px solid black;
-    border-radius: 50px;
-    padding: 20px 35px;
-    /* margin: 30px 0px; */
-    box-shadow: 4px 4px 0px black, 8px 8px 15px rgba(0, 0, 0, 0.1);
-    transition: transform 0.2s ease, box-shadow 0.2s ease;
-    margin-bottom: 1.5rem;
-}
-
-.pill-header:hover {
-    /* transform: scale(1.02); */
-    box-shadow: 6px 6px 0px black, 10px 10px 20px rgba(0, 0, 0, 0.15);
-}
-
-.page-heading {
-    font-size: 3em;
-    font-weight: 900;
-    /* text-transform: uppercase; */
-    letter-spacing: 2px;
-    margin: 0;
-    /* font-family: 'Poppins', sans-serif; */
-}
-
-.page-heading a {
-    text-decoration: none;
-    color: black;
-
-    /* -webkit-text-stroke: 3px black; */
-    /* text-stroke: 3px black; */
-    /* transition: transform 0.2s ease; */
-}
-
-.page-heading a:hover {
-    /* transform: scale(1.05); */
-    /* opacity: 0.9; */
-}
-
-.subtext {
-    font-size: 1em;
-    color: black;
-    margin-top: 8px;
-    font-style: italic;
-    font-weight: 500;
-}
-
-.subtext a {
-    font-weight: bold;
-    text-decoration: none;
-    color: black;
-    transition: color 0.3s ease;
-}
-
-.subtext a:hover {
-    color: #777;
-}
-
-/* FORM CONTAINER: Keep it sleek & compact */
-.form-container {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    text-align: center;
-    padding: 15px;
-    margin: 20px auto;
-    width: 100%;
-    /* max-width: 350px; */
-    background: white;
-    border: 2px solid black;
-    border-radius: 30px;
-    box-shadow: 4px 4px 0px black, 8px 8px 15px rgba(0, 0, 0, 0.1);
-    transition: all 0.3s ease;
+    padding: 1rem;
 }
 
 .form-container form {
     display: flex;
     flex-direction: column;
-    gap: 12px;
+    gap: 5px;
     width: 100%;
-    padding: 15px 20px;
-}
-
-/* LINK INPUT STYLED AS A PILL TITLE */
-.form-pill {
-    display: flex;
-    flex-direction: column;
     align-items: center;
-    background: white;
-    border: 3px solid black;
-    border-radius: 50px;
-    padding: 12px;
-    width: 100%;
-    text-align: center;
+    padding: 0 2rem;
 }
 
-/* Bold Link Title */
-.form-pill-title {
-    font-weight: bold;
-    font-size: 1.2em;
-    color: black;
-    text-transform: uppercase;
-}
-
-/* Link Input: Looks like part of the pill */
-.form-pill input {
+.form-container input {
     border: none;
     background: none;
     text-align: center;
-    font-size: 1em;
+    font-size: 1.2rem;
     font-weight: bold;
-    width: 100%;
     outline: none;
-    padding-top: 5px;
+    padding: 10px;
+    width: 80%;
+    margin: 0;
 }
 
-/* DESCRIPTION INPUT: Muted text below like the pills */
-.form-description input {
-    width: 100%;
-    text-align: center;
-    border: none;
-    font-size: 1em;
+.form-container input[name="description"] {
+    font-size: 1rem;
+    color: #777;
+    font-weight: normal;
+}
+
+.form-container input[name="link"] {
+    border-radius: 0;
+    border-bottom: 1px solid #777;
+}
+
+.form-container input::placeholder {
+    color: var(--primary-color);
     font-weight: 500;
-    color: gray;
-    background: none;
-    outline: none;
+    opacity: 0.7;
 }
 
-/* FORM BUTTON: Styled to match pills */
+.form-container input[name="description"]::placeholder {
+    color: var(--primary-color);
+    font-weight: 500;
+    font-style: normal;
+    opacity: 0.6;
+}
+
 .btn-submit {
-    padding: 10px 16px;
-    font-size: 1em;
+    padding: 10px 18px;
+    font-size: 1rem;
     font-weight: bold;
     text-transform: uppercase;
-    background: linear-gradient(90deg, #4A90E2, #007AFF);
-    color: white;
-    border: 2px solid black;
+    background: var(--primary-color);
+    color: var(--secondary-color);
+    border: 2px solid var(--primary-color);
     border-radius: 20px;
     cursor: pointer;
     transition: all 0.3s ease;
-    width: 100%;
+    margin-top: 5px;
+    width: 80%;
 }
 
 .btn-submit:hover {
-    background: linear-gradient(90deg, #007AFF, #4A90E2);
-    box-shadow: 2px 2px 10px rgba(0, 0, 0, 0.2);
+    background: var(--secondary-color);
+    color: var(--primary-color);
 }
 
-/* Make inputs slightly interactive */
-.form-container input:focus {
-    /* background-color: #f8f8f8; */
-    transform: scale(1.02);
-}
-
-/* Sleeker Submit Button */
-.btn-submit {
-    padding: 8px 16px;
-    font-size: 1em;
-    font-weight: bold;
-    text-transform: uppercase;
-    background-color: white;
-    /* color: black; */
-    border: 2px solid black;
-    border-radius: 20px;
-    cursor: pointer;
-    transition: all 0.3s ease;
-}
-
-/* .btn-submit:hover {
-    background-color: black;
-    color: white;
-    transform: scale(1.05);
-} */
-
-/* ======= Form Toggle Button (Sleek & Unified) ======= */
-.form-toggle {
-    margin-top: 10px;
-}
-
-.form-toggle span {
-    font-weight: bold;
-    cursor: pointer;
-    font-size: 0.9em;
-    text-transform: uppercase;
-    padding: 4px 12px;
-    border: 2px solid black;
-    border-radius: 20px;
-    background: white;
-    transition: all 0.3s ease;
-    display: inline-block;
-}
-
-.form-toggle span:hover {
-    background: black;
-    color: white;
-}
-
-/* Hide form when collapsed */
-.hidden {
-    display: none;
-}
-
-
-/* ======= Animations ======= */
-.icon {
-    font-size: 1.2em;
-    margin-right: 5px;
-    display: inline-block;
-    animation: sparkle 1.5s infinite ease-in-out alternate;
-}
-
-@keyframes sparkle {
-    0% {
-        transform: scale(1);
-        opacity: 0.7;
+/*---------------------------------------*\
+    # Mobile Overrides (Page Specific)
+\*---------------------------------------*/
+@media (max-width: 768px) {
+    .main-container {
+        width: 90%;
     }
 
-    100% {
-        transform: scale(1.2);
-        opacity: 1;
+    .pill {
+        padding: 7px;
     }
-}
 
-/* ======= Utility Classes ======= */
-.hidden {
-    display: none;
-}
+    .header-content {
+        width: 90%;
+    }
 
-/* ======= Action Buttons (Same Style as "Add Link") ======= */
-.action-buttons {
-    display: flex;
-    gap: 10px;
-    margin-top: 15px;
-}
+    .action-buttons {
+        gap: 5px;
+    }
 
-.btn-toggle {
-    font-weight: bold;
-    cursor: pointer;
-    font-size: 1.1em;
-    text-transform: uppercase;
-    padding: 5px 15px;
-    border: 3px solid black;
-    border-radius: 30px;
-    font-size: 14px;
-    background: white;
-    transition: all 0.3s ease;
-    display: inline-block;
-}
+    .action-buttons button {
+        padding: 4px 10px;
+        font-size: 0.9em;
+        border-radius: 20px;
+    }
 
-.btn-toggle:hover {
-    background: black;
-    color: white;
-}
+    .pill-content {
+        margin-left: 20px;
+    }
 
-/* ======= Hidden Form Toggle ======= */
-.hidden {
-    display: none;
+    .pill-link-icon {
+        width: 20px;
+    }
+
+    .modal-content {
+        max-width: 100%;
+        max-height: 80vh;
+    }
 }
