@@ -9,7 +9,7 @@ document.addEventListener("DOMContentLoaded", () => {
     // ======================================================
     const form = document.getElementById("form");
     const formContainer = document.getElementById("formContainer");
-    const toggleButton = document.getElementById("toggleFormButton");
+    // const toggleButton = document.getElementById("toggleFormButton");
 
     const linkInput = document.getElementById("linkPage");
     const descriptionInput = document.getElementById("descriptionPage");
@@ -19,6 +19,7 @@ document.addEventListener("DOMContentLoaded", () => {
     // Page Navigation & Buttons
     const pageHeadingBack = document.getElementById("pageHeadingBack");
     const shareButton = document.getElementById("copyLinkButton");
+    const tooltip = document.getElementById("tooltip");
 
     // ======================================================
     // Form Validation & Submission
@@ -53,7 +54,6 @@ document.addEventListener("DOMContentLoaded", () => {
     }
 
     function updateTableMessage() {
-        let allowed = allowAppending;
 
         // ✅ Remove any existing placeholder pills before counting
         const existingPlaceholders = pillContainer.querySelectorAll(".pill.placeholder");
@@ -64,32 +64,18 @@ document.addEventListener("DOMContentLoaded", () => {
         if (pillCount === 0) {
             pillContainer.innerHTML = ""; // Clear any existing content
 
-            if (allowed) {
-                // ✅ Create a new placeholder pill
-                const pill = document.createElement("div");
-                pill.classList.add("pill", "placeholder"); // ✅ Add "placeholder" class for styling
+            // ✅ Create a new placeholder pill
+            const pill = document.createElement("div");
+            pill.classList.add("pill", "placeholder"); // ✅ Add "placeholder" class for styling
 
-                pill.innerHTML = `
+            pill.innerHTML = `
                     <div class="pill-content">
                         <a href="#" class="pill-link">No links yet.</a>
                         <span class="description">Be the first to add a link to this page!</span>
                     </div>
                 `;
 
-                pillContainer.appendChild(pill);
-            } else {
-                // ✅ Show an invalid page pill instead
-                const invalidPill = document.createElement("div");
-                invalidPill.classList.add("pill", "placeholder");
-                invalidPill.innerHTML = `
-                    <div class="pill-content">
-                        <a href="#" class="pill-link" style="color: var(--error-color);">This page does not exist!</a>
-                        <span class="description">Due to invalid page name.</span>
-                    </div>
-                `;
-                pillContainer.appendChild(invalidPill);
-            }
-
+            pillContainer.appendChild(pill);
         }
     }
 
@@ -156,16 +142,7 @@ document.addEventListener("DOMContentLoaded", () => {
     // ======================================================
     // Additional Page Functionality
     // ======================================================
-    const pageNameValue = pageNameInput ? pageNameInput.value.trim() : "";
-    const allowAppending = validatePageName(pageNameValue).valid;
     updateTableMessage();
-
-    if (!allowAppending) {
-        if (formContainer) {
-            formContainer.style.pointerEvents = "none";
-            formContainer.style.opacity = 0.75;
-        }
-    }
 
     if (pageHeadingBack) {
         pageHeadingBack.addEventListener("click", () => {
@@ -178,13 +155,20 @@ document.addEventListener("DOMContentLoaded", () => {
         pageHeadingBack.style.cursor = "pointer";
     }
 
+    // tooltip not wrking
     if (shareButton) {
         shareButton.addEventListener("click", async () => {
             try {
                 await navigator.clipboard.writeText(window.location.href);
-                shareButton.style.opacity = "0.50";
+
+                // Show Tooltip
+                tooltip.style.visibility = "visible";
+                tooltip.style.opacity = "1";
+
+                // Hide Tooltip After 1.2s
                 setTimeout(() => {
-                    shareButton.style.opacity = "1.0";
+                    tooltip.style.opacity = "0";
+                    tooltip.style.visibility = "hidden";
                 }, 1200);
             } catch (err) {
                 console.error("Clipboard copy failed:", err);
@@ -192,16 +176,16 @@ document.addEventListener("DOMContentLoaded", () => {
         });
     }
 
-    toggleButton.addEventListener("click", function () {
-        if (formContainer) {
-            formContainer.scrollIntoView({ behavior: "smooth", block: "start" });
-            formContainer.classList.add("glow");
+    // toggleButton.addEventListener("click", function () {
+    //     if (formContainer) {
+    //         formContainer.scrollIntoView({ behavior: "smooth", block: "start" });
+    //         formContainer.classList.add("glow");
 
-            setTimeout(() => {
-                formContainer.classList.remove("glow");
-            }, 3000);
-        }
-    });
+    //         setTimeout(() => {
+    //             formContainer.classList.remove("glow");
+    //         }, 3000);
+    //     }
+    // });
 
     linkInput.addEventListener("paste", function (event) {
         event.preventDefault(); // ✅ Prevents the default paste behavior

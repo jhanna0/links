@@ -92,6 +92,8 @@ router.get('/:pagename', async (req, res) => {
     const templatePath = path.join(__dirname, 'pages', 'page.html');
     const privatePageNotFoundPath = path.join(__dirname, 'pages', 'page_not_found.html');
     const privatePageAccessPath = path.join(__dirname, 'pages', 'password.html');
+    const invalidPagePath = path.join(__dirname, 'pages', 'invalid_page.html');
+
 
     if (!fs.existsSync(templatePath)) {
         return res.status(500).send('<h1>500 - Template Not Found</h1>');
@@ -138,6 +140,12 @@ router.get('/:pagename', async (req, res) => {
                 return res.sendFile(privatePageAccessPath);
             }
             // ✅ If all checks pass, continue loading the page
+        }
+
+        // Validate page name
+        const pageValidation = validatePageName(pagename);
+        if (!pageValidation.valid) {
+            return res.sendFile(invalidPagePath);
         }
 
         // 🆓 Load public or unlocked private page

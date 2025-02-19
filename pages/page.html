@@ -39,8 +39,13 @@
             <h1 id="pageNameHeading">{{pagename}}</h1>
             <div class="action-buttons">
                 <button id="pageHeadingBack">Go Back</button>
-                <button id="toggleFormButton">Add Link</button>
-                <button id="copyLinkButton">Copy Link</button>
+                <!-- <button id="toggleFormButton">Add Link</button> -->
+                <button id="copyLinkButton">Copy Link
+                    <!-- tooltip not working -->
+                    <!-- <span id="tooltip" class="tooltip">Copied!</span> -->
+
+                </button>
+
             </div>
         </div>
     </div>
@@ -71,12 +76,25 @@
         <div class="modal-content" style="word-break: break-all;">
             <span class="close-button" onclick="closeLinkModal()">&times;</span>
 
-            <div
-                style="border: var(--border-width-3) solid var(--primary-color); border-radius: var(--radius-medium); padding: 1rem;">
-                <p style="font-weight: 500;" id="modalLinkText"></p>
+            <div class="private-box" style="margin-top: 1rem;">
+                <h4>Link</h4>
+                <p id="modalLinkText"></p>
             </div>
+
+            <button class="btn btn--full btn--secondary" onclick="copyToClipboard()">Copy Link</button>
         </div>
     </div>
+    <script>
+        function copyToClipboard() {
+            const linkText = document.getElementById("modalLinkText").innerText;
+            navigator.clipboard.writeText(linkText).then(() => {
+                alert("Link copied.");
+            }).catch(err => {
+                console.error("Error copying text:", err);
+                alert("Failed to copy.");
+            });
+        }
+    </script>
 
 </body>
 

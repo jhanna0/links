@@ -105,7 +105,7 @@
     border: var(--border-width-3) solid var(--primary-color);
     border-radius: var(--radius-large);
     background: var(--secondary-color);
-    transition: all 0.3s ease;
+    transition: all 0s ease;
     cursor: pointer;
     min-height: 5.25rem;
     display: flex;
@@ -125,7 +125,7 @@
     display: flex;
     flex-direction: column;
     align-items: center;
-    padding: 12px 0;
+    padding: 12px;
     margin-left: 40px;
 }
 
@@ -275,6 +275,7 @@
 
     .pill-content {
         margin-left: 20px;
+        padding: 6px;
     }
 
     .pill-link-icon {
