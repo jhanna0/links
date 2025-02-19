@@ -100,3 +100,53 @@ export function verifyPassword(inputPassword, storedHash, salt) {
     const hashedInput = hashPassword(inputPassword, salt);
     return hashedInput === storedHash;
 }
+
+/**
+ * Generate a signed authentication token for a specific page.
+ * @param {string} page - The page name (e.g. "~privatePage").
+ * @param {string} hashedPassword - The hashed password used for this page.
+ * @param {number} [expiresIn=86400000] - Expiration time in milliseconds (default: 24 hours).
+ * @returns {string} - The generated token in the format: base64(payload).signature
+ */
+export function generateAuthToken(page, hashedPassword, expiresIn = 24 * 60 * 60 * 1000) {
+    const exp = Date.now() + expiresIn;
+    const payload = { page, hashedPassword, exp };
+    const payloadString = JSON.stringify(payload);
+    const payloadBase64 = Buffer.from(payloadString).toString('base64');
+    const secret = process.env.TOKEN_SECRET || 'defaultSecretKey';
+    const signature = crypto.createHmac('sha256', secret)
+        .update(payloadBase64)
+        .digest('hex');
+    return `${payloadBase64}.${signature}`;
+}
+
+/**
+ * Validate a given authentication token.
+ * @param {string} token - The token to validate.
+ * @returns {object|false} - Returns the token payload if valid, or false if invalid.
+ */
+export function validateAuthToken(token) {
+    if (!token) return false;
+    const secret = process.env.TOKEN_SECRET || 'defaultSecretKey';
+    const parts = token.split('.');
+    if (parts.length !== 2) return false;
+
+    const [payloadBase64, signature] = parts;
+    const expectedSignature = crypto.createHmac('sha256', secret)
+        .update(payloadBase64)
+        .digest('hex');
+
+    if (expectedSignature !== signature) return false;
+
+    let payload;
+    try {
+        payload = JSON.parse(Buffer.from(payloadBase64, 'base64').toString('utf8'));
+    } catch (error) {
+        return false;
+    }
+
+    // Check if the token has expired
+    if (payload.exp < Date.now()) return false;
+
+    return payload;
+}

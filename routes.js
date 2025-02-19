@@ -5,7 +5,7 @@ import path from 'path';
 import { fileURLToPath } from 'url';
 import pool from './db.js';
 import { validatePageName, validateLink, validateDescription } from "./common/validator.js";
-import { generateSecureString, verifyPassword, generateStyledEntries, generateSalt, hashPassword } from "./common/utils.js";
+import { generateSecureString, verifyPassword, generateStyledEntries, generateSalt, hashPassword, generateAuthToken, validateAuthToken } from "./common/utils.js";
 
 // Define __dirname for ES modules
 const __filename = fileURLToPath(import.meta.url);
@@ -90,52 +90,65 @@ router.post('/add', async (req, res) => {
 router.get('/:pagename', async (req, res) => {
     const { pagename } = req.params;
     const templatePath = path.join(__dirname, 'pages', 'page.html');
+    const privatePageNotFoundPath = path.join(__dirname, 'pages', 'page_not_found.html');
+    const privatePageAccessPath = path.join(__dirname, 'pages', 'password.html');
 
     if (!fs.existsSync(templatePath)) {
         return res.status(500).send('<h1>500 - Template Not Found</h1>');
     }
 
     try {
-        // Check if the page is private
-        const privatePageResult = await pool.query(
-            'SELECT 1 FROM private_pages WHERE page = $1',
+        if (pagename.startsWith("~")) {
+            const privatePageResult = await pool.query(
+                'SELECT posting_password, viewing_password, salt FROM private_pages WHERE page = $1',
+                [pagename]
+            );
+
+            if (privatePageResult.rows.length === 0) {
+                return res.sendFile(privatePageNotFoundPath); // ❌ Private page does not exist
+            }
+
+            // 🔒 Get stored credentials
+            const { posting_password, viewing_password, salt } = privatePageResult.rows[0];
+
+            // ✅ Check for the auth token in the cookie for this page
+            const authCookieName = `auth_${pagename}`;
+            const authToken = req.cookies[authCookieName];
+
+            if (!authToken) {
+                return res.sendFile(privatePageAccessPath); // 🔐 Prompt for password if token missing
+            }
+
+            // Validate the token using our util function
+            const tokenPayload = validateAuthToken(authToken);
+            if (!tokenPayload) {
+                return res.sendFile(privatePageAccessPath); // ❌ Invalid or expired token → Re-prompt
+            }
+
+            // Optionally, ensure the token is for the correct page
+            if (tokenPayload.page !== pagename) {
+                return res.sendFile(privatePageAccessPath);
+            }
+
+            // Optionally, verify that the token’s hashedPassword matches one of the stored hashes
+            if (
+                tokenPayload.hashedPassword !== posting_password &&
+                tokenPayload.hashedPassword !== viewing_password
+            ) {
+                return res.sendFile(privatePageAccessPath);
+            }
+            // ✅ If all checks pass, continue loading the page
+        }
+
+        // 🆓 Load public or unlocked private page
+        const result = await pool.query(
+            'SELECT link, description FROM links WHERE page = $1 ORDER BY created_at ASC',
             [pagename]
         );
 
-        const isPrivate = privatePageResult.rows.length > 0;
         let html = fs.readFileSync(templatePath, 'utf8');
-
-        if (!isPrivate) {
-            // ✅ Public page: Fetch links and serve full page
-            const result = await pool.query(
-                'SELECT link, description FROM links WHERE page = $1 ORDER BY created_at ASC',
-                [pagename]
-            );
-            html = html.replace(/{{links}}/g, generateStyledEntries(result.rows));
-        } else {
-            // 🔒 Private page: Show password form
-            html = html.replace(/{{links}}/g, `
-                <div id="passwordPrompt">
-                    <p>This page is private. Enter the password to continue:</p>
-                    <input type="password" id="pagePassword" placeholder="Password">
-                    <button onclick="submitPassword()">Submit</button>
-                </div>
-                <script>
-                    function submitPassword() {
-                        const password = document.getElementById("pagePassword").value;
-                        if (!password) {
-                            alert("❌ No password entered.");
-                            return;
-                        }
-                        sessionStorage.setItem("auth_${pagename}", password);
-                        location.reload();
-                    }
-                </script>
-            `);
-        }
-
+        html = html.replace(/{{links}}/g, generateStyledEntries(result.rows));
         html = html.replace(/{{pagename}}/g, pagename);
-        html = html.replace(/{{isPrivate}}/g, isPrivate ? "true" : "false");
 
         res.send(html);
     } catch (err) {
@@ -143,7 +156,6 @@ router.get('/:pagename', async (req, res) => {
         res.status(500).send('<h1>500 - Database Error</h1>');
     }
 });
-
 
 // Serve only new rows based on the current length of the table in the frontend
 router.get('/api/:pagename/new', async (req, res) => {
@@ -208,36 +220,39 @@ router.post('/create-private-page', async (req, res) => {
     }
 });
 
-// 🆕 Verify Private Page Password (POST /verify-password)
-router.post('/verify-password', async (req, res) => {
-    const { page, password } = req.body;
+// POST /login for authenticating private pages
+router.post('/verify', async (req, res) => {
+    const { pagename, password } = req.body;
 
-    try {
-        // Get stored passwords & salt
-        const result = await pool.query(
-            'SELECT posting_password, viewing_password, salt FROM private_pages WHERE page = $1',
-            [page]
-        );
+    // Query your DB for the page
+    const privatePageResult = await pool.query(
+        'SELECT posting_password, viewing_password, salt FROM private_pages WHERE page = $1',
+        [pagename]
+    );
 
-        if (result.rows.length === 0) {
-            return res.status(404).json({ error: 'Page not found' });
-        }
-
-        const { posting_password, viewing_password, salt } = result.rows[0];
-        const hashedPassword = hashPassword(password, salt);
-
-        if (hashedPassword === posting_password) {
-            res.json({ success: true, access: "full" });
-        } else if (hashedPassword === viewing_password) {
-            res.json({ success: true, access: "view-only" });
-        } else {
-            res.status(401).json({ error: 'Incorrect password' });
-        }
-
-    } catch (err) {
-        console.error('❌ Error verifying password:', err);
-        res.status(500).json({ error: 'Internal server error' });
+    if (privatePageResult.rows.length === 0) {
+        return res.status(404).json({ error: 'Page not found' });
     }
+
+    const { posting_password, viewing_password, salt } = privatePageResult.rows[0];
+    const hashedPassword = hashPassword(password, salt);
+
+    if (hashedPassword !== posting_password && hashedPassword !== viewing_password) {
+        return res.status(401).json({ error: 'Invalid password.' });
+    }
+
+    // Create an auth token.
+    const authToken = generateAuthToken(pagename, hashedPassword);
+
+    // Set cookie. Consider setting HttpOnly and Secure flags in production.
+    res.cookie(`auth_${pagename}`, authToken, {
+        httpOnly: true,
+        secure: process.env.NODE_ENV === 'production'
+    });
+
+    // Return a JSON response instead of redirecting
+    res.status(200).json({ success: true, redirect: `/${pagename}` });
 });
+
 
 export default router;

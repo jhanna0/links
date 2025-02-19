@@ -2,6 +2,7 @@ import express from 'express';
 import rateLimit from 'express-rate-limit';
 import routes from './routes.js';
 import { fileURLToPath } from 'url';
+import cookieParser from 'cookie-parser';
 import path from 'path';
 
 const app = express();
@@ -51,6 +52,7 @@ const getDailyLimiter = rateLimit({
 // Middleware
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
+app.use(cookieParser());
 app.use(express.static('pages'));
 app.use('/common', express.static('common'));
 

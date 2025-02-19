@@ -111,31 +111,4 @@ export async function fetchUpdatedTable(page, offset) {
     }
 }
 
-async function verifyPrivatePage(page, password) {
-    try {
-        const response = await fetch('/verify-password', {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ page, password })
-        });
-
-        const data = await response.json();
-
-        if (data.success) {
-            if (data.access === "full") {
-                alert("✅ Full access granted!");
-                // Load page with full permissions
-            } else {
-                alert("👀 Viewing-only access granted.");
-                // Load page in read-only mode
-            }
-        } else {
-            alert("❌ Incorrect password.");
-        }
-    } catch (error) {
-        console.error("Error:", error);
-        alert("⚠️ Failed to verify password.");
-    }
-}
-
 // Example usage: verifyPrivatePage('myPage123', 'userEnteredPassword');
