@@ -65,17 +65,3 @@ export function validateDescription(description) {
     }
     return { valid: true };
 }
-
-/**
- * Escape HTML special characters to prevent XSS.
- * @param {string} text
- * @returns {string}
- */
-export function escapeHtml(text) {
-    return text
-        .replace(/&/g, '&amp;')
-        .replace(/</g, '&lt;')
-        .replace(/>/g, '&gt;')
-        .replace(/"/g, '&quot;')
-        .replace(/'/g, '&#039;');
-}

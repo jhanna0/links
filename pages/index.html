@@ -141,7 +141,7 @@
 
         /* Footer Links */
         .footer-links {
-            margin-top: 1rem;
+            margin-top: 1.5rem;
             font-size: 1em;
         }
 
@@ -388,9 +388,9 @@
             <button type="button" id="goButton" class="btn-go">Go</button>
 
             <!-- New Private Page Button (Styled Differently) -->
-            <!-- <button type="button" id="createPrivatePage" class="btn-secondary">
+            <button type="button" id="createPrivatePage" class="btn-secondary">
                 Create Private Page
-            </button> -->
+            </button>
         </div>
 
         <!-- Footer Links -->
@@ -413,12 +413,12 @@
                     <p><strong>20 → 100</strong> links per day</p>
                 </div>
                 <div class="feature-item">
-                    <strong>Account-Free</strong>
-                    <p>No sign-up needed.</p>
+                    <strong>Increase Private Page Creation Limit</strong>
+                    <p> <strong>1 → 5</strong> private pages per day.</p>
                 </div>
                 <div class="feature-item">
-                    <strong>Free Range Key</strong>
-                    <p>Use in the UI or programmatically.</p>
+                    <strong>Account-Free</strong>
+                    <p>No sign-up needed.</p>
                 </div>
                 <div class="feature-item">
                     <strong>Anonymous</strong>
@@ -451,7 +451,7 @@
                 </div>
                 <div class="info-item">
                     <strong>No Ownership- No Accounts</strong>
-                    <p>There are no private pages—anyone with the name has full access. No user data is stored when
+                    <p>No one owns pages- anyone with the name has full access. No user data is stored when
                         posting.</p>
                 </div>
                 <div class="info-item">
@@ -482,33 +482,26 @@
     <div id="privatePageModal" class="modal hidden">
         <div class="modal-content">
             <span class="close-button">&times;</span>
-            <!-- Title with Copy Icon -->
-            <div class="modal-header">
-                <h2 class="page-heading">Private Page Created</h2>
-                <!-- <span class="copy-icon" onclick="copyPrivatePageInfo()">📋</span> -->
-            </div>
+            <h2 class="page-heading">Create Private Page</h2>
             <p class="subtext">Share the correct password for the desired level of access.</p>
 
             <!-- Private Info Section -->
             <div class="private-info">
                 <div class="private-box">
                     <h4>Private URL</h4>
-                    <p id="privatePageUrl">Generating...</p>
+                    <p id="privatePageUrl">...</p>
                 </div>
                 <div class="private-box">
                     <h4>Posting Password</h4>
-                    <p id="postingPassword">Generating...</p>
+                    <p id="postingPassword">...</p>
                 </div>
                 <div class="private-box">
                     <h4>Viewing Password</h4>
-                    <p id="viewingPassword">Generating...</p>
+                    <p id="viewingPassword">...</p>
                 </div>
-
-                <!-- <button class="copy-button" onclick="copyPrivatePageInfo()">📋 Copy All</button> -->
-
             </div>
 
-            <!-- Instructions (No changes to .info-item) -->
+            <!-- Instructions -->
             <div class="info-list" style="margin-top: 1.5rem;">
                 <div class="info-item">
                     <strong>How It Works</strong>
@@ -527,15 +520,18 @@
                     <p>Do not share the posting password unless you trust the user.</p>
                 </div>
             </div>
+            <button id="generateButton" style="width: 100%;" class="copy-button">Generate</button>
+
         </div>
     </div>
+
 
     <style>
         /* Secondary Button Styling */
         .btn-secondary {
             padding: 8px 15px;
             font-size: 1em;
-            margin-top: 1.5rem;
+            margin-top: 1rem;
             font-weight: bold;
             background: white;
             color: black;
@@ -594,8 +590,8 @@
             font-weight: bold;
             padding: 10px 15px;
             border-radius: 50px;
-            background: white;
-            color: black;
+            background: black;
+            color: white;
             border: 2px solid black;
             cursor: pointer;
             transition: all 0.3s ease;
@@ -604,8 +600,8 @@
         }
 
         .copy-button:hover {
-            background: black;
-            color: white;
+            background: white;
+            color: black;
         }
     </style>
 </body>

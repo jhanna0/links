@@ -101,17 +101,6 @@ document.addEventListener("DOMContentLoaded", () => {
         }
     });
 
-
-    // Function to generate a random string
-    function generateRandomString(length) {
-        const characters = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
-        let result = "";
-        for (let i = 0; i < length; i++) {
-            result += characters.charAt(Math.floor(Math.random() * characters.length));
-        }
-        return result;
-    }
-
     // Function to copy text to clipboard
     function copyPrivatePageInfo() {
         const url = document.getElementById("privatePageUrl").innerText;
@@ -124,26 +113,57 @@ document.addEventListener("DOMContentLoaded", () => {
         });
     }
 
-    // Event Listener for "Create Private Page" Button
-    document.getElementById("createPrivatePage").addEventListener("click", function () {
-        const randomPageId = generateRandomString(8);
-        const postingPass = generateRandomString(12);
-        const viewingPass = generateRandomString(12);
-
-        // Set the generated values
-        document.getElementById("privatePageUrl").innerText = `https://linkstash.co/${randomPageId}`;
-        document.getElementById("postingPassword").innerText = postingPass;
-        document.getElementById("viewingPassword").innerText = viewingPass;
-
-        // Show the modal
-        document.getElementById("privatePageModal").style.display = "flex";
-    });
-
     // Close Modal
     document.querySelectorAll(".close-button").forEach(button => {
         button.addEventListener("click", function () {
             this.closest(".modal").style.display = "none";
         });
     });
-});
 
+    // Event Listener for "Create Private Page" Button
+    document.getElementById("createPrivatePage").addEventListener("click", function () {
+        document.getElementById("privatePageModal").style.display = "flex";
+    });
+
+    const generateButton = document.getElementById("generateButton");
+    console.log("clicked: ", generateButton)
+    if (generateButton) {
+        generateButton.addEventListener("click", generatePrivatePage);
+    }
+
+    async function generatePrivatePage() {
+        try {
+            // Show "Generating..." while waiting for response
+            document.getElementById("privatePageUrl").innerText = "...";
+            document.getElementById("postingPassword").innerText = "...";
+            document.getElementById("viewingPassword").innerText = "...";
+
+            // Call backend to create private page
+            const response = await fetch("/create-private-page", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" }
+            });
+
+            const data = await response.json();
+
+            if (!data.success) {
+                throw new Error(data.error || "Failed to generate private page.");
+            }
+
+            // ✅ Make the URL a clickable link
+            const privatePageUrlElem = document.getElementById("privatePageUrl");
+            privatePageUrlElem.innerHTML = `<a href="${data.pageUrl}" target="_blank" rel="noopener noreferrer">${data.pageUrl}</a>`;
+
+            // Update the passwords
+            document.getElementById("postingPassword").innerText = data.postingPassword;
+            document.getElementById("viewingPassword").innerText = data.viewingPassword;
+
+            // Show the modal
+            document.getElementById("privatePageModal").style.display = "flex";
+        } catch (error) {
+            console.error("Error creating private page:", error);
+            alert("❌ Error creating private page. Please try again.");
+        }
+    }
+
+});

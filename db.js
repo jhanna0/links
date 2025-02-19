@@ -31,7 +31,7 @@ pool.connect()
 
 // Initialize the database (create table if it doesn't exist)
 const initDB = async () => {
-    const createTableQuery = `
+    const createLinksTable = `
     CREATE TABLE IF NOT EXISTS links (
       id SERIAL PRIMARY KEY,
       page TEXT NOT NULL,
@@ -39,13 +39,25 @@ const initDB = async () => {
       description TEXT,
       created_at TIMESTAMPTZ DEFAULT CURRENT_TIMESTAMP,
       CONSTRAINT unique_page_link_description UNIQUE (page, link, description)
-    );
-  `;
+    );`;
+
+    const createPrivatePagesTable = `
+    CREATE TABLE IF NOT EXISTS private_pages (
+      id SERIAL PRIMARY KEY,
+      page TEXT UNIQUE NOT NULL,
+      title TEXT NOT NULL DEFAULT 'Page Title',
+      posting_password TEXT NOT NULL,
+      viewing_password TEXT NOT NULL,
+      salt TEXT NOT NULL,
+      created_at TIMESTAMPTZ DEFAULT CURRENT_TIMESTAMP
+    );`;
+
     try {
-        await pool.query(createTableQuery);
-        console.log('Database initialized.');
+        await pool.query(createLinksTable);
+        await pool.query(createPrivatePagesTable);
+        console.log('✅ Database initialized.');
     } catch (err) {
-        console.error('Error initializing database:', err);
+        console.error('❌ Error initializing database:', err);
     }
 };
 
