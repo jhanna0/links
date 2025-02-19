@@ -219,7 +219,7 @@ router.post('/create-private-page', async (req, res) => {
 
         res.json({
             success: true,
-            pageUrl: `https://linkstash.co/${pageName}`,
+            pageName,
             postingPassword,
             viewingPassword
         });

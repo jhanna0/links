@@ -101,18 +101,6 @@ document.addEventListener("DOMContentLoaded", () => {
         }
     });
 
-    // Function to copy text to clipboard
-    function copyPrivatePageInfo() {
-        const url = document.getElementById("privatePageUrl").innerText;
-        const postPass = document.getElementById("postingPassword").innerText;
-        const viewPass = document.getElementById("viewingPassword").innerText;
-        const fullText = `🔒 Private Page Info:\nURL: ${url}\n📩 Posting Password: ${postPass}\n👀 Viewing Password: ${viewPass}`;
-
-        navigator.clipboard.writeText(fullText).then(() => {
-            alert("Copied Private Page Info!");
-        });
-    }
-
     // Close Modal
     document.querySelectorAll(".close-button").forEach(button => {
         button.addEventListener("click", function () {

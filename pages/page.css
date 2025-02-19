@@ -252,7 +252,7 @@
 \*---------------------------------------*/
 @media (max-width: 768px) {
     .main-container {
-        width: 90%;
+        width: 95%;
     }
 
     .pill {
@@ -260,7 +260,7 @@
     }
 
     .header-content {
-        width: 90%;
+        width: 95%;
     }
 
     .action-buttons {
@@ -269,7 +269,7 @@
 
     .action-buttons button {
         padding: 4px 10px;
-        font-size: 0.9em;
+        font-size: 0.75em;
         border-radius: 20px;
     }
 

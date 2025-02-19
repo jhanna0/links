@@ -166,25 +166,6 @@ body {
 }
 
 /*---------------------------------------*\
-    # Footer & Global Links
-\*---------------------------------------*/
-.footer-links {
-    margin-top: var(--margin-medium);
-    font-size: 1em;
-}
-
-.footer-links span {
-    cursor: pointer;
-    font-weight: bold;
-    text-decoration: underline;
-    transition: color 0.3s ease;
-}
-
-.footer-links span:hover {
-    color: #777;
-}
-
-/*---------------------------------------*\
     # Modal Global Styles
 \*---------------------------------------*/
 .modal {
@@ -290,7 +271,7 @@ body {
 \*---------------------------------------*/
 @media (max-width: 768px) {
     .card {
-        width: 90%;
+        width: 95%;
         padding: 1.5rem;
     }
 
@@ -306,7 +287,7 @@ body {
     }
 
     .btn {
-        font-size: 1em;
+        font-size: 0.9em;
         padding: 8px 14px;
         width: 100%;
     }
