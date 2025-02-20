@@ -68,7 +68,7 @@ class PrivatePageModal {
             this.generateButton.innerText = "Copy Data";
             this.generateButton.disabled = false;
             this.generateButton.onclick = () => this.copyPrivatePageInfo();
-            this.copyPrivatePageInfo();
+            setTimeout(() => this.copyPrivatePageInfo(), 50);
         } catch (error) {
             console.error("Error creating private page:", error);
             alert("❌ Error creating private page. Please try again.");
@@ -84,7 +84,7 @@ class PrivatePageModal {
         const url = this.urlElem.innerText;
         const postPass = this.postingPassElem.innerText;
         const viewPass = this.viewingPassElem.innerText;
-        const fullText = `🔒 Private Page Info:\nURL: ${url}\n📩 Posting Password: ${postPass}\n👀 Viewing Password: ${viewPass}`;
+        const fullText = `Private URL: ${url}\n Posting Password: ${postPass}\n Viewing Password: ${viewPass}`;
 
         navigator.clipboard.writeText(fullText).then(() => {
             alert("Page URL and Passwords Copied.");
