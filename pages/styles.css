@@ -88,6 +88,8 @@ body {
 input,
 textarea {
     background: var(--input-background);
+    enterkeyhint: "done";
+    /* You can also use "go", "search", "send", "next", etc. */
 }
 
 .input-wrapper input,

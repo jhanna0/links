@@ -61,6 +61,16 @@ const initDB = async () => {
     }
 };
 
+// Reset the database (delete all records)
+// const resetDB = async () => {
+//     try {
+//         await pool.query("TRUNCATE TABLE links, private_pages RESTART IDENTITY CASCADE;");
+//         console.log("✅ Database reset: All data cleared.");
+//     } catch (err) {
+//         console.error("❌ Error resetting database:", err);
+//     }
+// };
+
 initDB();
 
 export default pool;
