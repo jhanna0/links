@@ -24,7 +24,7 @@ export const createCheckoutSession = async (req, res) => {
                     quantity: 1,
                 },
             ],
-            success_url: `${process.env.BASE_URL}/?payment_success=true&session_id={CHECKOUT_SESSION_ID}`,
+            success_url: `${process.env.BASE_URL}/stripe/success?payment_success=true&session_id={CHECKOUT_SESSION_ID}`,
             cancel_url: `${process.env.BASE_URL}/`,
         });
 
