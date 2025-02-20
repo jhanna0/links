@@ -70,25 +70,16 @@
         <div class="modal-content" style="word-break: break-all;">
             <span class="close-button" onclick="closeLinkModal()">&times;</span>
 
-            <div class="private-box" style="margin-top: 1rem;">
-                <h4>Link</h4>
-                <p id="modalLinkText"></p>
+            <div class="private-box" style="margin-top: 1rem; border: 0; padding: 0;">
+                <!-- <h4 class="heading" style="font-size: 1.5rem;">Link</h4> -->
+                <p id="modalLinkText"></p> <button class="btn btn--full btn--secondary" onclick="copyToClipboard()">Copy
+                    Link</button>
+
+
             </div>
 
-            <button class="btn btn--full btn--secondary" onclick="copyToClipboard()">Copy Link</button>
         </div>
     </div>
-    <script>
-        function copyToClipboard() {
-            const linkText = document.getElementById("modalLinkText").innerText;
-            navigator.clipboard.writeText(linkText).then(() => {
-                alert("Link copied.");
-            }).catch(err => {
-                console.error("Error copying text:", err);
-                alert("Failed to copy.");
-            });
-        }
-    </script>
 
 </body>
 

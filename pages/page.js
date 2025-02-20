@@ -5,30 +5,27 @@ document.addEventListener("DOMContentLoaded", () => {
     const pillContainer = document.getElementById("pillContainer");
     const pageHeadingBack = document.getElementById("pageHeadingBack");
     const shareButton = document.getElementById("copyLinkButton");
-    const tooltip = document.getElementById("tooltip");
-    const toggleFormButton = document.getElementById("toggleFormButton"); // Assuming this is the button ID
+    const toggleFormButton = document.getElementById("toggleFormButton");
     const formContainer = document.getElementById("formContainer");
+    const linkModal = document.getElementById("linkModal");
+    const modalLinkText = document.getElementById("modalLinkText");
+    const closeButton = document.querySelector(".close-button");
 
     function updateTableMessage() {
         const existingPlaceholders = pillContainer.querySelectorAll(".pill.placeholder");
-        existingPlaceholders.forEach((pill) => pill.remove());
+        existingPlaceholders.forEach(pill => pill.remove());
 
         const pillCount = pillContainer.querySelectorAll(".pill").length;
 
         if (pillCount === 0) {
-            pillContainer.innerHTML = "";
-
-            const pill = document.createElement("div");
-            pill.classList.add("pill", "placeholder");
-
-            pill.innerHTML = `
-                <div class="pill-content">
-                    <a href="#" class="pill-link">No links yet.</a>
-                    <span class="description">Be the first to add a link to this page!</span>
+            pillContainer.innerHTML = `
+                <div class="pill placeholder">
+                    <div class="pill-content">
+                        <a href="#" class="pill-link">No links yet.</a>
+                        <span class="description">Be the first to add a link to this page!</span>
+                    </div>
                 </div>
             `;
-
-            pillContainer.appendChild(pill);
         }
     }
 
@@ -59,11 +56,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
     if (pageHeadingBack) {
         pageHeadingBack.addEventListener("click", () => {
-            if (document.referrer.endsWith("/")) {
-                window.history.back();
-            } else {
-                window.location.href = "/";
-            }
+            document.referrer.endsWith("/") ? window.history.back() : (window.location.href = "/");
         });
         pageHeadingBack.style.cursor = "pointer";
     }
@@ -72,13 +65,7 @@ document.addEventListener("DOMContentLoaded", () => {
         shareButton.addEventListener("click", async () => {
             try {
                 await navigator.clipboard.writeText(window.location.href);
-                tooltip.style.visibility = "visible";
-                tooltip.style.opacity = "1";
-
-                setTimeout(() => {
-                    tooltip.style.opacity = "0";
-                    tooltip.style.visibility = "hidden";
-                }, 1200);
+                alert("Link copied to clipboard!");
             } catch (err) {
                 console.error("Clipboard copy failed:", err);
             }
@@ -89,16 +76,44 @@ document.addEventListener("DOMContentLoaded", () => {
     if (toggleFormButton && formContainer) {
         toggleFormButton.addEventListener("click", () => {
             formContainer.scrollIntoView({ behavior: "smooth", block: "center" });
-
-            // Remove existing glow class if it was applied before
             formContainer.classList.remove("glow");
-
-            // Add glow class to trigger animation
-            setTimeout(() => {
-                formContainer.classList.add("glow");
-            }, 100); // Small delay to re-trigger animation
+            setTimeout(() => formContainer.classList.add("glow"), 100);
         });
     }
+
+    // Open Modal When Clicking "⋮" (three-dot menu)
+    pillContainer.addEventListener("click", (event) => {
+        const icon = event.target.closest(".pill-link-icon");
+        if (!icon) return;
+
+        const link = icon.getAttribute("data-link");
+        if (!link) return;
+
+        modalLinkText.textContent = link;
+        linkModal.style.display = "flex";
+    });
+
+    // Close Modal When Clicking "X" or Outside
+    closeButton?.addEventListener("click", () => (linkModal.style.display = "none"));
+
+    window.addEventListener("click", (event) => {
+        if (event.target.classList.contains("modal")) {
+            event.target.style.display = "none";
+        }
+    });
+
+    // Copy Link Functionality
+    function copyToClipboard() {
+        const linkText = modalLinkText.textContent;
+        navigator.clipboard.writeText(linkText).then(() => {
+            alert("Link copied.");
+        }).catch(err => {
+            console.error("Error copying text:", err);
+            alert("Failed to copy.");
+        });
+    }
+
+    window.copyToClipboard = copyToClipboard; // Expose globally
 
     // Expose function for other modules
     window.updateLinksPillContainer = updateLinksPillContainer;

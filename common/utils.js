@@ -44,7 +44,7 @@ export function generateStyledEntries(entries) {
             </div>
 
             <!-- Link Icon (Opens Modal) -->
-            <div class="pill-link-icon" onclick="openLinkModal('${escapeHtml(entry.link)}')">
+            <div class="pill-link-icon" data-link="${escapeHtml(entry.link)}">
                 ⋮
             </div>
         </div>
