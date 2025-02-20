@@ -22,16 +22,17 @@
     <meta name="twitter:image" content="https://linkstash.co/link.png" />
     <meta name="twitter:url" content="https://linkstash.co/{{pagename}}" />
 
+    <link rel="icon" type="image/x-icon" href="/favicon.png">
+    <link rel="apple-touch-icon" href="/link.png">
+
     <!-- Favicon and Styles -->
     <link rel="stylesheet" href="/styles.css" />
     <link rel="stylesheet" href="/page.css" />
-    <link rel="icon" type="image/x-icon" href="/favicon.png">
-    <link rel="apple-touch-icon" href="/link.png">
     <link rel="stylesheet" href="alert.css">
 </head>
 
-<body>
-    <script type="module" src="/page.js"></script>
+<body data-pagename="{{pagename}}">
+    <!-- <script type="module" src="/page.js"></script> -->
 
     <!-- ✅ Keep the header full width, OUTSIDE of `.main-container` -->
     <div class="header-wrapper">
@@ -39,7 +40,7 @@
             <h1 id="pageNameHeading">{{pagename}}</h1>
             <div class="action-buttons">
                 <button id="pageHeadingBack">Go Back</button>
-                <!-- <button id="toggleFormButton">Add Link</button> -->
+                <button id="toggleFormButton">Add Link</button>
                 <button id="copyLinkButton">Copy Link
                     <!-- tooltip not working -->
                     <!-- <span id="tooltip" class="tooltip">Copied!</span> -->
@@ -57,15 +58,8 @@
                 <div id="pillContainer" class="pill-container">
                     {{links}}
                 </div>
-                <div id="formContainer" class="form-container">
-                    <form id="form" action="/add" method="POST">
-                        <input type="hidden" id="pagePage" name="page" value="{{pagename}}" />
-                        <input type="text" id="linkPage" name="link" maxlength="500" required placeholder="Link" />
-                        <input type="text" id="descriptionPage" name="description" maxlength="100"
-                            placeholder="Description (optional)" />
-                        <button type="submit" class="btn-submit">Stash</button>
-                    </form>
-                </div>
+
+                {{form}}
 
             </div>
         </div>

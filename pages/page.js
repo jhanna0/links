@@ -1,147 +1,58 @@
-// page.js
-import { validatePageName, validateLink, validateDescription } from "/common/validator.mjs";
-import { attachFormSubmission, fetchUpdatedTable } from "./request.js";
+import { fetchUpdatedTable } from "./request.js";
 import "/alert.js";
 
 document.addEventListener("DOMContentLoaded", () => {
-    // ======================================================
-    // Element Selections (using IDs only)
-    // ======================================================
-    const form = document.getElementById("form");
-    const formContainer = document.getElementById("formContainer");
-    // const toggleButton = document.getElementById("toggleFormButton");
-
-    const linkInput = document.getElementById("linkPage");
-    const descriptionInput = document.getElementById("descriptionPage");
-    const pageNameInput = document.getElementById("pagePage"); // Hidden input
     const pillContainer = document.getElementById("pillContainer");
-
-    // Page Navigation & Buttons
     const pageHeadingBack = document.getElementById("pageHeadingBack");
     const shareButton = document.getElementById("copyLinkButton");
     const tooltip = document.getElementById("tooltip");
 
-    // ======================================================
-    // Form Validation & Submission
-    // ======================================================
-    function getFormValues() {
-        const page = pageNameInput ? pageNameInput.value.trim() : "";
-        let link = linkInput ? linkInput.value.trim() : "";
-        const description = descriptionInput ? descriptionInput.value.trim() : "";
-
-        if (link) {
-            if (!/^https?:\/\//i.test(link)) {
-                link = `https://${link}`;
-                linkInput.value = link; // Update the input field
-            }
-
-            const linkResult = validateLink(link);
-            if (!linkResult.valid) {
-                alert(linkResult.error)
-                return null;
-            }
-        }
-
-        if (description) {
-            const descriptionResult = validateDescription(description);
-            if (!descriptionResult.valid) {
-                alert(descriptionResult.error)
-                return null;
-            }
-        }
-
-        return { page, link, description };
-    }
-
     function updateTableMessage() {
-
-        // ✅ Remove any existing placeholder pills before counting
         const existingPlaceholders = pillContainer.querySelectorAll(".pill.placeholder");
         existingPlaceholders.forEach((pill) => pill.remove());
 
         const pillCount = pillContainer.querySelectorAll(".pill").length;
 
         if (pillCount === 0) {
-            pillContainer.innerHTML = ""; // Clear any existing content
+            pillContainer.innerHTML = "";
 
-            // ✅ Create a new placeholder pill
             const pill = document.createElement("div");
-            pill.classList.add("pill", "placeholder"); // ✅ Add "placeholder" class for styling
+            pill.classList.add("pill", "placeholder");
 
             pill.innerHTML = `
-                    <div class="pill-content">
-                        <a href="#" class="pill-link">No links yet.</a>
-                        <span class="description">Be the first to add a link to this page!</span>
-                    </div>
-                `;
+                <div class="pill-content">
+                    <a href="#" class="pill-link">No links yet.</a>
+                    <span class="description">Be the first to add a link to this page!</span>
+                </div>
+            `;
 
             pillContainer.appendChild(pill);
         }
     }
 
     async function updateLinksPillContainer(page) {
-        if (!page) return;
-        if (!pillContainer) return;
+        if (!page || !pillContainer) return;
 
         try {
-            // ✅ Select placeholder (if it exists)
             const placeholderPill = pillContainer.querySelector(".pill.placeholder");
-
-            // ✅ Current pill count (excluding placeholder)
             let pillCount = pillContainer.querySelectorAll(".pill").length;
-            if (placeholderPill) pillCount -= 1; // Ignore placeholder in count
+            if (placeholderPill) pillCount -= 1;
 
-            // ✅ Fetch new pills
             const newHTML = await fetchUpdatedTable(page, pillCount);
-            if (!newHTML || !newHTML.trim()) {
-                console.log("No new pills to add.");
-                return;
-            }
+            if (!newHTML || !newHTML.trim()) return;
 
             if (placeholderPill) {
-                // ✅ Replace the placeholder pill completely with the new pill(s)
                 placeholderPill.outerHTML = newHTML;
             } else {
-                // ✅ Just insert new pills normally if no placeholder exists
                 pillContainer.insertAdjacentHTML("beforeend", newHTML);
             }
 
-            updateTableMessage(); // ✅ Updates UI state if needed
-
-            // ✅ Smoothly scroll to the last added pill
-            setTimeout(() => {
-                const lastPill = pillContainer.querySelector(".pill:last-child");
-                if (lastPill) {
-                    lastPill.scrollIntoView({ behavior: "smooth", block: "nearest" });
-                }
-            }, 100);
+            updateTableMessage();
         } catch (error) {
             console.error("Error updating pill container:", error);
         }
     }
 
-    function onSuccess(formValues, _) {
-        if (linkInput) linkInput.value = "";
-        if (descriptionInput) descriptionInput.value = "";
-
-        if (formValues.page && window.location.pathname !== `/${formValues.page}`) {
-            window.location.href = `/${formValues.page}`;
-        } else {
-            updateLinksPillContainer(formValues.page);
-        }
-    }
-
-    function onFailure(errorMessage) {
-        alert(errorMessage);
-    }
-
-    if (form) {
-        attachFormSubmission(form, getFormValues, onSuccess, onFailure);
-    }
-
-    // ======================================================
-    // Additional Page Functionality
-    // ======================================================
     updateTableMessage();
 
     if (pageHeadingBack) {
@@ -155,17 +66,13 @@ document.addEventListener("DOMContentLoaded", () => {
         pageHeadingBack.style.cursor = "pointer";
     }
 
-    // tooltip not wrking
     if (shareButton) {
         shareButton.addEventListener("click", async () => {
             try {
                 await navigator.clipboard.writeText(window.location.href);
-
-                // Show Tooltip
                 tooltip.style.visibility = "visible";
                 tooltip.style.opacity = "1";
 
-                // Hide Tooltip After 1.2s
                 setTimeout(() => {
                     tooltip.style.opacity = "0";
                     tooltip.style.visibility = "hidden";
@@ -176,56 +83,6 @@ document.addEventListener("DOMContentLoaded", () => {
         });
     }
 
-    // toggleButton.addEventListener("click", function () {
-    //     if (formContainer) {
-    //         formContainer.scrollIntoView({ behavior: "smooth", block: "start" });
-    //         formContainer.classList.add("glow");
-
-    //         setTimeout(() => {
-    //             formContainer.classList.remove("glow");
-    //         }, 3000);
-    //     }
-    // });
-
-    linkInput.addEventListener("paste", function (event) {
-        event.preventDefault(); // ✅ Prevents the default paste behavior
-
-        let pasteData = (event.clipboardData || window.clipboardData).getData("text");
-        this.value = pasteData; // ✅ Inserts the pasted text manually
-
-        setTimeout(() => {
-            this.setSelectionRange(0, 0); // ✅ Moves cursor to the start
-        }, 0);
-    });
-
-    descriptionInput.addEventListener("paste", function (event) {
-        event.preventDefault(); // ✅ Prevents the default paste behavior
-
-        let pasteData = (event.clipboardData || window.clipboardData).getData("text");
-        this.value = pasteData; // ✅ Inserts the pasted text manually
-
-        setTimeout(() => {
-            this.setSelectionRange(0, 0); // ✅ Moves cursor to the start
-        }, 0);
-    });
-
-    window.openLinkModal = function (link) {
-        const modal = document.getElementById("linkModal");
-        const modalContent = document.getElementById("modalLinkText");
-
-        if (modal && modalContent) {
-            modalContent.textContent = link;
-            modal.style.display = "flex"; // Show modal
-        }
-    };
-
-    window.addEventListener('click', function (event) {
-        if (event.target.classList.contains('modal')) {
-            event.target.style.display = 'none';
-        }
-    });
-
-    window.closeLinkModal = function () {
-        document.getElementById("linkModal").style.display = "none";
-    }
+    // Expose function for other modules
+    window.updateLinksPillContainer = updateLinksPillContainer;
 });

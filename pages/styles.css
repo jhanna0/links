@@ -12,6 +12,7 @@
     --radius-medium: 30px;
     --radius-small: 20px;
     --shadow-standard: 4px 4px 0px var(--primary-color), 8px 8px 15px rgba(0, 0, 0, 0.1);
+    --input-background: #F6F3EE;
     --margin-large: 1.5rem;
     --margin-medium: 1rem;
     --margin-small: 0.5rem;
@@ -282,7 +283,7 @@ body {
 .private-box p {
     font-size: 1rem;
     font-family: monospace;
-    background: #F6F3EE;
+    background: var(--input-background);
     padding: 8px;
     border-radius: 8px;
     display: inline-block;

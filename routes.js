@@ -20,7 +20,7 @@ router.get('/', (_, res) => {
 
 // Handle form submissions (POST /add)
 router.post('/add', async (req, res) => {
-    let { page, link, description = '', password } = req.body;
+    let { page, link, description = '' } = req.body;
 
     // Validate page name
     const pageValidation = validatePageName(page);
@@ -47,21 +47,31 @@ router.post('/add', async (req, res) => {
     try {
         // 🆕 Check if the page is private
         const privatePageResult = await pool.query(
-            'SELECT posting_password, salt FROM private_pages WHERE page = $1',
+            'SELECT posting_password, viewing_password, salt FROM private_pages WHERE page = $1',
             [page]
         );
 
         if (privatePageResult.rows.length > 0) {
-            // The page is private, require a password
-            if (!password) {
-                return res.status(403).json({ error: '🔒 Password required to post to this private page.' });
+            // The page is private, require authentication
+            const authCookieName = `auth_${page}`;
+            const authToken = req.cookies[authCookieName];
+
+            if (!authToken) {
+                return res.status(403).json({ error: '🔒 Authentication required to post to this private page.' });
             }
 
-            const { posting_password, salt } = privatePageResult.rows[0];
-            const hashedPassword = verifyPassword(password, posting_password, salt);
+            // Validate the token
+            const tokenPayload = validateAuthToken(authToken);
+            if (!tokenPayload || tokenPayload.page !== page) {
+                return res.status(403).json({ error: '❌ Invalid authentication token.' });
+            }
 
-            if (!hashedPassword) {
-                return res.status(403).json({ error: '❌ Incorrect password for posting.' });
+            // 🔒 Extract stored passwords
+            const { posting_password } = privatePageResult.rows[0];
+
+            // Ensure the token grants **posting** access, not just viewing access
+            if (tokenPayload.hashedPassword !== posting_password) {
+                return res.status(403).json({ error: '⛔ You do not have permission to post to this page.' });
             }
         }
 
@@ -89,20 +99,29 @@ router.post('/add', async (req, res) => {
 // Serve dynamic page (GET /:pagename)
 router.get('/:pagename', async (req, res) => {
     const { pagename } = req.params;
+
+    // Predefined HTML path constants
     const templatePath = path.join(__dirname, 'pages', 'page.html');
     const privatePageNotFoundPath = path.join(__dirname, 'pages', 'page_not_found.html');
     const privatePageAccessPath = path.join(__dirname, 'pages', 'password.html');
     const invalidPagePath = path.join(__dirname, 'pages', 'invalid_page.html');
 
+    // Partial templates for forms
+    const passwordFormPath = path.join(__dirname, 'pages', 'password_form.html');
+    const linkFormPath = path.join(__dirname, 'pages', 'link_form.html');
 
     if (!fs.existsSync(templatePath)) {
         return res.status(500).send('<h1>500 - Template Not Found</h1>');
     }
 
     try {
-        if (pagename.startsWith("~")) {
+        let isPrivatePage = pagename.startsWith("~");
+        let hasPostingAccess = false;
+        let hasViewingAccess = false;
+
+        if (isPrivatePage) {
             const privatePageResult = await pool.query(
-                'SELECT posting_password, viewing_password, salt FROM private_pages WHERE page = $1',
+                'SELECT posting_password, viewing_password FROM private_pages WHERE page = $1',
                 [pagename]
             );
 
@@ -110,10 +129,7 @@ router.get('/:pagename', async (req, res) => {
                 return res.sendFile(privatePageNotFoundPath); // ❌ Private page does not exist
             }
 
-            // 🔒 Get stored credentials
             const { posting_password, viewing_password } = privatePageResult.rows[0];
-
-            // ✅ Check for the auth token in the cookie for this page
             const authCookieName = `auth_${pagename}`;
             const authToken = req.cookies[authCookieName];
 
@@ -121,25 +137,24 @@ router.get('/:pagename', async (req, res) => {
                 return res.sendFile(privatePageAccessPath); // 🔐 Prompt for password if token missing
             }
 
-            // Validate the token using our util function
             const tokenPayload = validateAuthToken(authToken);
-            if (!tokenPayload) {
+            if (!tokenPayload || tokenPayload.page !== pagename) {
                 return res.sendFile(privatePageAccessPath); // ❌ Invalid or expired token → Re-prompt
             }
 
-            // Optionally, ensure the token is for the correct page
-            if (tokenPayload.page !== pagename) {
+            if (tokenPayload.hashedPassword === posting_password) {
+                hasPostingAccess = true;
+                hasViewingAccess = true;
+            } else if (tokenPayload.hashedPassword === viewing_password) {
+                hasViewingAccess = true;
+            } else {
                 return res.sendFile(privatePageAccessPath);
             }
+        }
 
-            // Optionally, verify that the token’s hashedPassword matches one of the stored hashes
-            if (
-                tokenPayload.hashedPassword !== posting_password &&
-                tokenPayload.hashedPassword !== viewing_password
-            ) {
-                return res.sendFile(privatePageAccessPath);
-            }
-            // ✅ If all checks pass, continue loading the page
+        else {
+            hasPostingAccess = true;
+            hasViewingAccess = true;
         }
 
         // Validate page name
@@ -148,7 +163,7 @@ router.get('/:pagename', async (req, res) => {
             return res.sendFile(invalidPagePath);
         }
 
-        // 🆓 Load public or unlocked private page
+        // Load public or unlocked private page
         const result = await pool.query(
             'SELECT link, description FROM links WHERE page = $1 ORDER BY created_at ASC',
             [pagename]
@@ -157,6 +172,26 @@ router.get('/:pagename', async (req, res) => {
         let html = fs.readFileSync(templatePath, 'utf8');
         html = html.replace(/{{links}}/g, generateStyledEntries(result.rows));
         html = html.replace(/{{pagename}}/g, pagename);
+
+        // ✅ Inject correct form (either password form or link submission form)
+        let formHTML = '';
+        if (isPrivatePage && !hasPostingAccess && hasViewingAccess) {
+            formHTML = fs.readFileSync(passwordFormPath, 'utf8'); // Password input form
+        } else if (hasPostingAccess) {
+            formHTML = fs.readFileSync(linkFormPath, 'utf8'); // Posting form
+        }
+
+        html = html.replace('{{form}}', formHTML);
+
+        // ✅ Inject correct JavaScript
+        let scripts = '<script src="page.js" type="module" defer></script>';
+        if (isPrivatePage && !hasPostingAccess && hasViewingAccess) {
+            scripts += '<script src="verify.js" type="module" defer></script>'; // Only viewing access
+        } else if (hasPostingAccess) {
+            scripts += '<script src="post.js" type="module" defer></script>'; // Can post
+        }
+
+        html = html.replace('</body>', `${scripts}</body>`);
 
         res.send(html);
     } catch (err) {
