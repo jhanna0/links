@@ -85,6 +85,11 @@ body {
     position: relative;
 }
 
+input,
+textarea {
+    background: var(--input-background);
+}
+
 .input-wrapper input,
 .button-input-wrapper input {
     width: 100%;

@@ -6,6 +6,8 @@ document.addEventListener("DOMContentLoaded", () => {
     const pageHeadingBack = document.getElementById("pageHeadingBack");
     const shareButton = document.getElementById("copyLinkButton");
     const tooltip = document.getElementById("tooltip");
+    const toggleFormButton = document.getElementById("toggleFormButton"); // Assuming this is the button ID
+    const formContainer = document.getElementById("formContainer");
 
     function updateTableMessage() {
         const existingPlaceholders = pillContainer.querySelectorAll(".pill.placeholder");
@@ -80,6 +82,21 @@ document.addEventListener("DOMContentLoaded", () => {
             } catch (err) {
                 console.error("Clipboard copy failed:", err);
             }
+        });
+    }
+
+    // Smooth scroll and glow effect when toggleFormButton is clicked
+    if (toggleFormButton && formContainer) {
+        toggleFormButton.addEventListener("click", () => {
+            formContainer.scrollIntoView({ behavior: "smooth", block: "center" });
+
+            // Remove existing glow class if it was applied before
+            formContainer.classList.remove("glow");
+
+            // Add glow class to trigger animation
+            setTimeout(() => {
+                formContainer.classList.add("glow");
+            }, 100); // Small delay to re-trigger animation
         });
     }
 

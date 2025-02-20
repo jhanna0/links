@@ -1,8 +1,66 @@
-<div id="formContainer" class="form-container">
-    <form id="form" action="/add" method="POST">
-        <input type="text" id="linkPage" name="link" maxlength="500" required placeholder="Link" />
-        <input type="text" id="descriptionPage" name="description" maxlength="100"
-            placeholder="Description (optional)" />
-        <button type="submit" class="btn-submit">Stash</button>
+<div id="formContainer" style="width: 100%; margin-bottom: var(--margin-large);">
+    <form id="form" class="link-form" action="/add" method="POST">
+        <h4 class="text-center">Add a Link</h4>
+        <div class="input-block">
+            <input type="text" id="linkPage" style="font-weight: bold;" name="link" class="input-text" maxlength="500"
+                required placeholder="Enter link" />
+            <div class="divider"></div>
+            <input type="text" id="descriptionPage" name="description" style="border-radius: 0; border: 0;"
+                class="input-text" maxlength="100" placeholder="Description (optional)" />
+        </div>
+        <button type="submit" class="btn btn--full">Stash</button>
+
     </form>
 </div>
+
+<style>
+    /* Link submission form */
+    .link-form {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        width: 100%;
+        padding: 1rem;
+        border-radius: var(--radius-medium);
+        background: var(--secondary-color);
+        border: var(--border-width-2) solid var(--primary-color);
+        box-shadow: var(--shadow-standard);
+    }
+
+    /* Form title */
+    .link-form h4 {
+        margin-bottom: var(--margin-medium);
+        font-size: 1.2rem;
+        font-weight: bold;
+    }
+
+    /* Input block (makes inputs feel like one unit) */
+    .input-block {
+        display: flex;
+        flex-direction: column;
+        width: 100%;
+        border: var(--border-width-2) solid var(--primary-color);
+        border-radius: var(--radius-medium);
+        overflow: hidden;
+        position: relative;
+    }
+
+    /* Inputs */
+    .input-text {
+        width: 100%;
+        padding: 12px;
+        font-size: 1rem;
+        border: none;
+        outline: none;
+        background: var(--input-background);
+        text-align: center;
+    }
+
+    /* Divider line between inputs */
+    .divider {
+        width: 100%;
+        height: 1px;
+        background: var(--primary-color);
+        margin: 0;
+    }
+</style>

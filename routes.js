@@ -5,7 +5,7 @@ import path from 'path';
 import { fileURLToPath } from 'url';
 import pool from './db.js';
 import { validatePageName, validateLink, validateDescription } from "./common/validator.js";
-import { generateSecureString, verifyPassword, generateStyledEntries, generateSalt, hashPassword, generateAuthToken, validateAuthToken } from "./common/utils.js";
+import { generateSecureString, generateStyledEntries, generateSalt, hashPassword, generateAuthToken, validateAuthToken } from "./common/utils.js";
 
 // Define __dirname for ES modules
 const __filename = fileURLToPath(import.meta.url);
@@ -201,6 +201,7 @@ router.get('/:pagename', async (req, res) => {
 });
 
 // Serve only new rows based on the current length of the table in the frontend
+// Serve only new rows based on the current length of the table in the frontend
 router.get('/api/:pagename/new', async (req, res) => {
     const { pagename } = req.params;
     const offset = parseInt(req.query.offset, 10) || 0; // Number of rows the frontend already has
@@ -212,6 +213,24 @@ router.get('/api/:pagename/new', async (req, res) => {
     }
 
     try {
+        if (pagename.startsWith("~")) {
+            // Ensure private pages have at least one password
+            const privatePageResult = await pool.query(
+                'SELECT posting_password, viewing_password FROM private_pages WHERE page = $1',
+                [pagename]
+            );
+
+            if (privatePageResult.rows.length === 0) {
+                return res.status(404).send("<tr><td colspan='2'>Private page not found.</td></tr>");
+            }
+
+            const { posting_password, viewing_password } = privatePageResult.rows[0];
+
+            if (!posting_password && !viewing_password) {
+                return res.status(403).send("<tr><td colspan='2'>Private page requires at least one password.</td></tr>");
+            }
+        }
+
         // Fetch only new rows (oldest first for offset to work)
         const result = await pool.query(
             'SELECT link, description FROM links WHERE page = $1 ORDER BY created_at ASC OFFSET $2',
@@ -221,8 +240,8 @@ router.get('/api/:pagename/new', async (req, res) => {
         // Reverse the rows to maintain `DESC` order before sending
         const reversedRows = result.rows.reverse();
 
-        // Convert new rows to HTML format using `parseDisplayName`
-        const linksHTML = generateStyledEntries(reversedRows)
+        // Convert new rows to HTML format using `generateStyledEntries`
+        const linksHTML = generateStyledEntries(reversedRows);
 
         res.send(linksHTML);
     } catch (err) {
