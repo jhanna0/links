@@ -84,7 +84,7 @@ class PrivatePageModal {
         const url = this.urlElem.innerText;
         const postPass = this.postingPassElem.innerText;
         const viewPass = this.viewingPassElem.innerText;
-        const fullText = `Private URL: ${url}\n Posting Password: ${postPass}\n Viewing Password: ${viewPass}`;
+        const fullText = `Private URL: ${url}. Posting Password: ${postPass}. Viewing Password: ${viewPass}`;
 
         navigator.clipboard.writeText(fullText).then(() => {
             alert("Page URL and Passwords Copied.");
