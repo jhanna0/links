@@ -150,3 +150,8 @@ export function validateAuthToken(token) {
 
     return payload;
 }
+
+
+export function hashEmail(email) {
+    return crypto.createHash("sha256").update(email).digest("hex");
+};

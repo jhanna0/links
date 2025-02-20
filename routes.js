@@ -1,5 +1,7 @@
 // routes.js (ES Module version)
 import express from 'express';
+import { createCheckoutSession, handlePaymentSuccess } from "./stripe_handler.js"; // Import Stripe functions
+
 import fs from 'fs';
 import path from 'path';
 import { fileURLToPath } from 'url';
@@ -95,6 +97,91 @@ router.post('/add', async (req, res) => {
         res.status(500).json({ error: 'Database error' });
     }
 });
+
+router.post('/create-private-page', async (req, res) => {
+    try {
+        let pageName;
+        let attempts = 0;
+        // Try up to 5 times to generate a unique page name
+        do {
+            pageName = "~" + generateSecureString(8);
+            const checkResult = await pool.query('SELECT 1 FROM private_pages WHERE page = $1', [pageName]);
+            if (checkResult.rowCount === 0) break;
+            attempts++;
+        } while (attempts < 5);
+
+        if (attempts >= 5) {
+            return res.status(500).json({ error: 'Could not generate a unique page name, please try again.' });
+        }
+
+        const postingPassword = "P-" + generateSecureString(8);
+        const viewingPassword = "V-" + generateSecureString(8);
+
+        const salt = generateSalt();
+        const hashedPostingPassword = hashPassword(postingPassword, salt);
+        const hashedViewingPassword = hashPassword(viewingPassword, salt);
+
+        await pool.query(
+            `INSERT INTO private_pages (page, posting_password, viewing_password, salt)
+         VALUES ($1, $2, $3, $4)`,
+            [pageName, hashedPostingPassword, hashedViewingPassword, salt]
+        );
+
+        res.json({
+            success: true,
+            pageName,
+            postingPassword,
+            viewingPassword
+        });
+    } catch (err) {
+        console.error('❌ Error creating private page:', err);
+        res.status(500).json({ error: 'Internal server error' });
+    }
+});
+
+
+// POST /login for authenticating private pages
+router.post('/verify', async (req, res) => {
+    const { pagename, password } = req.body;
+
+    // Query your DB for the page
+    const privatePageResult = await pool.query(
+        'SELECT posting_password, viewing_password, salt FROM private_pages WHERE page = $1',
+        [pagename]
+    );
+
+    if (privatePageResult.rows.length === 0) {
+        return res.status(404).json({ error: 'Page not found' });
+    }
+
+    const { posting_password, viewing_password, salt } = privatePageResult.rows[0];
+    const hashedPassword = hashPassword(password, salt);
+
+    if (hashedPassword !== posting_password && hashedPassword !== viewing_password) {
+        return res.status(401).json({ error: 'Invalid password.' });
+    }
+
+    // Create an auth token.
+    const authToken = generateAuthToken(pagename, hashedPassword);
+
+    // Set cookie. Consider setting HttpOnly and Secure flags in production.
+    res.cookie(`auth_${pagename}`, authToken, {
+        httpOnly: true,
+        secure: process.env.NODE_ENV === 'production'
+    });
+
+    // Return a JSON response instead of redirecting
+    res.status(200).json({ success: true, redirect: `/${pagename}` });
+});
+
+
+// Stripe Checkout Route
+router.post("/create-checkout-session", createCheckoutSession);
+
+// Handle Stripe Payment Success
+router.get("/success", handlePaymentSuccess);
+
+// we can add a /verify-purchase route that takes an email, checks the hash, and returns the key
 
 // Serve dynamic page (GET /:pagename)
 router.get('/:pagename', async (req, res) => {
@@ -249,82 +336,5 @@ router.get('/api/:pagename/new', async (req, res) => {
         res.status(500).json({ error: 'Database error' });
     }
 });
-
-router.post('/create-private-page', async (req, res) => {
-    try {
-        let pageName;
-        let attempts = 0;
-        // Try up to 5 times to generate a unique page name
-        do {
-            pageName = "~" + generateSecureString(8);
-            const checkResult = await pool.query('SELECT 1 FROM private_pages WHERE page = $1', [pageName]);
-            if (checkResult.rowCount === 0) break;
-            attempts++;
-        } while (attempts < 5);
-
-        if (attempts >= 5) {
-            return res.status(500).json({ error: 'Could not generate a unique page name, please try again.' });
-        }
-
-        const postingPassword = "P-" + generateSecureString(8);
-        const viewingPassword = "V-" + generateSecureString(8);
-
-        const salt = generateSalt();
-        const hashedPostingPassword = hashPassword(postingPassword, salt);
-        const hashedViewingPassword = hashPassword(viewingPassword, salt);
-
-        await pool.query(
-            `INSERT INTO private_pages (page, posting_password, viewing_password, salt)
-         VALUES ($1, $2, $3, $4)`,
-            [pageName, hashedPostingPassword, hashedViewingPassword, salt]
-        );
-
-        res.json({
-            success: true,
-            pageName,
-            postingPassword,
-            viewingPassword
-        });
-    } catch (err) {
-        console.error('❌ Error creating private page:', err);
-        res.status(500).json({ error: 'Internal server error' });
-    }
-});
-
-
-// POST /login for authenticating private pages
-router.post('/verify', async (req, res) => {
-    const { pagename, password } = req.body;
-
-    // Query your DB for the page
-    const privatePageResult = await pool.query(
-        'SELECT posting_password, viewing_password, salt FROM private_pages WHERE page = $1',
-        [pagename]
-    );
-
-    if (privatePageResult.rows.length === 0) {
-        return res.status(404).json({ error: 'Page not found' });
-    }
-
-    const { posting_password, viewing_password, salt } = privatePageResult.rows[0];
-    const hashedPassword = hashPassword(password, salt);
-
-    if (hashedPassword !== posting_password && hashedPassword !== viewing_password) {
-        return res.status(401).json({ error: 'Invalid password.' });
-    }
-
-    // Create an auth token.
-    const authToken = generateAuthToken(pagename, hashedPassword);
-
-    // Set cookie. Consider setting HttpOnly and Secure flags in production.
-    res.cookie(`auth_${pagename}`, authToken, {
-        httpOnly: true,
-        secure: process.env.NODE_ENV === 'production'
-    });
-
-    // Return a JSON response instead of redirecting
-    res.status(200).json({ success: true, redirect: `/${pagename}` });
-});
-
 
 export default router;

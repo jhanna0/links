@@ -52,14 +52,26 @@ const initDB = async () => {
       created_at TIMESTAMPTZ DEFAULT CURRENT_TIMESTAMP
     );`;
 
+    // 🔹 New Table for API Keys
+    const createAPIKeysTable = `
+    CREATE TABLE IF NOT EXISTS api_keys (
+      id SERIAL PRIMARY KEY,
+      key TEXT UNIQUE NOT NULL,
+      hashed_email TEXT NOT NULL,
+      created_at TIMESTAMPTZ DEFAULT CURRENT_TIMESTAMP,
+      expires_at TIMESTAMPTZ NOT NULL
+    );`;
+
     try {
         await pool.query(createLinksTable);
         await pool.query(createPrivatePagesTable);
+        await pool.query(createAPIKeysTable);
         console.log('✅ Database initialized.');
     } catch (err) {
         console.error('❌ Error initializing database:', err);
     }
 };
+
 
 // Reset the database (delete all records)
 // const resetDB = async () => {

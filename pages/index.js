@@ -108,4 +108,22 @@ document.addEventListener("DOMContentLoaded", () => {
         });
     });
 
+
+    // stripe payments
+    document.getElementById("checkoutButton").addEventListener("click", async () => {
+        const userConfirmed = confirm("DO NOT USE A FAKE EMAIL! Your key will be sent via the email provided in the payment method. Your email is not stored and is only used to send you the key once.\n\nClick OK to continue.");
+
+        if (!userConfirmed) {
+            return; // Stop execution if the user cancels
+        }
+
+        const response = await fetch("/create-checkout-session", { method: "POST" });
+        const { sessionId } = await response.json();
+
+        if (sessionId) {
+            const stripe = Stripe("pk_test_51P09NcH8kt7nJfipp05yxJylJWpThuX0wrWX1cJYjsQFiyEV0Di8n2TitSHD6f5emIVinkyiibnkXAgEEa5BabYG009Pl3NKAG");
+            stripe.redirectToCheckout({ sessionId });
+        }
+    });
+
 });
