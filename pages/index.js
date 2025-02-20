@@ -77,9 +77,9 @@ document.addEventListener("DOMContentLoaded", () => {
         document.getElementById('infoModal').style.display = 'flex';
     });
 
-    // document.getElementById('accessButton').addEventListener('click', function () {
-    //     document.getElementById('accessModal').style.display = 'flex';
-    // });
+    document.getElementById('accessButton').addEventListener('click', function () {
+        document.getElementById('accessModal').style.display = 'flex';
+    });
 
     document.querySelectorAll('.close-button').forEach(button => {
         button.addEventListener('click', function () {

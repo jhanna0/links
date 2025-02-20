@@ -16,3 +16,10 @@
 .footer-links span:hover {
     color: #777;
 }
+
+@media (max-width: 768px) {
+    .footer-links {
+        font-size: 0.8em;
+        margin-top: var(--margin-medium);
+    }
+}
