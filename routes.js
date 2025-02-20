@@ -266,8 +266,8 @@ router.post('/create-private-page', async (req, res) => {
             return res.status(500).json({ error: 'Could not generate a unique page name, please try again.' });
         }
 
-        const postingPassword = generateSecureString(8);
-        const viewingPassword = generateSecureString(8);
+        const postingPassword = "P-" + generateSecureString(8);
+        const viewingPassword = "V-" + generateSecureString(8);
 
         const salt = generateSalt();
         const hashedPostingPassword = hashPassword(postingPassword, salt);

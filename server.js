@@ -22,7 +22,7 @@ const postLimiter = rateLimit({
     headers: true,
     keyGenerator: (req) => req.ip,
     handler: (req, res) => {
-        res.status(429).json({ error: "You may only add 20 links per day without an API key." });
+        res.status(429).json({ error: "You may only add 20 links per day without an Access Key." });
     },
 });
 
@@ -33,19 +33,41 @@ const postMinuteLimiter = rateLimit({
     headers: true,
     keyGenerator: (req) => req.ip,
     handler: (req, res) => {
-        res.status(429).json({ error: "You may only add 5 links per minute without an API key." });
+        res.status(429).json({ error: "You may only add 5 links per minute without an Access Key." });
     },
 });
 
 // 🔹 Global GET Rate Limit - 5 requests per 24 hours
 const getDailyLimiter = rateLimit({
     windowMs: 24 * 60 * 60 * 1000, // 24 hours
-    max: 200, // Limit each IP to 5 GET requests per day
+    max: 200, // Limit each IP to 200 GET requests per day
     statusCode: 429,
     headers: true,
     keyGenerator: (req) => req.ip,
     handler: (req, res) => {
         res.status(429).sendFile(path.join(__dirname, 'pages', '429.html'));
+    },
+});
+
+const privateLimiter = rateLimit({
+    windowMs: 24 * 60 * 60 * 1000, // 24 hours
+    max: 1, // Limit each IP to 1 private page per day
+    statusCode: 429,
+    headers: true,
+    keyGenerator: (req) => req.ip,
+    handler: (req, res) => {
+        res.status(429).json({ error: "You may only create one private page a day without an Access Key." });
+    },
+});
+
+const verifyLimiter = rateLimit({
+    windowMs: 60 * 60 * 1000, // 1 hour
+    max: 20, // Limit each IP to 5 requests per minute
+    statusCode: 429,
+    headers: true,
+    keyGenerator: (req) => req.ip,
+    handler: (req, res) => {
+        res.status(429).json({ error: "You may only attempt to enter passwords 20 times an hour without an Access Key." });
     },
 });
 
@@ -59,8 +81,14 @@ app.use('/common', express.static('common'));
 // 🔹 Apply GET limit to all GET requests
 app.get('/:pagename', getDailyLimiter);
 
+// 🔹 Apply GET limit to all GET requests
+app.get('/verify', verifyLimiter);
+
 // 🔹 Apply POST limits only to /add
 app.use('/add', postMinuteLimiter, postLimiter);
+
+// 🔹 Apply POST limits only to /add
+app.use('/create-private-page', privateLimiter);
 
 // Import routes
 app.use('/', routes);
