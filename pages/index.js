@@ -108,7 +108,6 @@ document.addEventListener("DOMContentLoaded", () => {
         });
     });
 
-
     // stripe payments
     document.getElementById("checkoutButton").addEventListener("click", async () => {
         const userConfirmed = confirm("DO NOT USE A FAKE EMAIL! Your key will be sent via the email provided in the payment method. Your email is not stored and is only used to send you the key once.\n\nClick OK to continue.");

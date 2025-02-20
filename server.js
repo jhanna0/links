@@ -15,6 +15,16 @@ app.set('trust proxy', 1);
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
+// Middleware - Static Files (Placed **Before** Dynamic Routes)
+app.use(express.static('pages'));
+app.use('/common', express.static('common'));
+
+// Middleware - Request Parsers
+app.use(express.urlencoded({ extended: true }));
+app.use(express.json());
+app.use(cookieParser());
+
+// Rate Limiters
 const postLimiter = rateLimit({
     windowMs: 24 * 60 * 60 * 1000, // 24 hours
     max: 20, // Limit each IP to 20 requests per day
@@ -37,10 +47,10 @@ const postMinuteLimiter = rateLimit({
     },
 });
 
-// 🔹 Global GET Rate Limit - 5 requests per 24 hours
+// 🔹 Global GET Rate Limit - 200 requests per 24 hours
 const getDailyLimiter = rateLimit({
     windowMs: 24 * 60 * 60 * 1000, // 24 hours
-    max: 200, // Limit each IP to 200 GET requests per day
+    max: 200,
     statusCode: 429,
     headers: true,
     keyGenerator: (req) => req.ip,
@@ -51,7 +61,7 @@ const getDailyLimiter = rateLimit({
 
 const privateLimiter = rateLimit({
     windowMs: 24 * 60 * 60 * 1000, // 24 hours
-    max: 1, // Limit each IP to 1 private page per day
+    max: 1,
     statusCode: 429,
     headers: true,
     keyGenerator: (req) => req.ip,
@@ -62,7 +72,7 @@ const privateLimiter = rateLimit({
 
 const verifyLimiter = rateLimit({
     windowMs: 60 * 60 * 1000, // 1 hour
-    max: 20, // Limit each IP to 5 requests per minute
+    max: 20,
     statusCode: 429,
     headers: true,
     keyGenerator: (req) => req.ip,
@@ -71,26 +81,13 @@ const verifyLimiter = rateLimit({
     },
 });
 
-// Middleware
-app.use(express.urlencoded({ extended: true }));
-app.use(express.json());
-app.use(cookieParser());
-app.use(express.static('pages'));
-app.use('/common', express.static('common'));
-
-// 🔹 Apply GET limit to all GET requests
+// Apply Rate Limits Before Routes
 app.get('/:pagename', getDailyLimiter);
-
-// 🔹 Apply GET limit to all GET requests
 app.get('/verify', verifyLimiter);
-
-// 🔹 Apply POST limits only to /add
 app.use('/add', postMinuteLimiter, postLimiter);
-
-// 🔹 Apply POST limits only to /add
 app.use('/create-private-page', privateLimiter);
 
-// Import routes
+// Import Routes (Ensure This Comes After Static Middleware)
 app.use('/', routes);
 
 // Start the server

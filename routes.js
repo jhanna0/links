@@ -179,7 +179,7 @@ router.post('/verify', async (req, res) => {
 router.post("/create-checkout-session", createCheckoutSession);
 
 // Handle Stripe Payment Success
-router.get("/success", handlePaymentSuccess);
+router.get("/stripe/success", handlePaymentSuccess);
 
 // we can add a /verify-purchase route that takes an email, checks the hash, and returns the key
 
