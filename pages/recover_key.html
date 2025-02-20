@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Recover API Key | Link Stash</title>
+
+    <!-- Link existing styles -->
+    <link rel="stylesheet" href="/alert.css">
+    <link rel="stylesheet" href="/styles.css">
+
+    <link rel="icon" type="image/x-icon" href="/favicon.png">
+</head>
+
+<body class="text-center" style="min-height: 100vh;">
+    <div class="card">
+        <h1 class="heading">Recover Access Key</h1>
+        <p class="subtext">Enter your email to retrieve your latest access key.</p>
+
+        <div class="input-section">
+            <div class="button-input-wrapper" style="width: 100%;">
+                <input type="email" id="email" placeholder="Enter your email" required>
+                <button id="retrieveButton" class="btn">Go</button>
+            </div>
+        </div>
+
+        <!-- API Key Display Section -->
+        <div id="apiKeyContainer" class="private-box" style="margin-top: var(--margin-large); border: 0; padding: 0;">
+            <h4>Your Access Key</h4>
+            <div class="button-input-wrapper" style="width: 100%;">
+                <p id="apiKey" style="font-family: monospace; font-size: 1.1rem; color: #333; margin: 0;">
+                    No key retrieved yet.
+                </p>
+                <button id="copyButton" class="btn btn--secondary" style="padding: 5px 10px; font-size: 0.9rem;">
+                    Copy
+                </button>
+            </div>
+        </div>
+
+        <p style="margin-top: var(--margin-medium);">
+            We store a <strong>hashed</strong> version of your email to verify your key in case of recovery. Therefore
+            we can <strong>never</strong> see your email, only use it to verify a purchase.
+        </p>
+
+        <a href="/" style="text-decoration: none; margin-top: var(--margin-large);" class="btn btn--full">Back</a>
+
+        <p style="margin-top: var(--margin-medium);">
+            If you have any issues, please reach out to access@opus.cafe, and include the email address used during
+            purchase.
+        </p>
+    </div>
+
+    <script>
+        document.getElementById("retrieveButton").addEventListener("click", async function () {
+            const email = document.getElementById("email").value.trim();
+            const apiKeyElement = document.getElementById("apiKey");
+
+            if (!email) {
+                alert("❌ Please enter a valid email.");
+                return;
+            }
+
+            try {
+                const response = await fetch(`/api/retrieve-key?email=${encodeURIComponent(email)}`);
+                const data = await response.json();
+
+                if (response.ok) {
+                    apiKeyElement.textContent = data.apiKey;
+                } else {
+                    alert("❌ " + (data.error || "No API key found for this email."));
+                }
+            } catch (error) {
+                alert("❌ Error retrieving API key. Please try again.");
+            }
+        });
+
+        // Copy API Key to Clipboard
+        document.getElementById("copyButton").addEventListener("click", function () {
+            const apiKeyText = document.getElementById("apiKey").textContent;
+
+            if (!apiKeyText || apiKeyText === "No key retrieved yet.") {
+                alert("❌ No API key available to copy.");
+                return;
+            }
+
+            navigator.clipboard.writeText(apiKeyText).then(() => {
+                alert("✅ API Key copied to clipboard!");
+            }).catch(() => {
+                alert("❌ Failed to copy API Key. Please try manually.");
+            });
+        });
+    </script>
+
+</body>
+
+</html>

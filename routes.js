@@ -7,7 +7,7 @@ import path from 'path';
 import { fileURLToPath } from 'url';
 import pool from './db.js';
 import { validatePageName, validateLink, validateDescription } from "./common/validator.js";
-import { generateSecureString, generateStyledEntries, generateSalt, hashPassword, generateAuthToken, validateAuthToken } from "./common/utils.js";
+import { generateSecureString, generateStyledEntries, generateSalt, hashPassword, generateAuthToken, validateAuthToken, hashEmail } from "./common/utils.js";
 
 // Define __dirname for ES modules
 const __filename = fileURLToPath(import.meta.url);
@@ -178,6 +178,41 @@ router.post('/verify', async (req, res) => {
 // Stripe Checkout Route
 router.post("/create-checkout-session", createCheckoutSession);
 
+/** 
+ * ✅ Route 1: Serve the API Key Recovery Page (HTML)
+ */
+router.get("/retrieve/access/key", (req, res) => {
+    res.sendFile(path.join(__dirname, "pages", "recover_key.html"));
+});
+
+/** 
+ * ✅ Route 2: Fetch the latest API Key via AJAX
+ */
+router.get("/api/retrieve-key", async (req, res) => {
+    const { email } = req.query;
+    if (!email) return res.status(400).json({ error: "Email required." });
+
+    try {
+        // Hash the email before looking it up (assuming emails are stored hashed)
+        const hashedEmail = hashEmail(email);
+
+        // ✅ Retrieve the latest API key for the given email
+        const result = await pool.query(
+            "SELECT key FROM api_keys WHERE hashed_email = $1 ORDER BY created_at DESC LIMIT 1",
+            [hashedEmail]
+        );
+
+        if (result.rows.length === 0) {
+            return res.status(404).json({ error: "API Key not found." });
+        }
+
+        res.json({ success: true, apiKey: result.rows[0].key });
+    } catch (error) {
+        console.error("Error retrieving API Key:", error);
+        res.status(500).json({ error: "Error retrieving API Key." });
+    }
+});
+
 // Handle Stripe Payment Success
 router.get("/stripe/success", handlePaymentSuccess);
 
@@ -335,6 +370,12 @@ router.get('/api/:pagename/new', async (req, res) => {
         console.error('Database error:', err);
         res.status(500).json({ error: 'Database error' });
     }
+});
+
+// Catch-all for unknown routes
+router.use((req, res) => {
+    const invalidPagePath = path.join(__dirname, 'pages', 'invalid_page.html');
+    res.status(404).sendFile(invalidPagePath);
 });
 
 export default router;
