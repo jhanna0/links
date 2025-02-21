@@ -1,0 +1,38 @@
+<div id="accessModal" class="modal">
+    <div class="modal-content">
+        <span class="close-button">&times;</span>
+        <h2 class="heading">Increase Access</h2>
+        <p class="subtext">$5 for one month.</p>
+
+        <div class="feature-list">
+            <div class="feature-item">
+                <strong>Increase Link Submitting Limit</strong>
+                <p><strong>3 → 20</strong> links per minute.</p>
+                <p><strong>20 → 100</strong> links per day</p>
+            </div>
+            <div class="feature-item">
+                <strong>Increase Private Page Creation Limit</strong>
+                <p><strong>1 → 5</strong> private pages per day.</p>
+            </div>
+            <div class="feature-item">
+                <strong>Account-Free</strong>
+                <p>No sign-up needed.</p>
+            </div>
+            <div class="feature-item">
+                <strong>Anonymous</strong>
+                <p>Absolutely no user information is stored.</p>
+            </div>
+        </div>
+
+        <button id="checkoutButton" class="btn btn--full">Get Key</button>
+
+        <!-- API Key Input Section -->
+        <div class="button-input-wrapper" style="margin-top: var(--margin-large); width: 100%;">
+            <input style="text-align: left;" type="text" id="apiKey" placeholder="Enter key">
+            <button id="saveApiKey" class="btn">Save</button>
+        </div>
+
+        <a href="/retrieve/access/key" style="text-decoration: none; margin-top: var(--margin-large);"
+            class="btn btn--full btn--secondary">Recover Key</a>
+    </div>
+</div>

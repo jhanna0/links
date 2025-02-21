@@ -26,6 +26,7 @@ const __dirname = path.dirname(__filename);
 // ✅ Serve Static Files **First**
 app.use(express.static(path.join(__dirname, "pages")));
 app.use("/pages", express.static(path.join(__dirname, "pages")));
+app.use("/modals", express.static(path.join(__dirname, "modals")));
 app.use("/common", express.static(path.join(__dirname, "common")));
 app.use("/stripe", express.static(path.join(__dirname, "views/stripe")));
 

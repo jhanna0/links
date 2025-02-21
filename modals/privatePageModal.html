@@ -1,0 +1,44 @@
+<div id="privatePageModal" class="modal">
+    <div class="modal-content">
+        <span class="close-button">&times;</span>
+        <h2 class="heading">Create Private Page</h2>
+        <p class="subtext">Share the correct password for the desired level of access.</p>
+
+        <!-- Private Info Section -->
+        <div class="private-info">
+            <div class="private-box">
+                <h4>Private URL</h4>
+                <p id="privatePageUrl" style="word-wrap: break-word;">...</p>
+            </div>
+            <div class="private-box">
+                <h4>Posting Password</h4>
+                <p id="postingPassword">...</p>
+            </div>
+            <div class="private-box">
+                <h4>Viewing Password</h4>
+                <p id="viewingPassword">...</p>
+            </div>
+        </div>
+
+        <!-- Instructions -->
+        <div class="info-list" style="margin-top: var(--margin-large);">
+            <div class="info-item">
+                <strong>How It Works</strong>
+                <p>This page is private and can only be accessed by those with the URL.</p>
+            </div>
+            <div class="info-item">
+                <strong>Posting Access</strong>
+                <p>Users with the <strong>posting password</strong> can add content.</p>
+            </div>
+            <div class="info-item">
+                <strong>Viewing Access</strong>
+                <p>Users with the <strong>viewing password</strong> can see content, but not edit.</p>
+            </div>
+            <div class="info-item">
+                <strong>Keep It Secure</strong>
+                <p>Do not share the posting password unless you trust the user.</p>
+            </div>
+        </div>
+        <button id="generateButton" class="btn btn--full">Generate</button>
+    </div>
+</div>
