@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <link rel="stylesheet" href="/alert.css">
+    <link rel="stylesheet" href="/styles.css">
+    <link rel="stylesheet" href="/index.css">
+    <link rel="icon" type="image/x-icon" href="/favicon.png">
+    <title>Payment Error</title>
+</head>
+
+<body class="text-center" style="min-height: 100vh;">
+    <div class="card">
+        <h1 class="heading">⚠️ Payment Error</h1>
+        <p class="subtext error" id="errorMessage">An unknown error occurred.</p>
+        <a href="/" class="btn btn--secondary">Go Back</a>
+    </div>
+
+    <script>
+        const params = new URLSearchParams(window.location.search);
+        document.getElementById("errorMessage").textContent = params.get("message") || "An unknown error occurred.";
+    </script>
+</body>
+
+</html>

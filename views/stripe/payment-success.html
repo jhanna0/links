@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <link rel="stylesheet" href="/alert.css">
+    <link rel="stylesheet" href="/styles.css">
+    <link rel="icon" type="image/x-icon" href="/favicon.png">
+    <title>Payment Successful</title>
+</head>
+
+<body class="text-center" style="min-height: 100vh;">
+    <div class="card">
+        <h1 class="heading">✅ Payment Successful!</h1>
+        <p class="subtext">Here is your API Key:</p>
+        <div class="api-key input-wrapper" id="apiKey">Loading...</div>
+        <button class="btn" onclick="copyApiKey()">Copy</button>
+        <p class="subtext"><strong>Important:</strong> Your API key has been saved locally. Copy it if you need to store
+            it elsewhere.</p>
+    </div>
+    <script src="/pages/alert.js" defer></script>
+    <script>
+        function getCookie(name) {
+            const cookies = document.cookie.split("; ");
+            for (let cookie of cookies) {
+                const [key, value] = cookie.split("=");
+                if (key === name) return decodeURIComponent(value);
+            }
+            return null;
+        }
+
+        const apiKey = getCookie("api_key");
+
+        if (apiKey) {
+            document.getElementById("apiKey").textContent = apiKey;
+            localStorage.setItem("userApiKey", apiKey);
+            alert("✅ Your API key has been saved locally!");
+        } else {
+            document.getElementById("apiKey").textContent = "Error: API Key not found";
+        }
+
+        function copyApiKey() {
+            const keyText = document.getElementById("apiKey").textContent;
+            navigator.clipboard.writeText(keyText).then(() => {
+                alert("✅ API Key copied to clipboard!");
+            }).catch(() => {
+                alert("❌ Failed to copy API Key. Please copy manually.");
+            });
+        }
+    </script>
+</body>
+
+</html>

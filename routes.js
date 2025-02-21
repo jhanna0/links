@@ -216,24 +216,23 @@ router.get("/api/retrieve-key", async (req, res) => {
 // Handle Stripe Payment Success
 router.get("/stripe/response", handleStripeResponse);
 
-// we can add a /verify-purchase route that takes an email, checks the hash, and returns the key
-
 // Serve dynamic page (GET /:pagename)
-router.get('/:pagename', async (req, res) => {
+router.get("/:pagename", async (req, res, next) => {
+    if (req.params.pagename.includes(".")) return next(); // ✅ Don't match static files
+
     const { pagename } = req.params;
+    // Ensure these are defined before using them
+    const templatePath = path.join(__dirname, "pages", "page.html");
+    const privatePageNotFoundPath = path.join(__dirname, "pages", "page_not_found.html");
+    const privatePageAccessPath = path.join(__dirname, "pages", "password.html");
+    const invalidPagePath = path.join(__dirname, "pages", "invalid_page.html");
 
-    // Predefined HTML path constants
-    const templatePath = path.join(__dirname, 'pages', 'page.html');
-    const privatePageNotFoundPath = path.join(__dirname, 'pages', 'page_not_found.html');
-    const privatePageAccessPath = path.join(__dirname, 'pages', 'password.html');
-    const invalidPagePath = path.join(__dirname, 'pages', 'invalid_page.html');
-
-    // Partial templates for forms
-    const passwordFormPath = path.join(__dirname, 'pages', 'password_form.html');
-    const linkFormPath = path.join(__dirname, 'pages', 'link_form.html');
+    // ✅ Make sure we define these paths correctly
+    const passwordFormPath = path.join(__dirname, "pages", "password_form.html");
+    const linkFormPath = path.join(__dirname, "pages", "link_form.html");  // ✅ Fix added
 
     if (!fs.existsSync(templatePath)) {
-        return res.status(500).send('<h1>500 - Template Not Found</h1>');
+        return res.status(500).send("<h1>500 - Template Not Found</h1>");
     }
 
     try {
@@ -243,12 +242,12 @@ router.get('/:pagename', async (req, res) => {
 
         if (isPrivatePage) {
             const privatePageResult = await pool.query(
-                'SELECT posting_password, viewing_password FROM private_pages WHERE page = $1',
+                "SELECT posting_password, viewing_password FROM private_pages WHERE page = $1",
                 [pagename]
             );
 
             if (privatePageResult.rows.length === 0) {
-                return res.sendFile(privatePageNotFoundPath); // ❌ Private page does not exist
+                return res.sendFile(privatePageNotFoundPath);
             }
 
             const { posting_password, viewing_password } = privatePageResult.rows[0];
@@ -256,12 +255,12 @@ router.get('/:pagename', async (req, res) => {
             const authToken = req.cookies[authCookieName];
 
             if (!authToken) {
-                return res.sendFile(privatePageAccessPath); // 🔐 Prompt for password if token missing
+                return res.sendFile(privatePageAccessPath);
             }
 
             const tokenPayload = validateAuthToken(authToken);
             if (!tokenPayload || tokenPayload.page !== pagename) {
-                return res.sendFile(privatePageAccessPath); // ❌ Invalid or expired token → Re-prompt
+                return res.sendFile(privatePageAccessPath);
             }
 
             if (tokenPayload.hashedPassword === posting_password) {
@@ -272,9 +271,7 @@ router.get('/:pagename', async (req, res) => {
             } else {
                 return res.sendFile(privatePageAccessPath);
             }
-        }
-
-        else {
+        } else {
             hasPostingAccess = true;
             hasViewingAccess = true;
         }
@@ -285,40 +282,29 @@ router.get('/:pagename', async (req, res) => {
             return res.sendFile(invalidPagePath);
         }
 
-        // Load public or unlocked private page
+        // Load page contents
         const result = await pool.query(
-            'SELECT link, description FROM links WHERE page = $1 ORDER BY created_at ASC',
+            "SELECT link, description FROM links WHERE page = $1 ORDER BY created_at ASC",
             [pagename]
         );
 
-        let html = fs.readFileSync(templatePath, 'utf8');
+        let html = fs.readFileSync(templatePath, "utf8");
         html = html.replace(/{{links}}/g, generateStyledEntries(result.rows));
         html = html.replace(/{{pagename}}/g, pagename);
 
-        // ✅ Inject correct form (either password form or link submission form)
-        let formHTML = '';
+        let formHTML = "";
         if (isPrivatePage && !hasPostingAccess && hasViewingAccess) {
-            formHTML = fs.readFileSync(passwordFormPath, 'utf8'); // Password input form
+            formHTML = fs.readFileSync(passwordFormPath, "utf8");
         } else if (hasPostingAccess) {
-            formHTML = fs.readFileSync(linkFormPath, 'utf8'); // Posting form
+            formHTML = fs.readFileSync(linkFormPath, "utf8");
         }
 
-        html = html.replace('{{form}}', formHTML);
-
-        // ✅ Inject correct JavaScript
-        let scripts = '<script src="page.js" type="module" defer></script>';
-        if (isPrivatePage && !hasPostingAccess && hasViewingAccess) {
-            scripts += '<script src="verify.js" type="module" defer></script>'; // Only viewing access
-        } else if (hasPostingAccess) {
-            scripts += '<script src="post.js" type="module" defer></script>'; // Can post
-        }
-
-        html = html.replace('</body>', `${scripts}</body>`);
+        html = html.replace("{{form}}", formHTML);
 
         res.send(html);
     } catch (err) {
-        console.error('Database error:', err);
-        res.status(500).send('<h1>500 - Database Error</h1>');
+        console.error("Database error:", err);
+        res.status(500).send("<h1>500 - Database Error</h1>");
     }
 });
 
