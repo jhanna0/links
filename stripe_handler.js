@@ -2,7 +2,6 @@ import Stripe from "stripe";
 import { v4 as uuidv4 } from "uuid";
 import dotenv from "dotenv";
 import pool from "./db.js";
-import nodemailer from "nodemailer";
 import { hashEmail } from "./common/utils.js";
 
 dotenv.config();
@@ -24,9 +23,9 @@ export const createCheckoutSession = async (req, res) => {
                     quantity: 1,
                 },
             ],
-            // definitely make a cancel URL
-            success_url: `${process.env.BASE_URL}/stripe/success?payment_success=true&session_id={CHECKOUT_SESSION_ID}`,
-            cancel_url: `${process.env.BASE_URL}/`,
+            // ✅ Both success and cancel use the same route
+            success_url: `${process.env.BASE_URL}/stripe/response?payment_success=true&session_id={CHECKOUT_SESSION_ID}`,
+            cancel_url: `${process.env.BASE_URL}/stripe/response?payment_success=false`,
         });
 
         res.json({ sessionId: session.id });
@@ -36,15 +35,24 @@ export const createCheckoutSession = async (req, res) => {
     }
 };
 
-// Process Successful Payment and Generate API Key
-export const handlePaymentSuccess = async (req, res) => {
+export const handleStripeResponse = async (req, res) => {
     const sessionId = req.query.session_id;
+    const isSuccess = req.query.payment_success === "true";
 
+    if (!sessionId) {
+        return res.send(paymentErrorPage("We couldn't retrieve your payment session. Please try again."));
+    }
+
+    if (!isSuccess) {
+        return res.send(paymentCanceledPage());
+    }
+
+    // ✅ Handle Successful Payment
     try {
         const session = await stripe.checkout.sessions.retrieve(sessionId);
 
         if (session.payment_status !== "paid" || !session.customer_details.email) {
-            return res.status(400).send("Payment not completed.");
+            return res.send(paymentErrorPage("Your payment was not successful or could not be verified."));
         }
 
         const email = session.customer_details.email;
@@ -68,30 +76,86 @@ export const handlePaymentSuccess = async (req, res) => {
             );
         }
 
-        // ✅ Render a success page with the API key
-        res.send(`
-            <html>
-                <head>
-                    <title>Payment Successful</title>
-                    <style>
-                        body { font-family: Arial, sans-serif; text-align: center; margin-top: 50px; }
-                        .api-key { font-size: 1.5em; font-weight: bold; background: #f8f8f8; padding: 10px; display: inline-block; margin-top: 20px; }
-                    </style>
-                </head>
-                <body>
-                    <h1>✅ Payment Successful!</h1>
-                    <p>Here is your API Key:</p>
-                    <div class="api-key">${apiKey}</div>
-                    <p><strong>Important:</strong> Copy this key now. You will not be able to see it again.</p>
-                </body>
-            </html>
-        `);
+        // ✅ Render a success page with the API key and auto-save it
+        res.send(paymentSuccessPage(apiKey));
 
     } catch (error) {
         console.error("Error processing payment:", error);
-        res.status(500).send("Error retrieving session.");
+        return res.send(paymentErrorPage("Stripe couldn't find your payment. Email support if this is a mistake."));
     }
 };
+
+// Helper function to return success page with auto-saving script
+const paymentSuccessPage = (apiKey) => `
+    <html>
+        <head>
+            <title>Payment Successful</title>
+            <style>
+                body { font-family: Arial, sans-serif; text-align: center; margin-top: 50px; }
+                .api-key { font-size: 1.5em; font-weight: bold; background: #f8f8f8; padding: 10px; display: inline-block; margin-top: 20px; }
+                .copy-btn { cursor: pointer; background: blue; color: white; padding: 5px 10px; border: none; margin-left: 10px; }
+            </style>
+        </head>
+        <body>
+            <h1>✅ Payment Successful!</h1>
+            <p>Here is your API Key:</p>
+            <div class="api-key">${apiKey}</div>
+            <button class="copy-btn" onclick="copyApiKey()">Copy</button>
+            <p><strong>Important:</strong> Your API key has been saved locally. Copy it if you need to store it elsewhere.</p>
+
+            <script>
+                // ✅ Save API Key to localStorage automatically
+                localStorage.setItem("userApiKey", "${apiKey}");
+                alert("✅ Your API key has been saved locally!");
+
+                function copyApiKey() {
+                    const keyText = document.querySelector('.api-key').textContent;
+                    navigator.clipboard.writeText(keyText).then(() => {
+                        alert("✅ API Key copied to clipboard!");
+                    }).catch(() => {
+                        alert("❌ Failed to copy API Key. Please copy manually.");
+                    });
+                }
+            </script>
+        </body>
+    </html>
+`;
+
+// Helper function for error pages
+const paymentErrorPage = (message) => `
+    <html>
+        <head>
+            <title>Payment Error</title>
+            <style>
+                body { font-family: Arial, sans-serif; text-align: center; margin-top: 50px; }
+                .error { font-size: 1.2em; color: red; margin-top: 20px; }
+            </style>
+        </head>
+        <body>
+            <h1>⚠️ Payment Error</h1>
+            <p class="error">${message}</p>
+            <a href="/" style="text-decoration: none; font-size: 1.1em;">Go Back</a>
+        </body>
+    </html>
+`;
+
+// Helper function for canceled payments
+const paymentCanceledPage = () => `
+    <html>
+        <head>
+            <title>Payment Canceled</title>
+            <style>
+                body { font-family: Arial, sans-serif; text-align: center; margin-top: 50px; }
+                .message { font-size: 1.2em; color: red; margin-top: 20px; }
+            </style>
+        </head>
+        <body>
+            <h1>❌ Payment Canceled</h1>
+            <p class="message">Your payment was not completed. If this was a mistake, you can try again.</p>
+            <a href="/" style="text-decoration: none; font-size: 1.1em;">Go Back</a>
+        </body>
+    </html>
+`;
 
 
 // Email the API Key to the user

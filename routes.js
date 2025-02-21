@@ -1,6 +1,6 @@
 // routes.js (ES Module version)
 import express from 'express';
-import { createCheckoutSession, handlePaymentSuccess } from "./stripe_handler.js"; // Import Stripe functions
+import { createCheckoutSession, handleStripeResponse } from "./stripe_handler.js"; // Import Stripe functions
 
 import fs from 'fs';
 import path from 'path';
@@ -214,7 +214,7 @@ router.get("/api/retrieve-key", async (req, res) => {
 });
 
 // Handle Stripe Payment Success
-router.get("/stripe/success", handlePaymentSuccess);
+router.get("/stripe/response", handleStripeResponse);
 
 // we can add a /verify-purchase route that takes an email, checks the hash, and returns the key
 
