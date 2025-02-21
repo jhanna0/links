@@ -10,7 +10,8 @@ import {
     privateLimiter,
     verifyLimiter,
     keyRecoveryMinuteLimiter,
-    keyRecoveryHourLimiter
+    keyRecoveryHourLimiter,
+    verifyApiKey
 } from './rate_limiting.js';
 
 const app = express();
@@ -42,9 +43,12 @@ app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
 app.use(cookieParser());
 
+app.use(verifyApiKey);
+
 // Rate Limiters (these stay the same)
 app.get("/:pagename", getDailyLimiter);
-app.get("/verify", verifyLimiter);
+app.get("/verify-password", verifyLimiter);
+app.get("/api/verify-key", keyRecoveryMinuteLimiter, keyRecoveryHourLimiter)
 app.use("/add", postMinuteLimiter, postLimiter);
 app.use("/create-private-page", privateLimiter);
 app.use("/api/retrieve-key", keyRecoveryMinuteLimiter, keyRecoveryHourLimiter)

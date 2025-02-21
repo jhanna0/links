@@ -74,16 +74,16 @@ export const handleStripeResponse = async (req, res) => {
         } else {
             apiKey = uuidv4();
             await pool.query(
-                "INSERT INTO api_keys (key, hashed_email, session_id, expires_at) VALUES ($1, $2, $3, NOW() + interval '30 days')",
+                "INSERT INTO api_keys (key, hashed_email, session_id, expires_at) VALUES ($1, $2, $3, NOW() + interval '365 days')",
                 [apiKey, hashedEmail, sessionId]
             );
         }
 
-        // ✅ Store the API key in a cookie
-        res.cookie("api_key", apiKey, {
-            httpOnly: false,
-            secure: process.env.NODE_ENV === "production",  // ✅ Secure only in production
-            maxAge: 1000 * 60 * 10, // 10 minutes expiry
+        // ✅ Store the API key in a cookie (Matching the rest of your system)
+        res.cookie("apiKey", apiKey, {
+            httpOnly: false,  // Let JavaScript access it
+            secure: process.env.NODE_ENV === "production",  // Secure only in production
+            maxAge: 1000 * 60 * 60 * 24 * 365, // ✅ 365 days expiry
             sameSite: "Strict",
         });
 

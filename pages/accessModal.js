@@ -3,7 +3,7 @@ class AccessModal {
         this.initialize();
     }
 
-    initialize() {
+    async initialize() {
         this.modal = document.getElementById("accessModal");
 
         if (!this.modal) {
@@ -21,13 +21,13 @@ class AccessModal {
 
         this.attachEventListeners();
 
-        // Load API key when the modal is initialized
-        this.loadApiKey();
+        // Load and verify API key when initializing
+        await this.loadApiKey();
     }
 
     attachEventListeners() {
         if (this.checkoutButton) {
-            this.checkoutButton.addEventListener("click", () => this.startCheckout());
+            this.checkoutButton.addEventListener("click", async () => await this.startCheckout());
         } else {
             console.error("❌ checkoutButton not found.");
         }
@@ -39,7 +39,7 @@ class AccessModal {
         }
 
         if (this.saveButton) {
-            this.saveButton.addEventListener("click", () => this.saveApiKey());
+            this.saveButton.addEventListener("click", async () => await this.saveApiKey());
         } else {
             console.error("❌ saveButton not found.");
         }
@@ -48,7 +48,7 @@ class AccessModal {
     // Open the modal and reset input field
     open() {
         if (!this.modal) {
-            console.error("❌ Modal does not exist yet.");
+            console.error("❌ Modal does not exist.");
             return;
         }
         this.reset();
@@ -64,41 +64,75 @@ class AccessModal {
     // Reset modal contents
     reset() {
         if (!this.modal) return;
-        this.apiKeyInput.value = localStorage.getItem("userApiKey") || "";
+        this.apiKeyInput.value = "";
     }
 
-    // Load API key from local storage
-    loadApiKey() {
+    // Load and Verify API Key (from cookies only)
+    async loadApiKey() {
         if (!this.apiKeyInput) {
             console.error("❌ API Key input not found.");
             return;
         }
 
-        const storedKey = localStorage.getItem("userApiKey");
+        // Retrieve API key from cookies
+        const storedKey = this.getCookie("apiKey");
 
-        if (storedKey) {
-            this.apiKeyInput.value = storedKey;
-            console.log("✅ API key loaded from local storage.");
-        } else {
+        if (!storedKey) {
             this.apiKeyInput.value = "";
             console.log("ℹ️ No saved API key found.");
+            return;
+        }
+
+        try {
+            const response = await fetch("/api/verify-key", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ apiKey: storedKey }),
+            });
+
+            const result = await response.json();
+
+            if (result.success) {
+                this.apiKeyInput.value = storedKey;
+                console.log("✅ API key is valid.");
+            } else {
+                this.deleteCookie("apiKey"); // ❌ Remove invalid key
+                this.apiKeyInput.value = "";
+                console.warn("⚠️ API key was invalid or expired. It has been removed.");
+            }
+        } catch (error) {
+            console.error("❌ Error verifying API Key:", error);
         }
     }
 
+    // Save API Key (Validate Before Storing)
+    async saveApiKey() {
+        const key = this.apiKeyInput.value.trim();
 
-    // Save API key to local storage
-    saveApiKey() {
-        if (!this.apiKeyInput) {
-            console.error("❌ API Key input not found.");
+        if (!key) {
+            this.deleteCookie("apiKey"); // Clear cookie
+            alert("❌ API key removed.");
             return;
         }
-        const key = this.apiKeyInput.value.trim();
-        if (key) {
-            localStorage.setItem("userApiKey", key);
-            alert("✅ API key saved locally.");
-        } else {
-            localStorage.removeItem("userApiKey");
-            alert("❌ API key removed.");
+
+        try {
+            const response = await fetch("/api/verify-key", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ apiKey: key }),
+            });
+
+            const result = await response.json();
+
+            if (result.success) {
+                this.setCookie("apiKey", key, 365);
+                alert("✅ API key saved.");
+            } else {
+                alert("❌ Invalid API key.");
+            }
+        } catch (error) {
+            console.error("❌ Error saving API Key:", error);
+            alert("❌ Error verifying API Key. Please try again.");
         }
     }
 
@@ -131,6 +165,26 @@ class AccessModal {
             alert("❌ Failed to initiate checkout. Please try again.");
         }
     }
+
+    // 🔹 Utility Functions for Handling Cookies
+
+    // Get cookie value by name
+    getCookie(name) {
+        const match = document.cookie.match(new RegExp("(^| )" + name + "=([^;]+)"));
+        return match ? decodeURIComponent(match[2]) : null;
+    }
+
+    // Set cookie with expiration (in days)
+    setCookie(name, value, days) {
+        const expires = new Date();
+        expires.setTime(expires.getTime() + days * 24 * 60 * 60 * 1000);
+        document.cookie = `${name}=${encodeURIComponent(value)}; path=/; Secure; SameSite=Strict`;
+    }
+
+    // Delete cookie by setting max-age to 0
+    deleteCookie(name) {
+        document.cookie = `${name}=; Max-Age=0; path=/; Secure; SameSite=Strict`;
+    }
 }
 
 // 🔹 Load and open modal, ensuring correct initialization
@@ -148,8 +202,10 @@ async function openAccessModal() {
         document.body.insertAdjacentHTML("beforeend", modalHTML);
 
         // Wait a moment to ensure modal is in the DOM before initializing
-        setTimeout(() => {
-            new AccessModal().open();
+        setTimeout(async () => {
+            const modal = new AccessModal();
+            await modal.loadApiKey();
+            modal.open();
         }, 100);
     } catch (error) {
         console.error("Error loading modal:", error);

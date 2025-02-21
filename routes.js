@@ -141,7 +141,7 @@ router.post('/create-private-page', async (req, res) => {
 
 
 // POST /login for authenticating private pages
-router.post('/verify', async (req, res) => {
+router.post('/verify-password', async (req, res) => {
     const { pagename, password } = req.body;
 
     // Query your DB for the page
@@ -193,28 +193,67 @@ router.get("/api/retrieve-key", async (req, res) => {
         // Hash the email before looking it up (assuming emails are stored hashed)
         const hashedEmail = hashEmail(email);
 
-        // ✅ Retrieve the latest API key that hasn't expired
+        // ✅ Retrieve the latest API key (expired or not)
         const result = await pool.query(
             "SELECT key, expires_at FROM api_keys WHERE hashed_email = $1 ORDER BY created_at DESC LIMIT 1",
             [hashedEmail]
         );
 
         if (result.rows.length === 0) {
-            return res.status(404).json({ error: "API Key not found." });
+            return res.json({ success: false, message: "No API key found.", apiKey: null, expired: false });
         }
 
         const { key, expires_at } = result.rows[0];
-
-        // ✅ Check if the key has expired
         const now = new Date();
-        // if (new Date(expires_at) < now) {
-        //     return res.status(410).json({ error: "API Key expired.", expiredAt: expires_at });
-        // }
 
-        res.json({ success: true, apiKey: key, expiresAt: expires_at });
+        // ✅ Return key with expiration status
+        const expired = new Date(expires_at) < now;
+
+        res.json({
+            success: true,
+            apiKey: key,
+            expiresAt: expires_at,
+            expired,
+            message: expired ? "API Key is expired." : "API Key is valid."
+        });
+
     } catch (error) {
         console.error("Error retrieving API Key:", error);
-        res.status(500).json({ error: "Error retrieving API Key." });
+        res.status(500).json({ success: false, error: "Error retrieving API Key." });
+    }
+});
+
+// Verify API Key
+router.post("/api/verify-key", async (req, res) => {
+    const { apiKey } = req.body;
+    if (!apiKey) {
+        return res.status(400).json({ error: "API Key required." });
+    }
+
+    try {
+        // 🔎 Check if the API key exists
+        const result = await pool.query(
+            "SELECT expires_at FROM api_keys WHERE key = $1 LIMIT 1",
+            [apiKey]
+        );
+
+        if (result.rows.length === 0) {
+            return res.status(404).json({ error: "Invalid API Key." });
+        }
+
+        const { expires_at } = result.rows[0];
+
+        // ⏳ Check if the API key has expired
+        if (new Date(expires_at) < new Date()) {
+            return res.status(410).json({ error: "API Key expired.", expiredAt: expires_at });
+        }
+
+        // ✅ API key is valid
+        res.json({ success: true, message: "API Key is valid." });
+
+    } catch (error) {
+        console.error("Error verifying API Key:", error);
+        res.status(500).json({ error: "Error verifying API Key." });
     }
 });
 

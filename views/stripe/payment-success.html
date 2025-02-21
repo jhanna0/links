@@ -15,50 +15,56 @@
         <h1 class="heading">Your Access Key</h1>
         <p class="subtext">Click key to copy it</p>
         <div class="private-box" style="border: 0; padding: 0;">
-            <p id="apiKey" onclick="copyApiKey()" style="word-wrap: break-word; cursor: pointer;">...</p>
-            <!-- <div class="api-key input-wrapper">Loading...</div> -->
+            <p id="apiKey" onclick="copyApiKey()" style="word-wrap: break-word; cursor: pointer;">Loading...</p>
         </div>
 
         <a href="/" style="text-decoration: none; margin-top: var(--margin-large);" class="btn btn--full">Home</a>
 
-        <!-- <button class="btn" onclick="copyApiKey()">Copy</button> -->
-        <p class="subtext" style="margin-top: var(--margin-large); margin-bottom: 0;">Write your key down.
-            Paste it under "Increase Access" to start using it. Email access@opus.cafe with any issues.</p>
+        <p class="subtext" style="margin-top: var(--margin-large); margin-bottom: 0;">
+            Write your key down. Paste it under "Increase Access" to start using it. Email
+            <a href="mailto:access@opus.cafe">access@opus.cafe</a> with any issues.
+        </p>
     </div>
+
     <script src="/pages/alert.js" defer></script>
     <script>
+        // ✅ Get API Key from cookies
         function getCookie(name) {
-            const cookies = document.cookie.split("; ");
-            for (let cookie of cookies) {
-                const [key, value] = cookie.split("=");
-                if (key === name) return decodeURIComponent(value);
-            }
-            return null;
+            const match = document.cookie.match(new RegExp("(^| )" + name + "=([^;]+)"));
+            return match ? decodeURIComponent(match[2]) : null;
         }
 
-        function saveKey() {
-            const apiKey = getCookie("api_key");
+        // ✅ Load API Key from cookies and display it
+        function displayApiKey() {
+            const apiKey = getCookie("apiKey"); // ✅ Backend now sets this correctly
+
             if (apiKey) {
                 document.getElementById("apiKey").textContent = apiKey;
-                localStorage.setItem("userApiKey", apiKey);
-                // alert("✅ Your API key has been saved locally!");
             } else {
-                document.getElementById("apiKey").textContent = "Error: API Key not found";
+                document.getElementById("apiKey").textContent = "Error: API Key not found or expired.";
             }
         }
 
+        // ✅ Copy API Key to Clipboard
         function copyApiKey() {
             const keyText = document.getElementById("apiKey").textContent;
+
+            if (!keyText || keyText.includes("Error")) {
+                alert("No valid API key to copy.");
+                return;
+            }
+
             navigator.clipboard.writeText(keyText).then(() => {
                 alert("Access Key copied to clipboard!");
-                saveKey();
             }).catch(() => {
-                alert("Failed to copy Key. Please copy manually.");
+                alert("❌ Failed to copy Key. Please copy manually.");
             });
         }
 
-        saveKey();
+        // 🔥 Display API Key immediately on page load
+        displayApiKey();
     </script>
+
     <style>
         html,
         body {
