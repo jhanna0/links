@@ -26,16 +26,15 @@
         </div>
 
         <!-- API Key Display Section -->
-        <div id="apiKeyContainer" class="private-box" style="margin-top: var(--margin-large); border: 0; padding: 0;">
+        <div id="apiKeyContainer" class="private-box"
+            style="margin-top: var(--margin-large); border: 0; padding: 0; display: none;">
             <h4>Your Access Key</h4>
-            <div class="button-input-wrapper" style="width: 100%;">
-                <p id="apiKey" style="font-family: monospace; font-size: 1.1rem; color: #333; margin: 0;">
-                    No key retrieved yet.
-                </p>
-                <button id="copyButton" class="btn btn--secondary" style="padding: 5px 10px; font-size: 0.9rem;">
-                    Copy
-                </button>
-            </div>
+            <p id="apiKey" onclick="copy()"
+                style="font-family: monospace; font-size: 1.1rem; color: var(--primary-color); margin: 0;">
+                No key retrieved yet.
+            </p>
+            <p id="expiresAt" style="font-size: 0.9rem; color: var(--primary-color); opacity: 0.7; margin-top: 5px;">
+            </p>
         </div>
 
         <p style="margin-top: var(--margin-medium);">
@@ -46,18 +45,20 @@
         <a href="/" style="text-decoration: none; margin-top: var(--margin-large);" class="btn btn--full">Back</a>
 
         <p style="margin-top: var(--margin-medium);">
-            If you have any issues, please reach out to access@opus.cafe, and include the email address used during
-            purchase.
+            If you have any issues, please reach out to access@opus.cafe.
         </p>
     </div>
 
+    <script src="/alert.js" defer></script>
     <script>
         document.getElementById("retrieveButton").addEventListener("click", async function () {
             const email = document.getElementById("email").value.trim();
             const apiKeyElement = document.getElementById("apiKey");
+            const expiresAtElement = document.getElementById("expiresAt");
+            const apiKeyContainer = document.getElementById("apiKeyContainer");
 
             if (!email) {
-                alert("❌ Please enter a valid email.");
+                alert("Please enter a valid email.");
                 return;
             }
 
@@ -67,31 +68,33 @@
 
                 if (response.ok) {
                     apiKeyElement.textContent = data.apiKey;
+                    expiresAtElement.textContent = `Expires on: ${new Date(data.expiresAt).toLocaleString()}`;
+                    apiKeyContainer.style.display = "block";
                 } else {
-                    alert("❌ " + (data.error || "No API key found for this email."));
+                    alert(data.error || "No API key found for this email.");
+                    apiKeyContainer.style.display = "none";
                 }
             } catch (error) {
-                alert("❌ Error retrieving API key. Please try again.");
+                alert("Error retrieving API key. Please try again.");
             }
         });
 
         // Copy API Key to Clipboard
-        document.getElementById("copyButton").addEventListener("click", function () {
+        function copy() {
             const apiKeyText = document.getElementById("apiKey").textContent;
 
             if (!apiKeyText || apiKeyText === "No key retrieved yet.") {
-                alert("❌ No API key available to copy.");
+                alert("No API key available to copy.");
                 return;
             }
 
             navigator.clipboard.writeText(apiKeyText).then(() => {
-                alert("✅ API Key copied to clipboard!");
+                alert("Access Key copied to clipboard!");
             }).catch(() => {
-                alert("❌ Failed to copy API Key. Please try manually.");
+                alert("Failed to copy API Key. Please try manually.");
             });
-        });
+        };
     </script>
-
 </body>
 
 </html>

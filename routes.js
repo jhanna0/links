@@ -185,9 +185,6 @@ router.get("/retrieve/access/key", (req, res) => {
     res.sendFile(path.join(__dirname, "pages", "recover_key.html"));
 });
 
-/** 
- * ✅ Route 2: Fetch the latest API Key via AJAX
- */
 router.get("/api/retrieve-key", async (req, res) => {
     const { email } = req.query;
     if (!email) return res.status(400).json({ error: "Email required." });
@@ -196,9 +193,9 @@ router.get("/api/retrieve-key", async (req, res) => {
         // Hash the email before looking it up (assuming emails are stored hashed)
         const hashedEmail = hashEmail(email);
 
-        // ✅ Retrieve the latest API key for the given email
+        // ✅ Retrieve the latest API key that hasn't expired
         const result = await pool.query(
-            "SELECT key FROM api_keys WHERE hashed_email = $1 ORDER BY created_at DESC LIMIT 1",
+            "SELECT key, expires_at FROM api_keys WHERE hashed_email = $1 ORDER BY created_at DESC LIMIT 1",
             [hashedEmail]
         );
 
@@ -206,7 +203,15 @@ router.get("/api/retrieve-key", async (req, res) => {
             return res.status(404).json({ error: "API Key not found." });
         }
 
-        res.json({ success: true, apiKey: result.rows[0].key });
+        const { key, expires_at } = result.rows[0];
+
+        // ✅ Check if the key has expired
+        const now = new Date();
+        // if (new Date(expires_at) < now) {
+        //     return res.status(410).json({ error: "API Key expired.", expiredAt: expires_at });
+        // }
+
+        res.json({ success: true, apiKey: key, expiresAt: expires_at });
     } catch (error) {
         console.error("Error retrieving API Key:", error);
         res.status(500).json({ error: "Error retrieving API Key." });

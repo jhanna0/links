@@ -62,6 +62,29 @@ const verifyLimiter = rateLimit({
     },
 });
 
+const keyRecoveryMinuteLimiter = rateLimit({
+    windowMs: 10 * 60 * 1000, // 10 mins
+    max: 5,
+    statusCode: 429,
+    headers: true,
+    keyGenerator: (req) => req.ip,
+    handler: (req, res) => {
+        res.status(429).json({ error: "Exceeded key recovery limit. Try again in 10 minutes." });
+    },
+});
+
+const keyRecoveryHourLimiter = rateLimit({
+    windowMs: 24 * 60 * 60 * 1000, // 24 hours
+    max: 15,
+    statusCode: 429,
+    headers: true,
+    keyGenerator: (req) => req.ip,
+    handler: (req, res) => {
+        res.status(429).json({ error: "Exceeded key recovery limit. Try again in 24 hours." });
+    },
+});
+
+
 const app = express();
 const port = 3000; // Hardcoded port
 
@@ -95,6 +118,7 @@ app.get("/:pagename", getDailyLimiter);
 app.get("/verify", verifyLimiter);
 app.use("/add", postMinuteLimiter, postLimiter);
 app.use("/create-private-page", privateLimiter);
+app.use("/api/retrieve-key", keyRecoveryMinuteLimiter, keyRecoveryHourLimiter)
 
 // ✅ Import Routes (Ensures Dynamic Routing Happens **After Static Files**)
 app.use("/", routes);
