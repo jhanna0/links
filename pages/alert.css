@@ -47,30 +47,43 @@
 /* Popup message */
 #customPopupMessage {
     font-size: 1.1em;
-    font-weight: bold;
+    font-weight: 500;
     color: var(--primary-color);
     margin-bottom: 15px;
 }
 
-/* Popup buttons */
+/* Popup buttons container */
 .popup-buttons {
     margin-top: 15px;
     display: flex;
     gap: 10px;
+    /* Ensures space between buttons */
     justify-content: center;
+    align-items: center;
 }
 
+/* Style for buttons */
 .popup-btn {
-    padding: 10px 18px;
+    flex: 1;
+    /* Makes all buttons take equal width */
+    max-width: 150px;
+    /* Optional: Prevents buttons from becoming too wide */
+    padding: 12px 18px;
     font-size: 1rem;
     font-weight: bold;
     text-transform: uppercase;
+    text-align: center;
     background: var(--primary-color);
     color: var(--secondary-color);
     border: var(--border-width-3) solid var(--primary-color);
     border-radius: var(--radius-large);
     cursor: pointer;
     transition: all 0.3s ease;
+}
+
+/* Ensures buttons don't shrink too much */
+.popup-btn:not(:last-child) {
+    margin-right: 10px;
 }
 
 .popup-btn:hover {
