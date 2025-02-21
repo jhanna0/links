@@ -11,12 +11,18 @@
 
 <body class="text-center" style="min-height: 100vh;">
     <div class="card">
-        <h1 class="heading">✅ Payment Successful!</h1>
-        <p class="subtext">Here is your API Key:</p>
-        <div class="api-key input-wrapper" id="apiKey">Loading...</div>
-        <button class="btn" onclick="copyApiKey()">Copy</button>
-        <p class="subtext"><strong>Important:</strong> Your API key has been saved locally. Copy it if you need to store
-            it elsewhere.</p>
+        <h1 class="heading">Your Access Key</h1>
+        <p class="subtext">Click key to copy it</p>
+        <div class="private-box" style="border: 0; padding: 0;">
+            <p id="apiKey" onclick="copyApiKey()" style="word-wrap: break-word; cursor: pointer;">...</p>
+            <!-- <div class="api-key input-wrapper">Loading...</div> -->
+        </div>
+
+        <a href="/" style="text-decoration: none; margin-top: var(--margin-large);" class="btn btn--full">Home</a>
+
+        <!-- <button class="btn" onclick="copyApiKey()">Copy</button> -->
+        <p class="subtext" style="margin-top: var(--margin-large); margin-bottom: 0;">Write your key down.
+            Paste it under "Increase Access" to start using it. Email access@opus.cafe with any issues.</p>
     </div>
     <script src="/pages/alert.js" defer></script>
     <script>
@@ -29,24 +35,28 @@
             return null;
         }
 
-        const apiKey = getCookie("api_key");
-
-        if (apiKey) {
-            document.getElementById("apiKey").textContent = apiKey;
-            localStorage.setItem("userApiKey", apiKey);
-            alert("✅ Your API key has been saved locally!");
-        } else {
-            document.getElementById("apiKey").textContent = "Error: API Key not found";
+        function saveKey() {
+            const apiKey = getCookie("api_key");
+            if (apiKey) {
+                document.getElementById("apiKey").textContent = apiKey;
+                localStorage.setItem("userApiKey", apiKey);
+                // alert("✅ Your API key has been saved locally!");
+            } else {
+                document.getElementById("apiKey").textContent = "Error: API Key not found";
+            }
         }
 
         function copyApiKey() {
             const keyText = document.getElementById("apiKey").textContent;
             navigator.clipboard.writeText(keyText).then(() => {
-                alert("✅ API Key copied to clipboard!");
+                alert("Access Key copied to clipboard!");
+                saveKey();
             }).catch(() => {
-                alert("❌ Failed to copy API Key. Please copy manually.");
+                alert("Failed to copy Key. Please copy manually.");
             });
         }
+
+        saveKey();
     </script>
 </body>
 
