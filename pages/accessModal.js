@@ -105,7 +105,7 @@ class AccessModal {
     // Start Stripe checkout process
     async startCheckout() {
         const userConfirmed = await window.confirm(
-            "IMPORTANT!! Don't use a fake email during the payment process. Your email is not stored and can be used to verify any issues."
+            "IMPORTANT: Don't use a fake email during the payment process. We don't store your email, but it can be used to verify your purchase."
         );
 
         if (!userConfirmed) return;
