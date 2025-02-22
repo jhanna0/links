@@ -2,6 +2,12 @@
     # Page-Specific Styles (page.html)
 \*---------------------------------------*/
 
+html,
+body {
+    height: auto;
+}
+
+
 /* Header (Page Title & Action Buttons) */
 .header-wrapper {
     position: sticky;
