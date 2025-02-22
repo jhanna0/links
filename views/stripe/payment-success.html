@@ -14,16 +14,18 @@
     <div class="card">
         <h1 class="heading">Your Access Key</h1>
         <p class="subtext">Click key to copy it</p>
-        <div class="private-box" style="border: 0; padding: 0;">
-            <p id="apiKey" onclick="copyApiKey()" style="word-wrap: break-word; cursor: pointer;">Loading...</p>
+        <div class="inner">
+            <div class="private-box" style="border: 0; padding: 0;">
+                <p id="apiKey" onclick="copyApiKey()" style="word-wrap: break-word; cursor: pointer;">Loading...</p>
+            </div>
+
+            <a href="/" style="text-decoration: none; margin-top: var(--margin-large);" class="btn btn--full">Home</a>
+
+            <p class="subtext" style="margin-top: var(--margin-large); margin-bottom: 0;">
+                Write your key down. Paste it under "Increase Access" to start using it. Email
+                <a href="mailto:access@opus.cafe">access@opus.cafe</a> with any issues.
+            </p>
         </div>
-
-        <a href="/" style="text-decoration: none; margin-top: var(--margin-large);" class="btn btn--full">Home</a>
-
-        <p class="subtext" style="margin-top: var(--margin-large); margin-bottom: 0;">
-            Write your key down. Paste it under "Increase Access" to start using it. Email
-            <a href="mailto:access@opus.cafe">access@opus.cafe</a> with any issues.
-        </p>
     </div>
 
     <script src="/pages/alert.js" defer></script>

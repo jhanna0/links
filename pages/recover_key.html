@@ -14,39 +14,56 @@
 </head>
 
 <body class="text-center" style="min-height: 100vh;">
+    <style>
+        .inner {
+            margin: auto;
+            width: 80%;
+        }
+
+        @media (max-width: 768px) {
+            .inner {
+                width: 100%;
+            }
+        }
+    </style>
     <div class="card">
         <h1 class="heading">Recover Access Key</h1>
         <p class="subtext">Enter your email to retrieve your latest access key.</p>
 
-        <div class="input-section">
-            <div class="button-input-wrapper" style="width: 100%;">
-                <input type="email" id="email" placeholder="Enter your email" required>
-                <button id="retrieveButton" class="btn">Go</button>
+        <div class="inner">
+            <div class="input-section">
+                <div class="button-input-wrapper" style="width: 100%;">
+                    <input type="email" id="email" placeholder="Enter your email" required>
+                    <button id="retrieveButton" class="btn">Go</button>
+                </div>
             </div>
+
+            <!-- API Key Display Section -->
+            <div id="apiKeyContainer" class="private-box"
+                style="margin-top: var(--margin-large); border: 0; padding: 0; display: none;">
+                <h4>Your Access Key</h4>
+                <p id="apiKey" onclick="copy()"
+                    style="font-family: monospace; font-size: 1.1rem; color: var(--primary-color); margin: 0;">
+                    No key retrieved yet.
+                </p>
+                <p id="expiresAt"
+                    style="font-size: 0.9rem; color: var(--primary-color); opacity: 0.7; margin-top: 5px;">
+                </p>
+            </div>
+
+            <p style="margin-top: var(--margin-medium);">
+                We store a <strong>hashed</strong> version of your email to verify your key in case of recovery.
+                Therefore
+                we can <strong>never</strong> see your email, only use it to verify a purchase.
+            </p>
+
+            <a href="/" style="text-decoration: none; margin-top: var(--margin-large);" class="btn btn--full">Back</a>
+
+            <p style="margin-top: var(--margin-medium);">
+                If you have any issues, please reach out to access@opus.cafe.
+            </p>
         </div>
 
-        <!-- API Key Display Section -->
-        <div id="apiKeyContainer" class="private-box"
-            style="margin-top: var(--margin-large); border: 0; padding: 0; display: none;">
-            <h4>Your Access Key</h4>
-            <p id="apiKey" onclick="copy()"
-                style="font-family: monospace; font-size: 1.1rem; color: var(--primary-color); margin: 0;">
-                No key retrieved yet.
-            </p>
-            <p id="expiresAt" style="font-size: 0.9rem; color: var(--primary-color); opacity: 0.7; margin-top: 5px;">
-            </p>
-        </div>
-
-        <p style="margin-top: var(--margin-medium);">
-            We store a <strong>hashed</strong> version of your email to verify your key in case of recovery. Therefore
-            we can <strong>never</strong> see your email, only use it to verify a purchase.
-        </p>
-
-        <a href="/" style="text-decoration: none; margin-top: var(--margin-large);" class="btn btn--full">Back</a>
-
-        <p style="margin-top: var(--margin-medium);">
-            If you have any issues, please reach out to access@opus.cafe.
-        </p>
     </div>
 
     <script src="/alert.js" defer></script>
