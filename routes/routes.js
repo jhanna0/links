@@ -350,8 +350,10 @@ router.get("/:pagename", getDailyLimiter, async (req, res, next) => {
         let formHTML = "";
         if (isPrivatePage && !hasPostingAccess && hasViewingAccess) {
             formHTML = fs.readFileSync(passwordFormPath, "utf8");
+            formHTML += `<script type="module" src="/scripts/verify.js" defer></script>`;
         } else if (hasPostingAccess) {
             formHTML = fs.readFileSync(linkFormPath, "utf8");
+            formHTML += `<script type="module" src="/scripts/post.js" defer></script>`;
         }
 
         html = html.replace("{{form}}", formHTML);
