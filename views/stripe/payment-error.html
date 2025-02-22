@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="/styles.css">
+    <link rel="icon" type="image/x-icon" href="/favicon.png">
+    <title>Payment Error</title>
+</head>
+
+<body class="text-center" style="min-height: 100vh;">
+    <div class="card">
+        <h1 class="heading">Payment Error</h1>
+        <div class="inner">
+            <p class="subtext error" id="errorMessage">Stripe had a problem. Contact access@opus.cafe for support.</p>
+            <a href="/" style="text-decoration: none; margin-top: var(--margin-large);" class="btn btn--full">Home</a>
+        </div>
+    </div>
+
+    <script>
+        const params = new URLSearchParams(window.location.search);
+        document.getElementById("errorMessage").textContent = params.get("message") || "An unknown error occurred.";
+    </script>
+</body>
+
+</html>

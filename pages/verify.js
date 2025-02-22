@@ -14,7 +14,7 @@ document.addEventListener("DOMContentLoaded", () => {
             const pagename = window.location.pathname.replace(/^\//, '');
 
             try {
-                const response = await fetch("/verify", {
+                const response = await fetch("/verify-password", {
                     method: "POST",
                     headers: { "Content-Type": "application/json" },
                     body: JSON.stringify({ pagename, password })

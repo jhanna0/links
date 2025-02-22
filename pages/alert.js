@@ -1,56 +1,70 @@
-// Override default alert with a custom-styled modal
+// Override window.alert with a custom-styled modal
 window.alert = function (message) {
-    let existingAlert = document.getElementById("customAlert");
-    let existingBackdrop = document.getElementById("customAlertBackdrop");
+    createCustomPopup({ message, type: "alert" });
+};
 
-    if (!existingAlert) {
-        // ✅ Create the backdrop (dimmed background)
-        let backdrop = document.createElement("div");
-        backdrop.id = "customAlertBackdrop";
-        backdrop.classList.add("alert-backdrop");
-        backdrop.onclick = closeCustomAlert; // ✅ Clicking background closes the alert
-        document.body.appendChild(backdrop);
+// Override window.confirm with a custom-styled modal
+window.confirm = function (message) {
+    return new Promise((resolve) => {
+        createCustomPopup({ message, type: "confirm", resolve });
+    });
+};
 
-        // ✅ Create the alert box
-        let alertBox = document.createElement("div");
-        alertBox.id = "customAlert";
-        alertBox.innerHTML = `
-            <div class="alert-content">
-                <p id="customAlertMessage">${message}</p>
-                <button onclick="closeCustomAlert()" class="btn-close-alert">OK</button>
+function createCustomPopup({ message, type, resolve }) {
+    let existingPopup = document.getElementById("customPopup");
+    let existingOverlay = document.getElementById("customPopupOverlay");
+
+    if (!existingPopup) {
+        let overlay = document.createElement("div");
+        overlay.id = "customPopupOverlay";
+        overlay.classList.add("popup-overlay");
+        overlay.onclick = () => closeCustomPopup(false, resolve);
+        document.body.appendChild(overlay);
+
+        let popupBox = document.createElement("div");
+        popupBox.id = "customPopup";
+        popupBox.classList.add("popup-box");
+        popupBox.innerHTML = `
+            <div class="popup-content">
+                <p id="customPopupMessage"></p>
+                <div class="popup-buttons">
+                    <button id="popupOk" class="popup-btn">OK</button>
+                    <button id="popupCancel" class="popup-btn popup-btn-cancel">Cancel</button>
+                </div>
             </div>
         `;
-        document.body.appendChild(alertBox);
-        existingAlert = alertBox;
-        existingBackdrop = backdrop;
-    } else {
-        document.getElementById("customAlertMessage").textContent = message;
+        document.body.appendChild(popupBox);
+        existingPopup = popupBox;
+        existingOverlay = overlay;
     }
 
-    // ✅ Ensure alert and backdrop are visible
-    existingAlert.style.display = "flex";
-    existingBackdrop.style.display = "block";
+    document.getElementById("customPopupMessage").textContent = message;
+    document.getElementById("popupCancel").style.display = type === "confirm" ? "inline-block" : "none";
 
-    // ✅ Smooth fade-in effect
+    document.getElementById("popupOk").onclick = () => closeCustomPopup(true, resolve);
+    document.getElementById("popupCancel").onclick = () => closeCustomPopup(false, resolve);
+
+    existingPopup.style.display = "flex";
+    existingOverlay.style.display = "block";
+
     setTimeout(() => {
-        existingAlert.classList.add("visible");
-        existingBackdrop.classList.add("visible");
+        existingPopup.classList.add("visible");
+        existingOverlay.classList.add("visible");
     }, 10);
-};
+}
 
-// Function to close the custom alert
-window.closeCustomAlert = function () {
-    const alertBox = document.getElementById("customAlert");
-    const backdrop = document.getElementById("customAlertBackdrop");
+function closeCustomPopup(result, resolve) {
+    const popupBox = document.getElementById("customPopup");
+    const overlay = document.getElementById("customPopupOverlay");
 
-    if (alertBox && backdrop) {
-        alertBox.classList.remove("visible");
-        backdrop.classList.remove("visible");
+    if (popupBox && overlay) {
+        popupBox.classList.remove("visible");
+        overlay.classList.remove("visible");
 
-        // ✅ Wait for transition to finish before hiding elements
         setTimeout(() => {
-            alertBox.style.display = "none";
-            backdrop.style.display = "none";
+            popupBox.style.display = "none";
+            overlay.style.display = "none";
+            if (resolve) resolve(result);
         }, 300);
     }
-};
+}

@@ -1,53 +1,51 @@
 class PrivatePageModal {
     constructor() {
         this.modal = document.getElementById("privatePageModal");
-        this.generateButton = document.getElementById("generateButton");
-        this.closeButton = this.modal.querySelector(".close-button");
+        this.generateButton = this.modal?.querySelector("#generateButton");
+        this.closeButton = this.modal?.querySelector(".close-button");
 
-        this.urlElem = document.getElementById("privatePageUrl");
-        this.postingPassElem = document.getElementById("postingPassword");
-        this.viewingPassElem = document.getElementById("viewingPassword");
+        this.urlElem = this.modal?.querySelector("#privatePageUrl");
+        this.postingPassElem = this.modal?.querySelector("#postingPassword");
+        this.viewingPassElem = this.modal?.querySelector("#viewingPassword");
 
-        // Bind event listeners using onclick so we can easily swap functionality later
-        this.generateButton.onclick = () => this.generatePrivatePage();
-        this.closeButton.addEventListener("click", () => this.close());
+        // Ensure elements exist before adding event listeners
+        if (this.generateButton) {
+            this.generateButton.addEventListener("click", () => this.generatePrivatePage());
+        }
+        if (this.closeButton) {
+            this.closeButton.addEventListener("click", () => this.close());
+        }
     }
 
-    // Open the modal & reset data and button state
+    // Open the modal & reset data
     open() {
+        if (!this.modal) return;
         this.reset();
         this.modal.style.display = "flex";
     }
 
     // Close the modal
     close() {
+        if (!this.modal) return;
         this.modal.style.display = "none";
     }
 
-    // Reset modal contents and button state
+    // Reset modal contents
     reset() {
+        if (!this.modal) return;
         this.urlElem.innerHTML = "...";
         this.postingPassElem.innerText = "...";
         this.viewingPassElem.innerText = "...";
-        // Reset button text and bind the generate function
         this.generateButton.innerText = "Generate";
         this.generateButton.disabled = false;
-        this.generateButton.onclick = () => this.generatePrivatePage();
     }
 
     // Generate a new private page from the backend
     async generatePrivatePage() {
         try {
-            // Disable the button and show a generating state
             this.generateButton.disabled = true;
             this.generateButton.innerText = "Generating…";
 
-            // Optionally clear previous content
-            this.urlElem.innerHTML = "...";
-            this.postingPassElem.innerText = "...";
-            this.viewingPassElem.innerText = "...";
-
-            // Call backend to create private page
             const response = await fetch("/create-private-page", {
                 method: "POST",
                 headers: { "Content-Type": "application/json" }
@@ -58,24 +56,18 @@ class PrivatePageModal {
             }
 
             const pageUrl = `${window.location.origin}/${data.pageName}`;
-
-            // Update the modal with fetched values
-            this.urlElem.innerHTML = `<a href="${pageUrl}" style="color: var(--primary-color);" target="_blank" rel="noopener noreferrer">${pageUrl}</a>`;
+            this.urlElem.innerHTML = `<a href="${pageUrl}" target="_blank">${pageUrl}</a>`;
             this.postingPassElem.innerText = data.postingPassword;
             this.viewingPassElem.innerText = data.viewingPassword;
 
-            // Switch the button to "Copy Data" and bind the copy function
             this.generateButton.innerText = "Copy Data";
             this.generateButton.disabled = false;
             this.generateButton.onclick = () => this.copyPrivatePageInfo();
-            setTimeout(() => this.copyPrivatePageInfo(), 50);
         } catch (error) {
             console.error("Error creating private page:", error);
             alert("❌ Error creating private page. Please try again.");
-            // Re-enable the button to allow retrying
             this.generateButton.innerText = "Generate";
             this.generateButton.disabled = false;
-            this.generateButton.onclick = () => this.generatePrivatePage();
         }
     }
 
@@ -92,10 +84,19 @@ class PrivatePageModal {
     }
 }
 
-// Attach modal to a global variable
-const privatePageModal = new PrivatePageModal();
+// Dynamically create and open modal
+async function openPrivatePageModal() {
+    if (document.getElementById("privatePageModal")) {
+        new PrivatePageModal().open();
+        return;
+    }
 
-// Open modal when clicking the "Create Private Page" button
-document.getElementById("createPrivatePage").addEventListener("click", () => {
-    privatePageModal.open();
-});
+    const response = await fetch("/modals/privatePageModal.html");
+    const modalHTML = await response.text();
+    document.body.insertAdjacentHTML('beforeend', modalHTML);
+
+    new PrivatePageModal().open();
+}
+
+// Attach event listener to open modal
+document.getElementById("createPrivatePage").addEventListener("click", openPrivatePageModal);

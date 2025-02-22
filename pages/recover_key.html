@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Recover API Key | Link Stash</title>
+
+    <!-- Link existing styles -->
+    <link rel="stylesheet" href="/alert.css">
+    <link rel="stylesheet" href="/styles.css">
+
+    <link rel="icon" type="image/x-icon" href="/favicon.png">
+</head>
+
+<body class="text-center" style="min-height: 100vh;">
+    <style>
+        .inner {
+            margin: auto;
+            width: 80%;
+        }
+
+        @media (max-width: 768px) {
+            .inner {
+                width: 100%;
+            }
+        }
+    </style>
+    <div class="card">
+        <h1 class="heading">Recover Access Key</h1>
+        <p class="subtext">Enter your email to retrieve your latest access key.</p>
+
+        <div class="inner">
+            <div class="input-section">
+                <div class="button-input-wrapper" style="width: 100%;">
+                    <input type="email" id="email" placeholder="Enter your email" required>
+                    <button id="retrieveButton" class="btn">Go</button>
+                </div>
+            </div>
+
+            <!-- API Key Display Section -->
+            <div id="apiKeyContainer" class="private-box"
+                style="margin-top: var(--margin-large); border: 0; padding: 0; display: none;">
+                <h4>Your Access Key</h4>
+                <p id="apiKey" onclick="copy()"
+                    style="font-family: monospace; font-size: 1.1rem; color: var(--primary-color); margin: 0;">
+                    No key retrieved yet.
+                </p>
+                <p id="expiresAt"
+                    style="font-size: 0.9rem; color: var(--primary-color); opacity: 0.7; margin-top: 5px;">
+                </p>
+            </div>
+
+            <p style="margin-top: var(--margin-medium);">
+                We store a <strong>hashed</strong> version of your email to verify your key in case of recovery.
+                Therefore
+                we can <strong>never</strong> see your email, only use it to verify a purchase.
+            </p>
+
+            <a href="/" style="text-decoration: none; margin-top: var(--margin-large);" class="btn btn--full">Back</a>
+
+            <p style="margin-top: var(--margin-medium);">
+                If you have any issues, please reach out to access@opus.cafe.
+            </p>
+        </div>
+
+    </div>
+
+    <script src="/alert.js" defer></script>
+    <script>
+        document.getElementById("retrieveButton").addEventListener("click", async function () {
+            const email = document.getElementById("email").value.trim();
+            const apiKeyElement = document.getElementById("apiKey");
+            const expiresAtElement = document.getElementById("expiresAt");
+            const apiKeyContainer = document.getElementById("apiKeyContainer");
+
+            if (!email) {
+                alert("Please enter a valid email.");
+                return;
+            }
+
+            try {
+                const response = await fetch(`/api/retrieve-key?email=${encodeURIComponent(email)}`);
+                const data = await response.json();
+
+                // Handle rate-limiting (429 Too Many Requests)
+                if (response.status === 429) {
+                    alert(`⚠️ Too many requests! ${data.error || "Please wait a few minutes before trying again."}`);
+                    return;
+                }
+
+                if (data.success && data.apiKey) {
+                    const { apiKey, expiresAt, expired } = data;
+
+                    // ✅ Display API Key on page
+                    apiKeyElement.textContent = apiKey;
+                    expiresAtElement.textContent = expired
+                        ? `❌ Expired on: ${new Date(expiresAt).toLocaleString()}`
+                        : `✅ Expires on: ${new Date(expiresAt).toLocaleString()}`;
+
+                    apiKeyContainer.style.display = "block";
+
+                    if (!expired) {
+                        // ✅ Save API Key to cookies ONLY if valid
+                        setCookie("apiKey", apiKey, 365); // 1 year expiration
+                    } else {
+                        deleteCookie("apiKey"); // Remove expired keys from cookies
+                    }
+                } else {
+                    alert(data.error || "No valid API key found for this email.");
+                    apiKeyContainer.style.display = "none";
+                }
+            } catch (error) {
+                alert("Error retrieving API key. Please try again.");
+            }
+        });
+
+
+        // ✅ Copy API Key to Clipboard
+        function copy() {
+            const apiKeyText = document.getElementById("apiKey").textContent;
+
+            if (!apiKeyText || apiKeyText === "No key retrieved yet.") {
+                alert("No API key available to copy.");
+                return;
+            }
+
+            navigator.clipboard.writeText(apiKeyText).then(() => {
+                alert("Access Key copied to clipboard!");
+            }).catch(() => {
+                alert("Failed to copy API Key. Please try manually.");
+            });
+        };
+
+        // ✅ Utility function to set a cookie
+        function setCookie(name, value, days) {
+            const expires = new Date();
+            expires.setTime(expires.getTime() + days * 24 * 60 * 60 * 1000);
+            document.cookie = `${name}=${encodeURIComponent(value)}; path=/; Secure; SameSite=Strict`;
+        }
+
+        // ✅ Utility function to delete a cookie
+        function deleteCookie(name) {
+            document.cookie = `${name}=; Max-Age=0; path=/; Secure; SameSite=Strict`;
+        }
+    </script>
+
+</body>
+
+</html>

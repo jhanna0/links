@@ -1,4 +1,3 @@
-// homePage.js
 import { validatePageName } from "/common/validator.mjs";
 import "/alert.js";
 
@@ -11,101 +10,123 @@ document.addEventListener("DOMContentLoaded", () => {
     const pageNameInput = document.getElementById("page");
     const goButton = document.getElementById("goButton");
 
-    // Access toggling elements
-    const accessContainer = document.querySelector(".access");
-    const accessBtn = document.querySelector(".access-button");
-
-    // API key elements
-    const apiKeyInput = document.getElementById("apiKey");
-    const saveButton = document.getElementById("saveApiKey");
-
-    // ===============================
-    // API Key Functionality
-    // ===============================
-    // Load saved API key from local storage (if exists)
-    const savedKey = localStorage.getItem("userApiKey");
-    if (savedKey && apiKeyInput) {
-        apiKeyInput.value = savedKey;
-    }
-    if (saveButton) {
-        saveButton.addEventListener("click", () => {
-            const key = apiKeyInput.value.trim();
-            if (key) {
-                localStorage.setItem("userApiKey", key);
-                alert("API key saved locally.");
-            } else {
-                localStorage.removeItem("userApiKey"); // Remove stored key if blank
-                alert("API key removed.");
-            }
-        });
-    }
-
-    // ===============================
-    // Access Container Toggling
-    // ===============================
-    if (accessBtn && accessContainer) {
-        accessBtn.addEventListener("click", () => {
-            accessContainer.classList.toggle("hidden");
-            if (accessContainer.classList.contains("hidden")) {
-                accessBtn.textContent = "Increase access";
-            } else {
-                accessBtn.textContent = "Decrease access";
-            }
-        });
-    }
-
     // "Go" button redirects if page name is valid.
     if (goButton && pageNameInput) {
         goButton.addEventListener("click", () => {
             const page = pageNameInput.value.trim();
 
             if (page) {
-                const validation = validatePageName(page)
+                const validation = validatePageName(page);
 
                 if (validation.valid) {
                     window.location.href = `/${page}`;
-                }
-
-                else {
+                } else {
                     alert(validation.error);
                 }
             }
         });
     }
 
-    document.getElementById('infoButton').addEventListener('click', function () {
-        document.getElementById('infoModal').style.display = 'flex';
-    });
+    async function loadModal(modalId, modalFile, scriptFiles = []) {
+        // Prevent duplicate modals from loading
+        if (document.getElementById(modalId)) {
+            document.getElementById(modalId).style.display = "flex"; // Show modal if already exists
+            return;
+        }
 
-    document.getElementById('accessButton').addEventListener('click', function () {
-        document.getElementById('accessModal').style.display = 'flex';
-    });
+        try {
+            // Fetch the modal HTML
+            const response = await fetch(modalFile);
+            if (!response.ok) {
+                throw new Error(`Failed to load modal: ${modalFile} (HTTP ${response.status})`);
+            }
 
-    document.querySelectorAll('.close-button').forEach(button => {
-        button.addEventListener('click', function () {
-            this.parentElement.parentElement.style.display = 'none';
+            const modalHTML = await response.text();
+            document.body.insertAdjacentHTML("beforeend", modalHTML);
+
+            // Select the newly inserted modal
+            const modal = document.getElementById(modalId);
+
+            // Add close button functionality
+            modal.querySelector(".close-button").addEventListener("click", () => {
+                modal.remove();
+            });
+
+            // Show the modal
+            modal.style.display = "flex";
+
+            // Load scripts sequentially and wait for them
+            for (let scriptSrc of scriptFiles) {
+                await loadScript(scriptSrc);
+            }
+
+            // Initialize modal-specific logic AFTER scripts are fully loaded
+            initializeModal(modalId);
+        } catch (error) {
+            console.error("Error loading modal:", error);
+            alert("❌ Error loading the modal.");
+        }
+    }
+
+    // Helper function to load scripts sequentially
+    function loadScript(scriptSrc) {
+        return new Promise((resolve, reject) => {
+            const script = document.createElement("script");
+            script.src = scriptSrc;
+            // script.type = "module";  // Keep this if it's a module
+            script.onload = () => {
+                console.log(`✅ Loaded script: ${scriptSrc}`);
+                resolve();
+            };
+            script.onerror = () => {
+                console.error(`❌ Failed to load script: ${scriptSrc}`);
+                reject(new Error(`Script load error for ${scriptSrc}`));
+            };
+            document.body.appendChild(script);
         });
+    }
+
+
+    // Ensure modal logic initializes AFTER scripts load
+    function initializeModal(modalId) {
+        if (modalId === "accessModal") {
+            console.log("✅ Initializing AccessModal after script load.");
+            new AccessModal();
+        }
+    }
+
+
+    // ===============================
+    // Attach Modal Event Listeners
+    // ===============================
+    document.getElementById("accessButton").addEventListener("click", () => {
+        loadModal("accessModal", "../modals/accessModal.html", ["accessModal.js", "alert.js", "https://js.stripe.com/v3/"]);
     });
 
-    window.addEventListener('click', function (event) {
-        if (event.target.classList.contains('modal')) {
-            event.target.style.display = 'none';
+    document.getElementById("infoButton").addEventListener("click", () => {
+        loadModal("infoModal", "../modals/infoModal.html");
+    });
+
+    document.getElementById("createPrivatePage").addEventListener("click", () => {
+        loadModal("privatePageModal", "../modals/privatePageModal.html", ["/privatePageModal.js"]);
+    });
+
+    // ===============================
+    // Close Modal on Background Click
+    // ===============================
+    window.addEventListener("click", function (event) {
+        if (event.target.classList.contains("modal")) {
+            event.target.remove(); // Fully remove modal
         }
     });
 
+    // ===============================
     // Listen for Enter key on the input field
+    // ===============================
     pageNameInput.addEventListener("keydown", function (event) {
         if (event.key === "Enter") {
             event.preventDefault(); // Prevent default form submission (if inside a form)
             goButton.click(); // Simulate a click on the Go button
         }
     });
-
-    // Close Modal
-    document.querySelectorAll(".close-button").forEach(button => {
-        button.addEventListener("click", function () {
-            this.closest(".modal").style.display = "none";
-        });
-    });
-
 });

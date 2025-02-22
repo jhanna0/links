@@ -1,9 +1,18 @@
 import express from 'express';
-import rateLimit from 'express-rate-limit';
 import routes from './routes.js';
 import { fileURLToPath } from 'url';
 import cookieParser from 'cookie-parser';
 import path from 'path';
+import {
+    postLimiter,
+    postMinuteLimiter,
+    getDailyLimiter,
+    privateLimiter,
+    verifyLimiter,
+    keyRecoveryMinuteLimiter,
+    keyRecoveryHourLimiter,
+    verifyApiKey
+} from './rate_limiting.js';
 
 const app = express();
 const port = 3000; // Hardcoded port
@@ -15,83 +24,37 @@ app.set('trust proxy', 1);
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
-const postLimiter = rateLimit({
-    windowMs: 24 * 60 * 60 * 1000, // 24 hours
-    max: 20, // Limit each IP to 20 requests per day
-    statusCode: 429,
-    headers: true,
-    keyGenerator: (req) => req.ip,
-    handler: (req, res) => {
-        res.status(429).json({ error: "You may only add 20 links per day without an Access Key." });
-    },
-});
+// ✅ Serve Static Files **First**
+app.use(express.static(path.join(__dirname, "pages")));
+app.use("/pages", express.static(path.join(__dirname, "pages")));
+app.use("/modals", express.static(path.join(__dirname, "modals")));
+app.use("/common", express.static(path.join(__dirname, "common")));
+app.use("/stripe", express.static(path.join(__dirname, "views/stripe")));
 
-const postMinuteLimiter = rateLimit({
-    windowMs: 60 * 1000, // 1 minute
-    max: 5, // Limit each IP to 5 requests per minute
-    statusCode: 429,
-    headers: true,
-    keyGenerator: (req) => req.ip,
-    handler: (req, res) => {
-        res.status(429).json({ error: "You may only add 5 links per minute without an Access Key." });
-    },
-});
+// ✅ Serve JavaScript & CSS files correctly before the dynamic `/:pagename` route
+app.use("/scripts", express.static(path.join(__dirname, "scripts")));
+app.use("/styles", express.static(path.join(__dirname, "styles")));
 
-// 🔹 Global GET Rate Limit - 5 requests per 24 hours
-const getDailyLimiter = rateLimit({
-    windowMs: 24 * 60 * 60 * 1000, // 24 hours
-    max: 200, // Limit each IP to 200 GET requests per day
-    statusCode: 429,
-    headers: true,
-    keyGenerator: (req) => req.ip,
-    handler: (req, res) => {
-        res.status(429).sendFile(path.join(__dirname, 'pages', '429.html'));
-    },
-});
+// ✅ Ensure `/stripe/response` is handled before the dynamic catch-all
+app.get("/stripe/response", routes);
 
-const privateLimiter = rateLimit({
-    windowMs: 24 * 60 * 60 * 1000, // 24 hours
-    max: 1, // Limit each IP to 1 private page per day
-    statusCode: 429,
-    headers: true,
-    keyGenerator: (req) => req.ip,
-    handler: (req, res) => {
-        res.status(429).json({ error: "You may only create one private page a day without an Access Key." });
-    },
-});
-
-const verifyLimiter = rateLimit({
-    windowMs: 60 * 60 * 1000, // 1 hour
-    max: 20, // Limit each IP to 5 requests per minute
-    statusCode: 429,
-    headers: true,
-    keyGenerator: (req) => req.ip,
-    handler: (req, res) => {
-        res.status(429).json({ error: "You may only attempt to enter passwords 20 times an hour without an Access Key." });
-    },
-});
-
-// Middleware
+// Middleware - Request Parsers
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
 app.use(cookieParser());
-app.use(express.static('pages'));
-app.use('/common', express.static('common'));
 
-// 🔹 Apply GET limit to all GET requests
-app.get('/:pagename', getDailyLimiter);
+app.use(verifyApiKey);
 
-// 🔹 Apply GET limit to all GET requests
-app.get('/verify', verifyLimiter);
+// Rate Limiters (these stay the same)
+app.get("/:pagename", getDailyLimiter);
+app.get("/verify-password", verifyLimiter);
+app.get("/api/verify-key", keyRecoveryMinuteLimiter, keyRecoveryHourLimiter)
+app.use("/add", postMinuteLimiter, postLimiter);
+app.use("/create-private-page", privateLimiter);
+app.use("/api/retrieve-key", keyRecoveryMinuteLimiter, keyRecoveryHourLimiter)
 
-// 🔹 Apply POST limits only to /add
-app.use('/add', postMinuteLimiter, postLimiter);
-
-// 🔹 Apply POST limits only to /add
-app.use('/create-private-page', privateLimiter);
-
-// Import routes
-app.use('/', routes);
+// ✅ Import Routes (Ensures Dynamic Routing Happens **After Static Files**)
+app.use("/", routes);
 
 // Start the server
 app.listen(port, '0.0.0.0', () =>

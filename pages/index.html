@@ -3,8 +3,8 @@
 
 <head>
     <meta charset="UTF-8" />
-    <link rel="stylesheet" href="alert.css">
     <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="alert.css">
     <link rel="stylesheet" href="index.css">
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Link Stash</title>
@@ -53,137 +53,8 @@
         </div>
     </div>
 
-    <!-- Unlimited Access Modal -->
-    <div id="accessModal" class="modal">
-        <div class="modal-content">
-            <span class="close-button">&times;</span>
-            <h2 class="heading">Increase Access</h2>
-            <p class="subtext">$5 for one month.</p>
-
-            <div class="feature-list">
-                <div class="feature-item">
-                    <strong>Increase Link Submitting Limit</strong>
-                    <p><strong>3 → 20</strong> links per minute.</p>
-                    <p><strong>20 → 100</strong> links per day</p>
-                </div>
-                <div class="feature-item">
-                    <strong>Increase Private Page Creation Limit</strong>
-                    <p><strong>1 → 5</strong> private pages per day.</p>
-                </div>
-                <div class="feature-item">
-                    <strong>Account-Free</strong>
-                    <p>No sign-up needed.</p>
-                </div>
-                <div class="feature-item">
-                    <strong>Anonymous</strong>
-                    <p>Absolutely no user information is stored.</p>
-                </div>
-            </div>
-
-            <button class="btn btn--full">Get
-                Key</button>
-
-            <!-- API Key Input Section -->
-            <div class="button-input-wrapper" style="margin-top: var(--margin-large); width: 100%;">
-                <input style="text-align: left;" type="text" id="apiKey" placeholder="Enter key">
-                <button id="saveApiKey" class="btn">Save</button>
-            </div>
-        </div>
-    </div>
-
-    <!-- Info Modal -->
-    <div id="infoModal" class="modal">
-        <div class="modal-content">
-            <span class="close-button">&times;</span>
-            <h2 class="heading">How It Works</h2>
-
-            <div class="info-list">
-                <div class="info-item">
-                    <strong>Pages Store Links</strong>
-                    <p>Each page is a list of links. Anyone can view or add to it.</p>
-                </div>
-                <div class="info-item">
-                    <strong>No Ownership- No Accounts</strong>
-                    <p>No one owns pages—anyone with the name has full access. No user data is stored when posting.</p>
-                </div>
-                <div class="info-item">
-                    <strong>No Directory</strong>
-                    <p>Pages can only be found by knowing or guessing their name.</p>
-                </div>
-                <div class="info-item">
-                    <strong>Links Are Permanent</strong>
-                    <p>Once added, a link cannot be removed from a page.</p>
-                </div>
-                <div class="info-item">
-                    <strong>Obscurity = Privacy</strong>
-                    <p>A common name <code>/funnyvideos</code> is easy to guess. A random one <code>/b7Qx9fL2</code> is
-                        nearly impossible to find.</p>
-                </div>
-                <div class="info-item">
-                    <strong>You Are Responsible</strong>
-                    <p>By posting, you acknowledge that you alone are fully responsible for the content you share. Do
-                        not post anything illegal or harmful.</p>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <!-- Private Page Modal -->
-    <div id="privatePageModal" class="modal">
-        <div class="modal-content">
-            <span class="close-button">&times;</span>
-            <h2 class="heading">Create Private Page</h2>
-            <p class="subtext">Share the correct password for the desired level of access.</p>
-
-            <!-- Private Info Section -->
-            <div class="private-info">
-                <div class="private-box">
-                    <h4>Private URL</h4>
-                    <p id="privatePageUrl" style="word-wrap: break-word;">...</p>
-                </div>
-                <div class="private-box">
-                    <h4>Posting Password</h4>
-                    <p id="postingPassword">...</p>
-                </div>
-                <div class="private-box">
-                    <h4>Viewing Password</h4>
-                    <p id="viewingPassword">...</p>
-                </div>
-            </div>
-
-            <!-- Instructions -->
-            <div class="info-list" style="margin-top: var(--margin-large);">
-                <div class="info-item">
-                    <strong>How It Works</strong>
-                    <p>This page is private and can only be accessed by those with the URL.</p>
-                </div>
-                <div class="info-item">
-                    <strong>Posting Access</strong>
-                    <p>Users with the <strong>posting password</strong> can add content.</p>
-                </div>
-                <div class="info-item">
-                    <strong>Viewing Access</strong>
-                    <p>Users with the <strong>viewing password</strong> can see content, but not edit.</p>
-                </div>
-                <div class="info-item">
-                    <strong>Keep It Secure</strong>
-                    <p>Do not share the posting password unless you trust the user.</p>
-                </div>
-            </div>
-            <button id="generateButton" class="btn btn--full">Generate</button>
-        </div>
-    </div>
-
     <!-- External Scripts -->
     <script type="module" src="/index.js"></script>
-    <script src="/privatePageModal.js"></script>
-
-    <style>
-        html,
-        body {
-            min-height: 100vh;
-        }
-    </style>
 </body>
 
 </html>

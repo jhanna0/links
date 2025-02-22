@@ -52,9 +52,21 @@ const initDB = async () => {
       created_at TIMESTAMPTZ DEFAULT CURRENT_TIMESTAMP
     );`;
 
+    // 🔹 Updated API Keys Table with `session_id`
+    const createAPIKeysTable = `
+    CREATE TABLE IF NOT EXISTS api_keys (
+      id SERIAL PRIMARY KEY,
+      key TEXT UNIQUE NOT NULL,
+      hashed_email TEXT NOT NULL,
+      session_id TEXT UNIQUE NOT NULL, -- Ensures a session ID can't be reused
+      created_at TIMESTAMPTZ DEFAULT CURRENT_TIMESTAMP,
+      expires_at TIMESTAMPTZ NOT NULL
+    );`;
+
     try {
         await pool.query(createLinksTable);
         await pool.query(createPrivatePagesTable);
+        await pool.query(createAPIKeysTable);
         console.log('✅ Database initialized.');
     } catch (err) {
         console.error('❌ Error initializing database:', err);
