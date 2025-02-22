@@ -1,8 +1,8 @@
 import Stripe from "stripe";
 import { v4 as uuidv4 } from "uuid";
 import dotenv from "dotenv";
-import pool from "./db.js";
-import { hashEmail } from "./common/utils.js";
+import pool from "../db/db.js";
+import { hashEmail } from "../common/utils.js";
 import { fileURLToPath } from "url";
 import path from "path";
 

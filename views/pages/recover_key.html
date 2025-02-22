@@ -7,25 +7,13 @@
     <title>Recover API Key | Link Stash</title>
 
     <!-- Link existing styles -->
-    <link rel="stylesheet" href="/alert.css">
-    <link rel="stylesheet" href="/styles.css">
+    <link rel="stylesheet" href="/styles/alert.css">
+    <link rel="stylesheet" href="/styles/styles.css">
 
     <link rel="icon" type="image/x-icon" href="/favicon.png">
 </head>
 
 <body class="text-center" style="min-height: 100vh;">
-    <style>
-        .inner {
-            margin: auto;
-            width: 80%;
-        }
-
-        @media (max-width: 768px) {
-            .inner {
-                width: 100%;
-            }
-        }
-    </style>
     <div class="card">
         <h1 class="heading">Recover Access Key</h1>
         <p class="subtext">Enter your email to retrieve your latest access key.</p>
@@ -66,7 +54,7 @@
 
     </div>
 
-    <script src="/alert.js" defer></script>
+    <script src="/scripts/alert.js" defer></script>
     <script>
         document.getElementById("retrieveButton").addEventListener("click", async function () {
             const email = document.getElementById("email").value.trim();

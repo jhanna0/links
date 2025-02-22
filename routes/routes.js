@@ -1,13 +1,23 @@
 // routes.js (ES Module version)
 import express from 'express';
-import { createCheckoutSession, handleStripeResponse } from "./stripe_handler.js"; // Import Stripe functions
+import { createCheckoutSession, handleStripeResponse } from "../stripe/stripe_handler.js"; // Import Stripe functions
 
 import fs from 'fs';
 import path from 'path';
 import { fileURLToPath } from 'url';
-import pool from './db.js';
-import { validatePageName, validateLink, validateDescription } from "./common/validator.js";
-import { generateSecureString, generateStyledEntries, generateSalt, hashPassword, generateAuthToken, validateAuthToken, hashEmail } from "./common/utils.js";
+import pool from '../db/db.js';
+import { validatePageName, validateLink, validateDescription } from "../common/validator.js";
+import { generateSecureString, generateStyledEntries, generateSalt, hashPassword, generateAuthToken, validateAuthToken, hashEmail } from "../common/utils.js";
+
+import {
+    postLimiter,
+    postMinuteLimiter,
+    getDailyLimiter,
+    privateLimiter,
+    verifyLimiter,
+    keyRecoveryMinuteLimiter,
+    keyRecoveryHourLimiter
+} from '../middleware/rate_limiting.js';
 
 // Define __dirname for ES modules
 const __filename = fileURLToPath(import.meta.url);
@@ -16,12 +26,12 @@ const __dirname = path.dirname(__filename);
 const router = express.Router();
 
 // Serve the homepage (GET /)
-router.get('/', (_, res) => {
-    res.sendFile(path.join(__dirname, 'pages', 'index.html'));
-});
+// router.get('/', (_, res) => {
+//     res.sendFile(path.join(__dirname, 'pages', 'index.html'));
+// });
 
 // Handle form submissions (POST /add)
-router.post('/add', async (req, res) => {
+router.post('/add', postMinuteLimiter, postLimiter, async (req, res) => {
     let { page, link, description = '' } = req.body;
 
     // Validate page name
@@ -98,7 +108,7 @@ router.post('/add', async (req, res) => {
     }
 });
 
-router.post('/create-private-page', async (req, res) => {
+router.post('/create-private-page', privateLimiter, async (req, res) => {
     try {
         let pageName;
         let attempts = 0;
@@ -141,7 +151,7 @@ router.post('/create-private-page', async (req, res) => {
 
 
 // POST /login for authenticating private pages
-router.post('/verify-password', async (req, res) => {
+router.post('/verify-password', verifyLimiter, async (req, res) => {
     const { pagename, password } = req.body;
 
     // Query your DB for the page
@@ -181,11 +191,12 @@ router.post("/create-checkout-session", createCheckoutSession);
 /** 
  * ✅ Route 1: Serve the API Key Recovery Page (HTML)
  */
+// move to static
 router.get("/retrieve/access/key", (req, res) => {
-    res.sendFile(path.join(__dirname, "pages", "recover_key.html"));
+    res.sendFile(path.join(__dirname, "../views", "pages", "recover_key.html"));
 });
 
-router.get("/api/retrieve-key", async (req, res) => {
+router.get("/api/retrieve-key", keyRecoveryMinuteLimiter, keyRecoveryHourLimiter, async (req, res) => {
     const { email } = req.query;
     if (!email) return res.status(400).json({ error: "Email required." });
 
@@ -224,7 +235,7 @@ router.get("/api/retrieve-key", async (req, res) => {
 });
 
 // Verify API Key
-router.post("/api/verify-key", async (req, res) => {
+router.post("/api/verify-key", keyRecoveryMinuteLimiter, keyRecoveryHourLimiter, async (req, res) => {
     const { apiKey } = req.body;
     if (!apiKey) {
         return res.status(400).json({ error: "API Key required." });
@@ -261,7 +272,7 @@ router.post("/api/verify-key", async (req, res) => {
 router.get("/stripe/response", handleStripeResponse);
 
 // Serve dynamic page (GET /:pagename)
-router.get("/:pagename", async (req, res, next) => {
+router.get("/:pagename", getDailyLimiter, async (req, res, next) => {
     if (req.params.pagename.includes(".")) return next(); // ✅ Don't match static files
 
     const { pagename } = req.params;
@@ -352,7 +363,6 @@ router.get("/:pagename", async (req, res, next) => {
     }
 });
 
-// Serve only new rows based on the current length of the table in the frontend
 // Serve only new rows based on the current length of the table in the frontend
 router.get('/api/:pagename/new', async (req, res) => {
     const { pagename } = req.params;

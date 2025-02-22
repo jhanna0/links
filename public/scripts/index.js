@@ -1,5 +1,5 @@
 import { validatePageName } from "/common/validator.mjs";
-import "/alert.js";
+import "/scripts/alert.js";
 
 document.addEventListener("DOMContentLoaded", () => {
     // ===============================
@@ -100,15 +100,15 @@ document.addEventListener("DOMContentLoaded", () => {
     // Attach Modal Event Listeners
     // ===============================
     document.getElementById("accessButton").addEventListener("click", () => {
-        loadModal("accessModal", "../modals/accessModal.html", ["accessModal.js", "alert.js", "https://js.stripe.com/v3/"]);
+        loadModal("accessModal", "./modals/accessModal.html", ["scripts/accessModal.js", "scripts/alert.js", "https://js.stripe.com/v3/"]);
     });
 
     document.getElementById("infoButton").addEventListener("click", () => {
-        loadModal("infoModal", "../modals/infoModal.html");
+        loadModal("infoModal", "./modals/infoModal.html");
     });
 
     document.getElementById("createPrivatePage").addEventListener("click", () => {
-        loadModal("privatePageModal", "../modals/privatePageModal.html", ["/privatePageModal.js"]);
+        loadModal("privatePageModal", "./modals/privatePageModal.html", ["scripts/privatePageModal.js"]);
     });
 
     // ===============================

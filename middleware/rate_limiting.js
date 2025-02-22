@@ -1,12 +1,11 @@
 import rateLimit from 'express-rate-limit';
-import pool from './db.js';
+import pool from '../db/db.js';
 import path from 'path';
 import { fileURLToPath } from 'url';
 
 // Define __dirname for ES modules
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
-
 
 export const verifyApiKey = async (req, res, next) => {
     const apiKey = req.cookies.apiKey; // Check both

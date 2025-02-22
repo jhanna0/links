@@ -1,18 +1,11 @@
 import express from 'express';
-import routes from './routes.js';
+import routes from './routes/routes.js';
 import { fileURLToPath } from 'url';
 import cookieParser from 'cookie-parser';
 import path from 'path';
 import {
-    postLimiter,
-    postMinuteLimiter,
-    getDailyLimiter,
-    privateLimiter,
-    verifyLimiter,
-    keyRecoveryMinuteLimiter,
-    keyRecoveryHourLimiter,
     verifyApiKey
-} from './rate_limiting.js';
+} from './middleware/rate_limiting.js';
 
 const app = express();
 const port = 3000; // Hardcoded port
@@ -24,19 +17,18 @@ app.set('trust proxy', 1);
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
-// ✅ Serve Static Files **First**
-app.use(express.static(path.join(__dirname, "pages")));
-app.use("/pages", express.static(path.join(__dirname, "pages")));
-app.use("/modals", express.static(path.join(__dirname, "modals")));
+// ✅ Serve only specific static files (CSS, JS, Images)
+app.use(express.static(path.join(__dirname, "public")));
 app.use("/common", express.static(path.join(__dirname, "common")));
-app.use("/stripe", express.static(path.join(__dirname, "views/stripe")));
 
-// ✅ Serve JavaScript & CSS files correctly before the dynamic `/:pagename` route
-app.use("/scripts", express.static(path.join(__dirname, "scripts")));
-app.use("/styles", express.static(path.join(__dirname, "styles")));
-
-// ✅ Ensure `/stripe/response` is handled before the dynamic catch-all
-app.get("/stripe/response", routes);
+// ✅ Custom Middleware to Block Invalid Paths
+// app.use((req, res, next) => {
+//     // ✅ If request has a `/` in the middle (e.g., `/public/styles`), return invalid page
+//     if (req.path !== '/' && req.path.includes('/')) {
+//         return res.status(404).sendFile(path.join(__dirname, "views", "invalid_page.html"));
+//     }
+//     next();
+// });
 
 // Middleware - Request Parsers
 app.use(express.urlencoded({ extended: true }));
@@ -44,14 +36,6 @@ app.use(express.json());
 app.use(cookieParser());
 
 app.use(verifyApiKey);
-
-// Rate Limiters (these stay the same)
-app.get("/:pagename", getDailyLimiter);
-app.get("/verify-password", verifyLimiter);
-app.get("/api/verify-key", keyRecoveryMinuteLimiter, keyRecoveryHourLimiter)
-app.use("/add", postMinuteLimiter, postLimiter);
-app.use("/create-private-page", privateLimiter);
-app.use("/api/retrieve-key", keyRecoveryMinuteLimiter, keyRecoveryHourLimiter)
 
 // ✅ Import Routes (Ensures Dynamic Routing Happens **After Static Files**)
 app.use("/", routes);

@@ -1,14 +1,16 @@
 <div id="formContainer" style="width: 100%; margin-bottom: var(--margin-large);">
     <form id="form" class="link-form" action="/add" method="POST">
         <h4 class="text-center">Add a Link</h4>
-        <div class="input-block">
-            <input type="text" id="linkPage" style="font-weight: bold;" name="link" class="input-text" maxlength="500"
-                required placeholder="Link URL" />
-            <div class="divider"></div>
-            <input type="text" id="descriptionPage" name="description" style="border-radius: 0; border: 0;"
-                class="input-text" maxlength="100" placeholder="Description (optional)" />
+        <div class="inner">
+            <div class="input-block">
+                <input type="text" id="linkPage" style="font-weight: bold;" name="link" class="input-text"
+                    maxlength="500" required placeholder="Link URL" />
+                <div class="divider"></div>
+                <input type="text" id="descriptionPage" name="description" style="border-radius: 0; border: 0;"
+                    class="input-text" maxlength="100" placeholder="Description (optional)" />
+            </div>
+            <button type="submit" class="btn btn--full">Stash</button>
         </div>
-        <button type="submit" class="btn btn--full">Stash</button>
 
     </form>
 </div>
