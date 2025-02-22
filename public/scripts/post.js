@@ -1,4 +1,5 @@
-import { attachFormSubmission } from "./request.js";
+import { attachFormSubmission } from "/scripts/request.js";
+import { validatePageName, validateLink, validateDescription } from "/common/validator.mjs"
 
 document.addEventListener("DOMContentLoaded", () => {
     const form = document.getElementById("form");
@@ -22,10 +23,40 @@ document.addEventListener("DOMContentLoaded", () => {
 
     if (form) {
         const page = window.location.pathname.substring(1); // Extract pagename from URL
-        attachFormSubmission(form, () => ({
-            page: page.trim(),
-            link: linkInput.value.trim(),
-            description: descriptionInput.value.trim(),
-        }), onSuccess, onFailure);
+
+        attachFormSubmission(form, () => {
+
+            // Ensure link starts with "https://"
+            if (!/^https?:\/\//i.test(linkInput.value)) {
+                linkInput.value = 'https://' + linkInput.value;
+            }
+
+            const link = linkInput.value.trim();
+            const description = descriptionInput.value.trim();
+
+            // Validate page name
+            const pageValidation = validatePageName(page);
+            if (!pageValidation.valid) {
+                alert(pageValidation.error);
+                return null; // Abort if validation fails
+            }
+
+            // Validate link
+            const linkValidation = validateLink(link);
+            if (!linkValidation.valid) {
+                alert(linkValidation.error);
+                return null;
+            }
+
+            // Validate description
+            const descriptionValidation = validateDescription(description);
+            if (!descriptionValidation.valid) {
+                alert(descriptionValidation.error);
+                return null;
+            }
+
+            return { page, link, description }; // Only return values if all validations pass
+        }, onSuccess, onFailure);
     }
+
 });

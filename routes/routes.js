@@ -277,17 +277,17 @@ router.get("/:pagename", getDailyLimiter, async (req, res, next) => {
 
     const { pagename } = req.params;
     // Ensure these are defined before using them
-    const templatePath = path.join(__dirname, "pages", "page.html");
-    const privatePageNotFoundPath = path.join(__dirname, "pages", "page_not_found.html");
-    const privatePageAccessPath = path.join(__dirname, "pages", "password.html");
-    const invalidPagePath = path.join(__dirname, "pages", "invalid_page.html");
+    const templatePath = path.join(__dirname, "../dynamic", "page.html");
+    const privatePageNotFoundPath = path.join(__dirname, "../dynamic", "page_not_found.html");
+    const privatePageAccessPath = path.join(__dirname, "../dynamic", "password.html");
+    const invalidPagePath = path.join(__dirname, "../dynamic", "invalid_page.html");
 
     // ✅ Make sure we define these paths correctly
-    const passwordFormPath = path.join(__dirname, "pages", "password_form.html");
-    const linkFormPath = path.join(__dirname, "pages", "link_form.html");  // ✅ Fix added
+    const passwordFormPath = path.join(__dirname, "../dynamic", "partials", "password_form.html");
+    const linkFormPath = path.join(__dirname, "../dynamic", "partials", "link_form.html");  // ✅ Fix added
 
     if (!fs.existsSync(templatePath)) {
-        return res.status(500).send("<h1>500 - Template Not Found</h1>");
+        return res.status(500).send(`<h1>500 - Template Not Found</h1><p>Path: ${templatePath}</p>`);
     }
 
     try {
@@ -414,7 +414,7 @@ router.get('/api/:pagename/new', async (req, res) => {
 
 // Catch-all for unknown routes
 router.use((req, res) => {
-    const invalidPagePath = path.join(__dirname, 'pages', 'invalid_page.html');
+    const invalidPagePath = path.join(__dirname, '../dynamic', 'invalid_page.html');
     res.status(404).sendFile(invalidPagePath);
 });
 

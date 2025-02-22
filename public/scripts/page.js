@@ -1,5 +1,5 @@
-import { fetchUpdatedTable } from "./request.js";
-import "/alert.js";
+import { fetchUpdatedTable } from "/scripts/request.js";
+import "/scripts/alert.js";
 
 document.addEventListener("DOMContentLoaded", () => {
     const pillContainer = document.getElementById("pillContainer");

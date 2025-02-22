@@ -1,8 +1,7 @@
 // request.js
 // This client-side file wraps the shared validators and provides form submission helpers.
 
-import "/alert.js";
-
+import "/scripts/alert.js";
 /**
  * Helper to perform the POST submission via fetch.
  * @param {HTMLFormElement} form - The form element.
